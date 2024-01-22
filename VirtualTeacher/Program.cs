@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace VirtualTeacher;
 
 public class Program
@@ -10,6 +12,13 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddDbContext<VTDbContext>(options =>
+        {
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            options.EnableSensitiveDataLogging();
+            options.EnableDetailedErrors();
+        });
 
         var app = builder.Build();
 
