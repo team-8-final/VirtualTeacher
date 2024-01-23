@@ -37,6 +37,7 @@ public class User
     public IList<Lecture> Lectures { get; set; } = null!;
     public IList<Assignment> Assignments { get; set; } = null!;
     public IList<Rating> Ratings { get; set; } = null!;
+    public IList<Note> Notes { get; set; } = null!;
 
     // teachers only
     public IList<Course> CreatedCourses { get; set; } = null!;

@@ -19,17 +19,13 @@ public class VTDbContext : DbContext
 
         modelBuilder.Entity<Course>()
             .HasMany(course => course.Teachers)
-            .WithMany(user => user.Courses)
+            .WithMany(teacher => teacher.Courses)
             .UsingEntity(joinEntity => joinEntity.ToTable("CourseTeachers"));
 
         modelBuilder.Entity<Course>()
             .HasMany(course => course.Students)
-            .WithMany(user => user.CreatedCourses)
+            .WithMany(student => student.CreatedCourses)
             .UsingEntity(joinEntity => joinEntity.ToTable("CourseStudents"));
-
-        modelBuilder.Entity<Lecture>()
-            .HasMany(course => course.Assignments)
-            .WithOne(assignment => assignment.Lecture);
 
         modelBuilder.Entity<Assignment>()
             .HasMany(a => a.Teachers)
@@ -68,21 +64,17 @@ public class VTDbContext : DbContext
 
         modelBuilder.Entity<Lecture>()
             .HasMany(lecture => lecture.Teacher)
-            .WithMany(user => user.CreatedLectures)
+            .WithMany(teacher => teacher.CreatedLectures)
             .UsingEntity(joinEntity => joinEntity.ToTable("LectureTeachers"));
 
         modelBuilder.Entity<Lecture>()
             .HasMany(lecture => lecture.Student)
-            .WithMany(user => user.Lectures)
-            .UsingEntity(joinEntity => joinEntity.ToTable("LectureStudents"));
+            .WithMany(student => student.Lectures)
+            .UsingEntity(joinEntity => joinEntity.ToTable("WatchedLectures"));
 
-        modelBuilder.Entity<Rating>()
-            .HasOne(rating => rating.Course)
-            .WithMany(course => course.Ratings);
-
-        modelBuilder.Entity<Rating>()
-            .HasOne(rating => rating.User)
-            .WithMany(user => user.Ratings);
+        modelBuilder.Entity<Lecture>()
+            .HasMany(course => course.Assignments)
+            .WithOne(assignment => assignment.Lecture);
 
         modelBuilder.Entity<User>()
             .HasIndex(user => user.Email)
