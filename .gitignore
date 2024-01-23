@@ -400,3 +400,4 @@ FodyWeavers.xsd
 
 # Database Migrations
 VirtualTeacher/Migrations
+/VirtualTeacher/appsettings.json
