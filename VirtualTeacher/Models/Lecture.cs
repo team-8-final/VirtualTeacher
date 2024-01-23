@@ -7,4 +7,7 @@ public class Lecture
     public Course Course { get; set; } = null!;
     public IList<User> Student { get; set; } = null!;
     public IList<User> Teacher { get; set; } = null!;
+
+    public IList<Assignment> Assignments { get; set; } = null!;
+
 }

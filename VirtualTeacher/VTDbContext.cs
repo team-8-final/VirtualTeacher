@@ -27,9 +27,9 @@ public class VTDbContext : DbContext
             .WithMany(user => user.CreatedCourses)
             .UsingEntity(joinEntity => joinEntity.ToTable("CourseStudents"));
 
-        modelBuilder.Entity<Course>()
+        modelBuilder.Entity<Lecture>()
             .HasMany(course => course.Assignments)
-            .WithOne(assignment => assignment.Course);
+            .WithOne(assignment => assignment.Lecture);
 
         modelBuilder.Entity<Assignment>()
             .HasMany(a => a.Teachers)
