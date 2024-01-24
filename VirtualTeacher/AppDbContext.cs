@@ -1,14 +1,16 @@
 using VirtualTeacher.Models;
+using VirtualTeacher.Models.enums;
 
 namespace VirtualTeacher;
 using Microsoft.EntityFrameworkCore;
 
-public class VTDbContext : DbContext
+public class AppDbContext : DbContext
 {
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Course> Courses { get; set; } = null!;
+    public DbSet<Lecture> Lectures { get; set; } = null!;
 
-    public VTDbContext(DbContextOptions<VTDbContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }
@@ -16,6 +18,22 @@ public class VTDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+
+        modelBuilder.Entity<Course>().HasData(
+            new List<Course>
+            {
+                new() { Id = 1, Title = "English A1", Description = "Most basic English course.", StartingDate = DateTime.Now, CourseTopic = CourseTopic.English, Published = true},
+                new() { Id = 2, Title = "Chinese B2", Description = "More advanced Chinese course.", StartingDate = DateTime.MinValue, CourseTopic = CourseTopic.Chinese, Published = true},
+                new() { Id = 3, Title = "English C2", Description = "Most advanced English course.", StartingDate = DateTime.MaxValue, CourseTopic = CourseTopic.English, Published = true},
+            });
+
+        modelBuilder.Entity<Lecture>().HasData(
+            new List<Lecture>
+            {
+                new() { Id = 1, CourseId = 1, Title = "Lecture 1: The basics", Description = "Test description", VideoLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk",},
+                new() { Id = 2, CourseId = 1, Title = "Lecture 2: Next Level", Description = "description #2", VideoLink = "https://www.youtube.com/watch?v=X99fpJ2HB0A",},
+            });
 
         modelBuilder.Entity<Course>()
             .HasMany(course => course.Teachers)
