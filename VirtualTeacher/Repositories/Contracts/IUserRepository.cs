@@ -13,5 +13,7 @@ namespace VirtualTeacher.Repositories.Contracts
         bool Delete(int id);
         int GetUserCount();
         bool CheckDuplicateEmail(string email);
+        User PromoteToTeacher(int id);
+        User DemoteToStudent(int id);
     }
 }

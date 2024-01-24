@@ -73,7 +73,7 @@ namespace VirtualTeacher.Controllers.API
             }
         }
 
-        //Add loggedId
+        //Add loggedId, , authorization exception
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -89,11 +89,60 @@ namespace VirtualTeacher.Controllers.API
             }
         }
 
-        //Add loggedId
+        //Add loggedId, authorization exception
         [HttpPut("{id}")]
-        public IActionResult Update(int id)
+        public IActionResult Update(int id, [FromBody] UserUpdateDto updateData)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var updatedUser = userService.Update(id, mapper.MapUpdate(updateData));
+
+                return Ok(mapper.MapResponse(updatedUser));
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        //Add loggedId, authorization exception
+        [HttpPut("promote/{id}")]
+        public IActionResult PromoteToTeacher(int id)
+        {
+            try
+            {
+                var promotedUser = userService.PromoteToTeacher(id);
+
+                return Ok(mapper.MapResponse(promotedUser));
+            }
+            catch (InvalidUserInputException e)
+            {
+                return Conflict(e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        //Add loggedId, authorization exception
+        [HttpPut("demote/{id}")]
+        public IActionResult DemoteToStudent(int id)
+        {
+            try
+            {
+                var demotedUser = userService.DemoteToStudent(id);
+
+                return Ok(mapper.MapResponse(demotedUser));
+            }
+            catch (InvalidUserInputException e)
+            {
+                return Conflict(e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
     }

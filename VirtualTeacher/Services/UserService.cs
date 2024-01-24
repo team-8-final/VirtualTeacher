@@ -38,16 +38,28 @@ namespace VirtualTeacher.Services
             return userRepository.GetById(id);
         }
 
-        //add loggedId validation
-        public User Update(int idToUpdate, User user)
+        //add loggedId = admin/idToUpdate validation
+        public User Update(int idToUpdate, User updateData)
         {
-            throw new NotImplementedException();
+            return userRepository.Update(idToUpdate, updateData);
         }
 
-        //add loggedId validation
+        //add loggedId = admin validation
         public bool Delete(int id)
         {
             return userRepository.Delete(id);
+        }
+
+        //add loggedId = admin validation
+        public User PromoteToTeacher(int id)
+        {
+            return userRepository.PromoteToTeacher(id);
+        }
+
+        //add loggedId = admin validation
+        public User DemoteToStudent(int id)
+        {
+            return userRepository.DemoteToStudent(id);
         }
 
         public int GetUserCount()

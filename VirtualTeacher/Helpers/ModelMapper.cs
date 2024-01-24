@@ -30,5 +30,16 @@ namespace VirtualTeacher.Helpers
                 UserRole = user.UserRole.ToString()
             };
         }
+
+        public User MapUpdate(UserUpdateDto dto)
+        {
+            return new User()
+            {
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Password = dto.Password,
+                AvatarUrl = dto.AvatarUrl
+            };
+        }
     }
 }

@@ -3,6 +3,7 @@ using VirtualTeacher.Models;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Exceptions;
+using VirtualTeacher.Models.enums;
 
 namespace VirtualTeacher.Repositories
 {
@@ -37,7 +38,48 @@ namespace VirtualTeacher.Repositories
 
         public User Update(int id, User updateData)
         {
-            throw new NotImplementedException();
+            var updatedUser = GetById(id);
+
+            updatedUser.FirstName = updateData.FirstName ?? updatedUser.FirstName;
+            updatedUser.LastName = updateData.LastName ?? updatedUser.LastName;
+
+            updatedUser.Password = updateData.Password ?? updatedUser.Password;
+
+            context.Update(updatedUser);
+            context.SaveChanges();
+
+            return updatedUser;
+
+        }
+
+        public User PromoteToTeacher(int id)
+        {
+            var user = GetById(id);
+
+            if (Convert.ToInt32(user.UserRole) == 1)
+            {
+                throw new InvalidUserInputException($"User is already a teacher!");
+            }
+
+            user.UserRole = UserRole.Teacher;
+            context.SaveChanges();
+
+            return user;
+        }
+
+        public User DemoteToStudent(int id)
+        {
+            var user = GetById(id);
+
+            if (Convert.ToInt32(user.UserRole) == 0)
+            {
+                throw new InvalidUserInputException($"User is already a student!");
+            }
+
+            user.UserRole = UserRole.Student;
+            context.SaveChanges();
+
+            return user;
         }
 
         public bool Delete(int id)
