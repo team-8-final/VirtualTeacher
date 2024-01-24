@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
 
+
         modelBuilder.Entity<Course>().HasData(
             new List<Course>
             {
@@ -33,6 +34,16 @@ public class AppDbContext : DbContext
             {
                 new() { Id = 1, CourseId = 1, Title = "Lecture 1: The basics", Description = "Test description", VideoLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk",},
                 new() { Id = 2, CourseId = 1, Title = "Lecture 2: Next Level", Description = "description #2", VideoLink = "https://www.youtube.com/watch?v=X99fpJ2HB0A",},
+            });
+
+
+        modelBuilder.Entity<User>().HasData(
+            new List<User>
+            {
+                new User { Id = 1, FirstName = "Admin", LastName = "Admin", Password = "securepass", Email = "admin@example.com", UserRole = UserRole.Admin, AvatarUrl="randomurl.com" },
+                new User { Id = 2, FirstName = "John", LastName = "Doe", Password = "securepass", Email = "johndoe@example.com", UserRole = UserRole.Student, AvatarUrl="randomurl.com" },
+                new User { Id = 3, FirstName = "Stevie", LastName = "Johnson", Password = "securepass", Email = "stevie@example.com", UserRole = UserRole.Teacher, AvatarUrl="randomurl.com" },
+
             });
 
         modelBuilder.Entity<Course>()

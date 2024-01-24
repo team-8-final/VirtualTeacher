@@ -8,9 +8,9 @@ namespace VirtualTeacher.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly VTDbContext context;
+        private readonly AppDbContext context;
 
-        public UserRepository(VTDbContext context)
+        public UserRepository(AppDbContext context)
         {
             this.context = context;
         }
