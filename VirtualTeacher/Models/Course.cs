@@ -17,7 +17,7 @@ public class Course
 
     public DateTime? StartingDate { get; set; }
 
-    public Topic Topic { get; set; }
+    public CourseTopic CourseTopic { get; set; }
 
     public bool Published { get; set; }
 

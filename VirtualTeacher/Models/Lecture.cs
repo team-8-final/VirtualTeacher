@@ -17,7 +17,9 @@ public class Lecture
     [MaxLength(8192)]
     public string VideoLink { get; set; } = null!;
 
+    public int CourseId { get; set; }
     public Course Course { get; set; } = null!;
+
     public IList<User> Student { get; set; } = null!;
     public IList<User> Teacher { get; set; } = null!;
     public IList<Note> Notes { get; set; } = null!;
