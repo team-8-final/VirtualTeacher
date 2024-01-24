@@ -1,7 +1,7 @@
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.enums;
 
-namespace VirtualTeacher;
+namespace VirtualTeacher.Data;
 using Microsoft.EntityFrameworkCore;
 
 public class AppDbContext : DbContext

@@ -4,6 +4,7 @@ using VirtualTeacher.Repositories;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.Services;
 using VirtualTeacher.Helpers;
+using VirtualTeacher.Data;
 
 namespace VirtualTeacher;
 

@@ -4,6 +4,7 @@ using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models.enums;
+using VirtualTeacher.Data;
 
 namespace VirtualTeacher.Repositories
 {
