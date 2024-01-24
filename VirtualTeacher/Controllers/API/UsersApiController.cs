@@ -44,7 +44,11 @@ namespace VirtualTeacher.Controllers.API
         {
             try
             {
-                var users = userService.FilterBy(parameters);
+                //maybe move all mapping to the service
+                var users = userService.FilterBy(parameters)
+                    .Select(user => mapper.MapResponse(user))
+                    .ToList();
+
                 return Ok(users);
             }
             catch (EntityNotFoundException e)
@@ -59,8 +63,9 @@ namespace VirtualTeacher.Controllers.API
             try
             {
                 var user = userService.GetById(id);
+                var userDto = mapper.MapResponse(user);
 
-                return Ok(user);
+                return Ok(userDto);
             }
             catch (EntityNotFoundException e)
             {

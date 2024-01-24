@@ -18,5 +18,17 @@ namespace VirtualTeacher.Helpers
                 UserRole = dto.UserRole
             };
         }
+
+        public UserResponseDto MapResponse(User user)
+        {
+            return new UserResponseDto()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserRole = user.UserRole.ToString()
+            };
+        }
     }
 }
