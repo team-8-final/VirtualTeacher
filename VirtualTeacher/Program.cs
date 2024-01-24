@@ -1,4 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using VirtualTeacher.Repositories.Contracts;
+using VirtualTeacher.Repositories;
+using VirtualTeacher.Services.Contracts;
+using VirtualTeacher.Services;
+using VirtualTeacher.Helpers;
 
 namespace VirtualTeacher;
 
@@ -20,6 +25,16 @@ public class Program
             options.EnableDetailedErrors();
         });
 
+        //Repos
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+        //Services
+        builder.Services.AddScoped<IUserService, UserService>();
+
+        //Helpers
+        builder.Services.AddScoped<ModelMapper>();
+
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -29,7 +44,12 @@ public class Program
         }
 
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "VirtualTeacher API");
+            options.RoutePrefix = "api/swagger";
+            // options.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+        }); 
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthorization();

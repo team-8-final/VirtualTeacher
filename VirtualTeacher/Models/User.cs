@@ -7,7 +7,7 @@ namespace VirtualTeacher.Models;
 public class User
 {
     public int Id { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     [Required]
     [EmailAddress]
@@ -32,6 +32,7 @@ public class User
 
     [Required]
     public UserRole UserRole { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     public IList<Course> Courses { get; set; } = null!;
     public IList<Lecture> Lectures { get; set; } = null!;
