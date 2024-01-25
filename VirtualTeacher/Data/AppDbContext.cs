@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.enums;
 
@@ -20,7 +21,13 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        modelBuilder.Entity<User>().HasData(
+            new List<User>
+            {
+                new() { Id = 1, FirstName = "Admin", LastName = "Admin", Password = "securepass", Email = "admin@example.com", UserRole = UserRole.Admin, AvatarUrl="randomurl.com" },
+                new() { Id = 2, FirstName = "John", LastName = "Doe", Password = "securepass", Email = "johndoe@example.com", UserRole = UserRole.Student, AvatarUrl="randomurl.com" },
+                new() { Id = 3, FirstName = "Stevie", LastName = "Johnson", Password = "securepass", Email = "stevie@example.com", UserRole = UserRole.Teacher, AvatarUrl="randomurl.com" },
+            });
 
         modelBuilder.Entity<Course>().HasData(
             new List<Course>
@@ -33,85 +40,63 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Lecture>().HasData(
             new List<Lecture>
             {
-                new() { Id = 1, CourseId = 1, Title = "Lecture 1: The basics", Description = "Test description", VideoLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk",},
-                new() { Id = 2, CourseId = 1, Title = "Lecture 2: Next Level", Description = "description #2", VideoLink = "https://www.youtube.com/watch?v=X99fpJ2HB0A",},
+                new() { Id = 1, TeacherId = 3, CourseId = 1, Title = "Lecture 1: The basics", Description = "Test description", VideoLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk", AssignmentLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk"},
+                new() { Id = 2, TeacherId = 3, CourseId = 1, Title = "Lecture 2: Next Level", Description = "description #2", VideoLink = "https://www.youtube.com/watch?v=X99fpJ2HB0A", AssignmentLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk"},
             });
 
-
-        modelBuilder.Entity<User>().HasData(
-            new List<User>
-            {
-                new User { Id = 1, FirstName = "Admin", LastName = "Admin", Password = "securepass", Email = "admin@example.com", UserRole = UserRole.Admin, AvatarUrl="randomurl.com" },
-                new User { Id = 2, FirstName = "John", LastName = "Doe", Password = "securepass", Email = "johndoe@example.com", UserRole = UserRole.Student, AvatarUrl="randomurl.com" },
-                new User { Id = 3, FirstName = "Stevie", LastName = "Johnson", Password = "securepass", Email = "stevie@example.com", UserRole = UserRole.Teacher, AvatarUrl="randomurl.com" },
-
-            });
 
         modelBuilder.Entity<Course>()
-            .HasMany(course => course.Teachers)
-            .WithMany(teacher => teacher.Courses)
+            .HasMany(course => course.ActiveTeachers)
+            .WithMany(teacher => teacher.CreatedCourses)
             .UsingEntity(joinEntity => joinEntity.ToTable("CourseTeachers"));
 
         modelBuilder.Entity<Course>()
-            .HasMany(course => course.Students)
-            .WithMany(student => student.CreatedCourses)
+            .HasMany(course => course.EnrolledStudents)
+            .WithMany(student => student.EnrolledCourses)
             .UsingEntity(joinEntity => joinEntity.ToTable("CourseStudents"));
 
-        modelBuilder.Entity<Assignment>()
-            .HasMany(a => a.Teachers)
-            .WithMany(t => t.CreatedAssignments)
+        modelBuilder.Entity<Lecture>()
+            .HasOne(lecture => lecture.Teacher)
+            .WithMany(teacher => teacher.CreatedLectures);
+
+        modelBuilder.Entity<Lecture>()
+            .HasMany(lecture => lecture.WatchedBy)
+            .WithMany(student => student.WatchedLectures)
             .UsingEntity<Dictionary<string, object>>(
-                "AssignmentTeachers",
+                "WatchedLectures",
                 j => j
                     .HasOne<User>()
                     .WithMany()
-                    .HasForeignKey("TeachersId")
+                    .HasForeignKey("WatchedById")
                     .OnDelete(DeleteBehavior.Restrict),
                 j => j
-                    .HasOne<Assignment>()
+                    .HasOne<Lecture>()
                     .WithMany()
-                    .HasForeignKey("CreatedAssignmentsId")
+                    .HasForeignKey("LectureId")
                     .OnDelete(DeleteBehavior.Cascade)
             );
 
-        modelBuilder.Entity<Assignment>()
-            .HasOne(assignment => assignment.Student)
-            .WithMany(user => user.Assignments);
-
-        modelBuilder.Entity<Grade>()
-            .HasOne(grade => grade.Assignment)
-            .WithMany(assignment => assignment.Grades);
-
-        modelBuilder.Entity<Grade>()
-            .HasOne(grade => grade.Teacher)
-            .WithMany(teacher => teacher.GivenGrades)
-            .HasForeignKey(grade => grade.TeacherId)
+        modelBuilder.Entity<Submission>()
+            .HasOne(submission => submission.Student)
+            .WithMany(student => student.Submissions)
+            .HasForeignKey(student => student.StudentId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Lecture>()
-            .HasOne(lecture => lecture.Course)
-            .WithMany(course => course.Lectures);
+        modelBuilder.Entity<Note>()
+            .HasOne(note => note.Student)
+            .WithMany(student => student.Notes)
+            .HasForeignKey(note => note.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Lecture>()
-            .HasMany(lecture => lecture.Teacher)
-            .WithMany(teacher => teacher.CreatedLectures)
-            .UsingEntity(joinEntity => joinEntity.ToTable("LectureTeachers"));
+        modelBuilder.Entity<Comment>()
+            .HasOne(comment => comment.User)
+            .WithMany(user => user.LectureComments)
+            .HasForeignKey(comment => comment.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Lecture>()
-            .HasMany(lecture => lecture.Student)
-            .WithMany(student => student.Lectures)
-            .UsingEntity(joinEntity => joinEntity.ToTable("WatchedLectures"));
-
-        modelBuilder.Entity<Lecture>()
-            .HasMany(course => course.Assignments)
-            .WithOne(assignment => assignment.Lecture);
-
+        // uniques
         modelBuilder.Entity<User>()
             .HasIndex(user => user.Email)
-            .IsUnique();
-
-        modelBuilder.Entity<Grade>()
-            .HasIndex(g => new { g.AssignmentId, g.TeacherId })
             .IsUnique();
     }
 }

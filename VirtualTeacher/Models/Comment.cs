@@ -11,8 +11,8 @@ public class Comment
 
     public DateTime CreatedOn { get; set; }
 
-    public int CourseId { get; set; }
-    public Course Course { get; set; } = null!;
+    public int LectureId { get; set; }
+    public Lecture Lecture { get; set; } = null!;
 
     public int UserId { get; set; }
     public User User { get; set; } = null!;

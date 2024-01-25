@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using VirtualTeacher.Models.enums;
 
 namespace VirtualTeacher.Models;
@@ -34,16 +33,15 @@ public class User
     public UserRole UserRole { get; set; }
     public bool IsDeleted { get; set; } = false;
 
-    public IList<Course> Courses { get; set; } = null!;
-    public IList<Lecture> Lectures { get; set; } = null!;
-    public IList<Assignment> Assignments { get; set; } = null!;
+    public IList<Course> EnrolledCourses { get; set; } = null!;
+    public IList<Lecture> WatchedLectures { get; set; } = null!;
+    public IList<Submission> Submissions { get; set; } = null!;
     public IList<Rating> Ratings { get; set; } = null!;
     public IList<Note> Notes { get; set; } = null!;
-    public IList<Comment> Comments { get; set; } = null!;
+    public IList<Comment> LectureComments { get; set; } = null!;
 
     // teachers only
     public IList<Course> CreatedCourses { get; set; } = null!;
     public IList<Lecture> CreatedLectures { get; set; } = null!;
-    public IList<Assignment> CreatedAssignments { get; set; } = null!;
-    public IList<Grade> GivenGrades { get; set; } = null!;
+    public IList<Submission> CreatedAssignments { get; set; } = null!;
 }

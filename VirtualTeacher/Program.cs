@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using VirtualTeacher.Data;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Repositories;
 using VirtualTeacher.Services.Contracts;
