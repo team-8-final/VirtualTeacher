@@ -4,14 +4,16 @@ using VirtualTeacher.Models.enums;
 
 namespace VirtualTeacher.Data;
 
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-
 public class AppDbContext : DbContext
 {
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Course> Courses { get; set; } = null!;
+    public DbSet<Rating> Ratings { get; set; } = null!;
+
     public DbSet<Lecture> Lectures { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<Note> Notes { get; set; } = null!;
+    public DbSet<Submission> Submissions { get; set; } = null!;
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -44,6 +46,34 @@ public class AppDbContext : DbContext
                 new() { Id = 2, TeacherId = 3, CourseId = 1, Title = "Lecture 2: Next Level", Description = "description #2", VideoLink = "https://www.youtube.com/watch?v=X99fpJ2HB0A", AssignmentLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk"},
             });
 
+        modelBuilder.Entity<Comment>().HasData(
+            new List<Comment>
+            {
+                new() { Id = 1, LectureId = 1, StudentId = 2, Content = "This is a comment", },
+                new() { Id = 2, LectureId = 2, StudentId = 1, Content = "This is also a comment", },
+            });
+
+        modelBuilder.Entity<Note>().HasData(
+            new List<Note>
+            {
+                new() { Id = 1, LectureId = 1, StudentId = 2, Content = "This is a note", },
+                new() { Id = 2, LectureId = 2, StudentId = 1, Content = "This is also a note", },
+            });
+
+        modelBuilder.Entity<Rating>().HasData(
+            new List<Rating>
+            {
+                new() { Id = 1, CourseId = 1, StudentId = 1, Value = 5, },
+                new() { Id = 2, CourseId = 2, StudentId = 1, Value = 1, },
+                new() { Id = 3, CourseId = 1, StudentId = 2, Value = 1, },
+            });
+
+        modelBuilder.Entity<Submission>().HasData(
+            new List<Submission>
+            {
+                new() { Id = 1, LectureId = 1, StudentId = 2, SubmissionLink = "www.test.com", Grade = 100 },
+                new() { Id = 2, LectureId = 2, StudentId = 1, SubmissionLink = "www.test.com", Grade = 100 },
+            });
 
         modelBuilder.Entity<Course>()
             .HasMany(course => course.ActiveTeachers)
@@ -89,9 +119,9 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Comment>()
-            .HasOne(comment => comment.User)
+            .HasOne(comment => comment.Student)
             .WithMany(user => user.LectureComments)
-            .HasForeignKey(comment => comment.UserId)
+            .HasForeignKey(comment => comment.StudentId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // uniques

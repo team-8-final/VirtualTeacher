@@ -14,6 +14,6 @@ public class Comment
     public int LectureId { get; set; }
     public Lecture Lecture { get; set; } = null!;
 
-    public int UserId { get; set; }
-    public User User { get; set; } = null!;
+    public int StudentId { get; set; }
+    public User Student { get; set; } = null!;
 }
