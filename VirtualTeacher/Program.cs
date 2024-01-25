@@ -103,12 +103,20 @@ public class Program
             options.EnableDetailedErrors();
         });
 
+        builder.Services.AddMvc()
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+
         //Repos
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
         //Services
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<ICourseService, CourseService>();
 
         //Helpers
         builder.Services.AddScoped<ModelMapper>();
@@ -138,7 +146,7 @@ public class Program
         app.UseAuthorization();
         app.UseStaticFiles();
 
-        
+
 
 
 

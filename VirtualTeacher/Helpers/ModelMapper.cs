@@ -1,4 +1,5 @@
 ﻿using VirtualTeacher.Models;
+using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.DTOs.User;
 
 namespace VirtualTeacher.Helpers
@@ -39,6 +40,25 @@ namespace VirtualTeacher.Helpers
                 LastName = dto.LastName,
                 Password = dto.Password,
                 AvatarUrl = dto.AvatarUrl
+            };
+        }
+
+        // course DTOs
+        public CourseResponseDto MapResponse(Course course)
+        {
+            return new CourseResponseDto
+            {
+                Id = course.Id,
+                Title = course.Title,
+                Description = course.Description,
+                StartingDate = course.StartingDate,
+                CourseTopic = course.CourseTopic.ToString(),
+                Published = course.Published,
+
+                EnrolledStudents = new List<User>(course.EnrolledStudents),
+                Lectures = new List<Lecture>(course.Lectures),
+                Ratings = new List<Rating>(course.Ratings),
+                ActiveTeachers = new List<User>(course.ActiveTeachers)
             };
         }
     }

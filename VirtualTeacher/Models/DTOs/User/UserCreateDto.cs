@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using VirtualTeacher.Models.enums;
+using VirtualTeacher.Models.Enums;
 
 namespace VirtualTeacher.Models.DTOs.User
 {

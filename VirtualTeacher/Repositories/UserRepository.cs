@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using VirtualTeacher.Data;
+﻿using VirtualTeacher.Data;
 using VirtualTeacher.Models;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Exceptions;
-using VirtualTeacher.Models.enums;
-using VirtualTeacher.Data;
+using VirtualTeacher.Models.Enums;
 
 namespace VirtualTeacher.Repositories
 {

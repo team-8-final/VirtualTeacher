@@ -1,4 +1,4 @@
-namespace VirtualTeacher.Models.enums;
+namespace VirtualTeacher.Models.Enums;
 
 public enum UserRole
 {

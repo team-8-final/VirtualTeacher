@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VirtualTeacher.Models;
-using VirtualTeacher.Models.enums;
+using VirtualTeacher.Models.Enums;
 
 namespace VirtualTeacher.Data;
 
@@ -23,6 +23,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<User>().HasData(
             new List<User>
             {

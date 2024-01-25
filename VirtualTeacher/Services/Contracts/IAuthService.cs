@@ -1,5 +1,5 @@
 ﻿using VirtualTeacher.Models;
-using VirtualTeacher.Models.enums;
+using VirtualTeacher.Models.Enums;
 
 namespace VirtualTeacher.Services.Contracts
 {
@@ -11,6 +11,6 @@ namespace VirtualTeacher.Services.Contracts
         User ValidateCredentials(LoginRequest loginCredentials);
         UserRole CheckRoleAuthorization(User user);
 
-        string EncodePassword(string password); 
+        string EncodePassword(string password);
     }
 }

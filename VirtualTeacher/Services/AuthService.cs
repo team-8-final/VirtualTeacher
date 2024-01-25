@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models;
-using VirtualTeacher.Models.enums;
+using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Services.Contracts;
 
@@ -104,7 +104,7 @@ namespace VirtualTeacher.Services
             return result;
         }
 
-        public User ValidateCredentials(LoginRequest loginRequest)  
+        public User ValidateCredentials(LoginRequest loginRequest)
         {
             try
             {
