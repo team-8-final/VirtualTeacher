@@ -6,7 +6,7 @@ namespace VirtualTeacher.Models.DTOs.User
     public class UserCreateDto
     {
         [Required]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        [EmailAddress(ErrorMessage = "Invalid email")]
         [MaxLength(254)]
         public string Email { get; set; } = null!;
 
@@ -27,6 +27,6 @@ namespace VirtualTeacher.Models.DTOs.User
         public string? AvatarUrl { get; set; }
 
         [Required]
-        public UserRole UserRole { get; set; }
+        public UserRole UserRole { get; set; } = UserRole.Student;
     }
 }

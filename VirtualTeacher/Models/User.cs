@@ -10,7 +10,7 @@ public class User
 
     [Required]
     [EmailAddress]
-    [MaxLength(254)]
+    [MaxLength(254)] 
     public string Email { get; set; } = null!;
 
     [Required]
@@ -44,4 +44,7 @@ public class User
     public IList<Course> CreatedCourses { get; set; } = null!;
     public IList<Lecture> CreatedLectures { get; set; } = null!;
     public IList<Submission> CreatedAssignments { get; set; } = null!;
+
+
+
 }

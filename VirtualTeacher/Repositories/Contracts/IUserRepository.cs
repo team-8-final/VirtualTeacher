@@ -8,6 +8,8 @@ namespace VirtualTeacher.Repositories.Contracts
         //Promote to teacher, get count, get by email?
         IList<User> FilterBy(UserQueryParameters parameters);
         User GetById(int id);
+
+        User GetByEmail(string email);
         User Create(User user);
         User Update(int id, User updateData);
         bool Delete(int id);
@@ -15,5 +17,7 @@ namespace VirtualTeacher.Repositories.Contracts
         bool CheckDuplicateEmail(string email);
         User PromoteToTeacher(int id);
         User DemoteToStudent(int id);
+
+
     }
 }

@@ -8,6 +8,9 @@ using VirtualTeacher.Helpers;
 using VirtualTeacher.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace VirtualTeacher;
 
@@ -17,9 +20,39 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+
+        //  JWT setup start  //
+
+        var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
+        var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                ValidateIssuer = false,
+                ValidIssuer = jwtIssuer,
+                ValidateLifetime = true,
+                ValidateAudience = false,
+            };
+        });
+
+
+        builder.Services.AddAuthorization();
+        builder.Services.AddHttpContextAccessor(); // claim reader
+
+        //  JWT setup end  //
+
+
+
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddEndpointsApiExplorer();
+
+
         builder.Services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "Language School API", Version = "v1" });
@@ -52,6 +85,8 @@ public class Program
         });
 
 
+
+
         //Session
         builder.Services.AddSession(options =>
         {
@@ -73,6 +108,7 @@ public class Program
 
         //Services
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
 
         //Helpers
         builder.Services.AddScoped<ModelMapper>();

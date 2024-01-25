@@ -38,6 +38,14 @@ namespace VirtualTeacher.Repositories
             return user ?? throw new EntityNotFoundException($"User not found!");
         }
 
+
+        public User GetByEmail(string email)  //necessary for the login request via API
+        {
+            User user = context.Users.FirstOrDefault(u => u.Email == email);
+
+            return user ?? throw new EntityNotFoundException($"User not found!");
+        }
+
         public User Update(int id, User updateData)
         {
             var updatedUser = GetById(id);
