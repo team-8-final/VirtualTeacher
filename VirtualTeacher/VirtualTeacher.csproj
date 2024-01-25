@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\MVC\" />
-    <Folder Include="Models\Interfaces\" />
   </ItemGroup>
 
 </Project>

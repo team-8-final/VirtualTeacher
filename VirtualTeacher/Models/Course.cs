@@ -21,9 +21,11 @@ public class Course
 
     public bool Published { get; set; }
 
-    public IList<User> Teachers { get; set; } = null!;
-    public IList<User> Students { get; set; } = null!;
+    public bool IsDeleted { get; set; }
+
+    public IList<User> EnrolledStudents { get; set; } = null!;
     public IList<Lecture> Lectures { get; set; } = null!;
     public IList<Rating> Ratings { get; set; } = null!;
-    public IList<Comment> Comments { get; set; } = null!;
+
+    public IList<User> ActiveTeachers { get; set; } = null!;
 }

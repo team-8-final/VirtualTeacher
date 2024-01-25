@@ -14,14 +14,17 @@ public class Lecture
     [MaxLength(1000, ErrorMessage = "Description must be less than 1000 characters.")]
     public string? Description { get; set; }
 
-    [MaxLength(8192)]
-    public string VideoLink { get; set; } = null!;
+    [MaxLength(8192)] public string VideoLink { get; set; } = null!;
+
+    [MaxLength(8192)] public string AssignmentLink { get; set; } = null!;
 
     public int CourseId { get; set; }
     public Course Course { get; set; } = null!;
 
-    public IList<User> Student { get; set; } = null!;
-    public IList<User> Teacher { get; set; } = null!;
+    public int TeacherId { get; set; }
+    public User Teacher { get; set; } = null!;
+
+    public IList<User> WatchedBy { get; set; } = null!;
     public IList<Note> Notes { get; set; } = null!;
-    public IList<Assignment> Assignments { get; set; } = null!;
+    public IList<Comment> Comments { get; set; } = null!;
 }
