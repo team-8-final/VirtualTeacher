@@ -38,6 +38,7 @@ namespace VirtualTeacher.Helpers
         {
             return new User()
             {
+                Email = dto.Email,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Password = dto.Password,

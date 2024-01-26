@@ -45,14 +45,6 @@ namespace VirtualTeacher.Repositories
             return user ?? throw new EntityNotFoundException($"User not found!");
         }
 
-
-        public User GetByEmail(string email)  //necessary for the login request via API
-        {
-            User user = context.Users.FirstOrDefault(u => u.Email == email);
-
-            return user ?? throw new EntityNotFoundException($"User not found!");
-        }
-
         public User Update(int id, User updateData)
         {
             var updatedUser = GetById(id);
@@ -60,6 +52,7 @@ namespace VirtualTeacher.Repositories
             updatedUser.FirstName = updateData.FirstName ?? updatedUser.FirstName;
             updatedUser.LastName = updateData.LastName ?? updatedUser.LastName;
 
+            updatedUser.Email = updateData.Email ?? updatedUser.Email;
             updatedUser.Password = updateData.Password ?? updatedUser.Password;
 
             context.Update(updatedUser);
@@ -68,31 +61,16 @@ namespace VirtualTeacher.Repositories
             return updatedUser;
         }
 
-        public User PromoteToTeacher(int id)
+        public User ChangeRole(int id, int roleId)
         {
             var user = GetById(id);
 
-            if (Convert.ToInt32(user.UserRole) == 1)
+            if (Convert.ToInt32(user.UserRole) == roleId)
             {
-                throw new InvalidUserInputException($"User is already a teacher!");
+                throw new InvalidUserInputException($"User is already a {user.UserRole}!");
             }
 
-            user.UserRole = UserRole.Teacher;
-            context.SaveChanges();
-
-            return user;
-        }
-
-        public User DemoteToStudent(int id)
-        {
-            var user = GetById(id);
-
-            if (Convert.ToInt32(user.UserRole) == 0)
-            {
-                throw new InvalidUserInputException($"User is already a student!");
-            }
-
-            user.UserRole = UserRole.Student;
+            user.UserRole = (UserRole)roleId;
             context.SaveChanges();
 
             return user;
@@ -102,9 +80,9 @@ namespace VirtualTeacher.Repositories
         {
             User user = GetById(id);
             user.IsDeleted = true;
-            context.SaveChanges();
 
-            return true; //temp
+            context.SaveChanges();
+            return true;
         }
 
         public bool CheckDuplicateEmail(string email)

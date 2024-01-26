@@ -15,11 +15,13 @@ namespace VirtualTeacher.Controllers.API
     public class UsersApiController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly IAuthService authService;
         private readonly ModelMapper mapper;
 
-        public UsersApiController(IUserService userService, ModelMapper mapper)
+        public UsersApiController(IUserService userService, IAuthService authService, ModelMapper mapper)
         {
             this.userService = userService;
+            this.authService = authService;
             this.mapper = mapper;
         }
 
@@ -57,12 +59,12 @@ namespace VirtualTeacher.Controllers.API
             }
         }
 
-        //Add loggedId, authorization exception
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             try
             {
+                authService.ValidateAdminRole();
                 bool userDeleted = userService.Delete(id);
 
                 return Ok(userDeleted);
@@ -73,12 +75,12 @@ namespace VirtualTeacher.Controllers.API
             }
         }
 
-        //Add loggedId, authorization exception
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UserUpdateDto updateData)
         {
             try
             {
+                authService.ValidateAuthorOrAdmin(id);
                 var updatedUser = userService.Update(id, mapper.MapUpdate(updateData));
                 var dto = mapper.MapResponse(updatedUser);
 
@@ -90,14 +92,14 @@ namespace VirtualTeacher.Controllers.API
             }
         }
 
-        //Add loggedId, authorization exception
-        [HttpPut("promote/{id}")]
-        public IActionResult PromoteToTeacher(int id)
+        [HttpPut("{id}/role/{roleId}")]
+        public IActionResult ChangeRole(int id, int roleId)
         {
             try
             {
-                var promotedUser = userService.PromoteToTeacher(id);
-                var dto = mapper.MapResponse(promotedUser);
+                authService.ValidateAdminRole();
+                var updatedUser = userService.ChangeRole(id, roleId);
+                var dto = mapper.MapResponse(updatedUser);
 
                 return Ok(dto);
             }
@@ -109,28 +111,10 @@ namespace VirtualTeacher.Controllers.API
             {
                 return NotFound(e.Message);
             }
-        }
-
-        //Add loggedId, authorization exception
-        [HttpPut("demote/{id}")]
-        public IActionResult DemoteToStudent(int id)
-        {
-            try
+            catch (UnauthorizedOperationException e)
             {
-                var demotedUser = userService.DemoteToStudent(id);
-                var dto = mapper.MapResponse(demotedUser);
-
-                return Ok(dto);
-            }
-            catch (InvalidUserInputException e)
-            {
-                return Conflict(e.Message);
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
+                return Unauthorized(e.Message);
             }
         }
-
     }
 }

@@ -105,6 +105,36 @@ namespace VirtualTeacher.Services
             return result;
         }
 
+        public User GetLoggedUser()
+        {
+            int loggedId = GetLoggedUserId();
+
+            if (loggedId != -1)
+            {
+                var loggedUser = userRepository.GetById(loggedId);
+                return loggedUser;
+            }
+
+            throw new UnauthorizedOperationException("You are not logged in!");
+        }
+
+        public void ValidateAdminRole()
+        {
+            var currentRole = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
+
+            if (currentRole != UserRole.Admin.ToString())
+                throw new UnauthorizedOperationException("You are not an admin!");
+        }
+
+        public void ValidateAuthorOrAdmin(int id)
+        {
+            var currentRole = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
+            var currentId = GetLoggedUserId();
+
+            if (currentRole != UserRole.Admin.ToString() && currentId != id)
+                throw new UnauthorizedOperationException("You are not an admin!");
+        }
+
         public User ValidateCredentials(LoginRequest loginRequest)
         {
             try
@@ -117,6 +147,7 @@ namespace VirtualTeacher.Services
                 {
                     throw new InvalidCredentialsException("Wrong credentials!");
                 }
+
                 return user;
             }
             catch (EntityNotFoundException)
