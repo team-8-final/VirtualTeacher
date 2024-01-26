@@ -1,4 +1,5 @@
 ﻿using VirtualTeacher.Models;
+using VirtualTeacher.Models.DTOs.Comment;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.DTOs.User;
 
@@ -38,6 +39,7 @@ namespace VirtualTeacher.Helpers
         {
             return new User()
             {
+                Email = dto.Email,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Password = dto.Password,
@@ -61,6 +63,27 @@ namespace VirtualTeacher.Helpers
                 Lectures = new List<Lecture>(course.Lectures),
                 Ratings = new List<Rating>(course.Ratings),
                 ActiveTeachers = new List<User>(course.ActiveTeachers)
+            };
+        }
+
+        //Comment DTOs
+
+        public Comment MapCreate(CommentCreateDto dto, User author)
+        {
+            return new Comment()
+            {
+                CreatedOn = DateTime.Now,
+                AuthorId = author.Id,
+                Author = author,
+                LectureId = dto.LectureId,
+                Content = dto.Content
+            };
+        }
+        public Comment MapUpdate(CommentUpdateDto dto)
+        {
+            return new Comment()
+            {
+                Content = dto.Content
             };
         }
     }

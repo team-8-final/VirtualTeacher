@@ -10,8 +10,7 @@ namespace VirtualTeacher.Services.Contracts
         User Create(User user);
         User Update(int idToUpdate, User updateData);
         bool Delete(int id);
-        User PromoteToTeacher(int id);
-        User DemoteToStudent(int id);
+        User ChangeRole(int id, int roleId);
         int GetUserCount();
     }
 }

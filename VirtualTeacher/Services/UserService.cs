@@ -1,4 +1,5 @@
 ﻿using VirtualTeacher.Exceptions;
+using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Repositories.Contracts;
@@ -43,28 +44,27 @@ namespace VirtualTeacher.Services
             return userRepository.GetById(id);
         }
 
-        //add loggedId = admin/idToUpdate validation
         public User Update(int idToUpdate, User updateData)
         {
+            if (userRepository.CheckDuplicateEmail(updateData.Email))
+            {
+                throw new DuplicateEntityException($"Email {updateData.Email} is already in use!");
+            }
+
             return userRepository.Update(idToUpdate, updateData);
         }
 
-        //add loggedId = admin validation
         public bool Delete(int id)
         {
             return userRepository.Delete(id);
         }
 
-        //add loggedId = admin validation
-        public User PromoteToTeacher(int id)
+        public User ChangeRole(int id, int roleId)
         {
-            return userRepository.PromoteToTeacher(id);
-        }
+            if (roleId < 0 || roleId > 2)
+                throw new InvalidUserInputException("Invalid role id!");
 
-        //add loggedId = admin validation
-        public User DemoteToStudent(int id)
-        {
-            return userRepository.DemoteToStudent(id);
+            return userRepository.ChangeRole(id, roleId);
         }
 
         public int GetUserCount()

@@ -50,8 +50,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Comment>().HasData(
             new List<Comment>
             {
-                new() { Id = 1, LectureId = 1, StudentId = 2, Content = "This is a comment", },
-                new() { Id = 2, LectureId = 2, StudentId = 1, Content = "This is also a comment", },
+                new() { Id = 1, LectureId = 1, AuthorId = 2, Content = "This is a comment", },
+                new() { Id = 2, LectureId = 2, AuthorId = 1, Content = "This is also a comment", },
             });
 
         modelBuilder.Entity<Note>().HasData(
@@ -120,9 +120,9 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Comment>()
-            .HasOne(comment => comment.Student)
+            .HasOne(comment => comment.Author)
             .WithMany(user => user.LectureComments)
-            .HasForeignKey(comment => comment.StudentId)
+            .HasForeignKey(comment => comment.AuthorId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // uniques

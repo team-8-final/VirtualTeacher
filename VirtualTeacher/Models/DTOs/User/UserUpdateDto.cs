@@ -5,6 +5,10 @@ namespace VirtualTeacher.Models.DTOs.User
     public class UserUpdateDto
     {
         [Required]
+        [EmailAddress(ErrorMessage = "Invalid email")]
+        [MaxLength(254)]
+        public string? Email { get; set; }
+        [Required]
         [MinLength(2), MaxLength(20)]
         public string? FirstName { get; set; } 
 
