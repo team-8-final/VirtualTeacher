@@ -17,7 +17,7 @@ namespace VirtualTeacher.Repositories
         }
 
         // todo add inclusions
-        private IQueryable<User> GetUsers()
+        public IQueryable<User> GetUsers()
         {
             return context.Users
                 .Where(u => !u.IsDeleted);

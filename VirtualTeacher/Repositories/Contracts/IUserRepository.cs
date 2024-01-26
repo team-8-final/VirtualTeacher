@@ -6,6 +6,8 @@ namespace VirtualTeacher.Repositories.Contracts
     public interface IUserRepository
     {
         IList<User> FilterBy(UserQueryParameters parameters);
+
+        IQueryable<User> GetUsers();
         User GetById(int id);
         User GetByName(string username);
         User Create(User user);

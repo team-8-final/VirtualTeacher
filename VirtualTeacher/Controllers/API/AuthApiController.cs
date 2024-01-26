@@ -25,6 +25,16 @@ namespace VirtualTeacher.Controllers.API
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginCredentials)
         {
+            if (loginCredentials == null)
+            {
+                throw new InvalidUserInputException("Fields cannot be empty");
+            }
+
+            if (userService.GetUsers() == null)
+            {
+                //not implemented
+            }
+
             try
             {
                 var token = authService.GenerateToken(loginCredentials);

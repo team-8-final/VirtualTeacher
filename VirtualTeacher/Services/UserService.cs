@@ -15,6 +15,7 @@ namespace VirtualTeacher.Services
             this.userRepository = userRepository;
         }
 
+
         public User Create(User user)
         {
             if (userRepository.CheckDuplicateUsername(user.Username))
@@ -30,6 +31,11 @@ namespace VirtualTeacher.Services
             return userRepository.Create(user);
         }
 
+        public IList<User> GetUsers()
+        {
+            IQueryable<User> list = userRepository.GetUsers();
+                return null;
+        }
         public IList<User> FilterBy(UserQueryParameters parameters)
         {
             if (userRepository.GetUserCount() == 0)

@@ -99,8 +99,6 @@ namespace VirtualTeacher.Services
         {
             int result = -1;
 
-            //check if user is null
-
             if (httpContextAccessor.HttpContext.User.FindFirstValue("UserID") is not null 
                 && httpContextAccessor.HttpContext.User.FindFirstValue("UserID") != null)
             {
@@ -111,8 +109,9 @@ namespace VirtualTeacher.Services
 
         public User GetLoggedUser()
         {
-           
             int loggedId = GetLoggedUserId();
+
+
 
             if (loggedId != -1)
             {
