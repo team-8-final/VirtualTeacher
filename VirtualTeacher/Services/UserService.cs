@@ -46,6 +46,11 @@ namespace VirtualTeacher.Services
 
         public User Update(int idToUpdate, User updateData)
         {
+            if (userRepository.CheckDuplicateEmail(updateData.Email))
+            {
+                throw new DuplicateEntityException($"Email {updateData.Email} is already in use!");
+            }
+
             return userRepository.Update(idToUpdate, updateData);
         }
 

@@ -3,7 +3,6 @@ using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.User;
-using VirtualTeacher.Models.enums;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Services.Contracts;
 
