@@ -6,10 +6,13 @@ namespace VirtualTeacher.Services.Contracts;
 
 public interface ICourseService
 {
-    IList<Course> FilterBy(CourseQueryParameters parameters);
+    IList<Course> FilterCoursesBy(CourseQueryParameters parameters);
 
-    Course GetById(int id);
-    Course Create(CourseCreateDto dto);
-    Course Update(int id, CourseUpdateDto dto);
-    string Delete(int id);
+    Course GetCourseById(int id);
+    Course CreateCourse(CourseCreateDto dto);
+    Course UpdateCourse(int id, CourseUpdateDto dto);
+    string DeleteCourse(int id);
+    List<Rating> GetRatings(int courseId);
+    Rating RateCourse(int courseId, RatingCreateDto dto);
+    string RemoveRating(int courseId);
 }

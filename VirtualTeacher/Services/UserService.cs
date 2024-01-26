@@ -1,5 +1,4 @@
 ﻿using VirtualTeacher.Exceptions;
-using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Repositories.Contracts;

@@ -55,7 +55,7 @@ namespace VirtualTeacher.Controllers.API
                 if (userDto.UserRole != UserRole.Teacher && userDto.UserRole != UserRole.Student)
                 {
                     throw new InvalidOperationException("You cannot create an account with this role");
-                } 
+                }
 
                 User createdUser = userService.Create(mapper.MapCreate(userDto));
 

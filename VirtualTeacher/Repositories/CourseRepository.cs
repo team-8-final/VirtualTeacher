@@ -28,14 +28,14 @@ public class CourseRepository : ICourseRepository
     }
 
     // todo: currently logged in user should be added as an active teacher
-    public Course? GetById(int id)
+    public Course? GetCourseById(int id)
     {
         Course? course = GetCourses().FirstOrDefault(u => u.Id == id);
 
         return course;
     }
 
-    public Course? Create(CourseCreateDto dto)
+    public Course? CreateCourse(CourseCreateDto dto)
     {
         var newCourse = new Course()
         {
@@ -56,9 +56,9 @@ public class CourseRepository : ICourseRepository
         return newCourse;
     }
 
-    public Course? Update(int id, CourseUpdateDto dto)
+    public Course? UpdateCourse(int id, CourseUpdateDto dto)
     {
-        var updatedCourse = GetById(id);
+        var updatedCourse = GetCourseById(id);
 
         if (updatedCourse == null)
         {
@@ -78,9 +78,9 @@ public class CourseRepository : ICourseRepository
 
     }
 
-    public bool? Delete(int id)
+    public bool? DeleteCourse(int id)
     {
-        Course? course = GetById(id);
+        Course? course = GetCourseById(id);
 
         if (course == null)
         {
@@ -93,6 +93,48 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
+    public List<Rating> GetRatings(Course course)
+    {
+        var ratingsList = context.Ratings
+            .Include(rating => rating.Course)
+            .Include(user => user.Student)
+            .Where(rating => rating.Course == course)
+            .ToList();
+
+        return ratingsList;
+    }
+
+    public Rating? CreateRating(Course course, User user, RatingCreateDto dto)
+    {
+
+        var rating = new Rating()
+        {
+            Course = course,
+            Student = user,
+            Value = dto.Value
+        };
+
+        context.Ratings.Add(rating);
+        context.SaveChanges();
+
+        return rating;
+    }
+
+    public Rating? UpdateRating(Rating rating, RatingCreateDto dto)
+    {
+        rating.Value = dto.Value;
+        context.SaveChanges();
+
+        return rating;
+    }
+
+    public bool RemoveRating(Rating rating)
+    {
+        context.Ratings.Remove(rating);
+        context.SaveChanges();
+
+        return true;
+    }
 
     public IList<Course> FilterBy(CourseQueryParameters parameters)
     {

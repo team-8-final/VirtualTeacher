@@ -12,5 +12,6 @@ namespace VirtualTeacher.Services.Contracts
         void ValidateAdminRole();
         void ValidateAuthorOrAdmin(int id);
         string EncodePassword(string password);
+        User GetLoggedUser();
     }
 }

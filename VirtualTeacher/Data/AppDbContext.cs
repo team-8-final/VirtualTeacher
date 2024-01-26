@@ -129,5 +129,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>()
             .HasIndex(user => user.Email)
             .IsUnique();
+
+        modelBuilder.Entity<Rating>()
+            .HasIndex(rating => new { rating.StudentId, rating.CourseId })
+            .IsUnique();
     }
 }

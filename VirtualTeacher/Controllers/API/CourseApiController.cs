@@ -23,11 +23,11 @@ namespace VirtualTeacher.Controllers.API
         }
 
         [HttpGet("")]
-        public IActionResult GetAll([FromQuery] CourseQueryParameters parameters)
+        public IActionResult GetCourses([FromQuery] CourseQueryParameters parameters)
         {
             try
             {
-                var courses = courseService.FilterBy(parameters)
+                var courses = courseService.FilterCoursesBy(parameters)
                     .Select(course => mapper.MapResponse(course))
                     .ToList();
 
@@ -40,11 +40,11 @@ namespace VirtualTeacher.Controllers.API
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetCourseById(int id)
         {
             try
             {
-                var course = courseService.GetById(id);
+                var course = courseService.GetCourseById(id);
                 var courseDto = mapper.MapResponse(course);
 
                 return Ok(courseDto);
@@ -56,11 +56,11 @@ namespace VirtualTeacher.Controllers.API
         }
 
         [HttpPost("")]
-        public IActionResult Create([FromBody] CourseCreateDto dto)
+        public IActionResult CreateCourse([FromBody] CourseCreateDto dto)
         {
             try
             {
-                Course createdCourse = courseService.Create(dto);
+                Course createdCourse = courseService.CreateCourse(dto);
 
                 var responseDto = mapper.MapResponse(createdCourse);
                 return StatusCode(StatusCodes.Status201Created, responseDto);
@@ -73,11 +73,11 @@ namespace VirtualTeacher.Controllers.API
 
         [Authorize]
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] CourseUpdateDto dto)
+        public IActionResult UpdateCourse(int id, [FromBody] CourseUpdateDto dto)
         {
             try
             {
-                var updatedCourse = courseService.Update(id, dto);
+                var updatedCourse = courseService.UpdateCourse(id, dto);
 
                 return Ok(mapper.MapResponse(updatedCourse));
             }
@@ -88,15 +88,70 @@ namespace VirtualTeacher.Controllers.API
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteCourse(int id)
         {
             try
             {
-                return Ok(courseService.Delete(id));
+                return Ok(courseService.DeleteCourse(id));
             }
             catch (EntityNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("{courseId}/Ratings")]
+        public IActionResult GetRatings(int courseId)
+        {
+            try
+            {
+                var ratings = courseService.GetRatings(courseId)
+                    .Select(rating => mapper.MapResponse(rating))
+                    .ToList();
+
+                return Ok(ratings);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpPut("{courseId}/Ratings")]
+        public IActionResult RateCourse(int courseId, [FromBody] RatingCreateDto dto)
+        {
+            try
+            {
+                var rating = courseService.RateCourse(courseId, dto);
+
+                return Ok(mapper.MapResponse(rating));
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+            }
+        }
+
+        [HttpDelete("{courseId}/Ratings")]
+        public IActionResult RemoveRating(int courseId)
+        {
+            try
+            {
+                var response = courseService.RemoveRating(courseId);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
             }
         }
     }
