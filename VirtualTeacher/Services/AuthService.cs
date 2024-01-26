@@ -49,7 +49,7 @@ namespace VirtualTeacher.Services
             }
             else
             {
-                claims.Add(new Claim(ClaimTypes.Role, "Anonymous"));  // we will probably never use this
+                claims.Add(new Claim(ClaimTypes.Role, "Anonymous"));  
             }
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(

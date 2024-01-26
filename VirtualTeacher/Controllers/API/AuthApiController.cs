@@ -3,6 +3,8 @@ using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.User;
+using VirtualTeacher.Models.enums;
+using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Services.Contracts;
 
 namespace VirtualTeacher.Controllers.API
@@ -51,6 +53,11 @@ namespace VirtualTeacher.Controllers.API
         {
             try
             {
+                if (userDto.UserRole != UserRole.Teacher && userDto.UserRole != UserRole.Student)
+                {
+                    throw new InvalidOperationException("You cannot create an account with this role");
+                } 
+
                 User createdUser = userService.Create(mapper.MapCreate(userDto));
 
                 UserResponseDto createdUserDto = new UserResponseDto();
