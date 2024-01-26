@@ -73,6 +73,10 @@ namespace VirtualTeacher.Controllers.API
             {
                 return NotFound(e.Message);
             }
+            catch (UnauthorizedOperationException e)
+            {
+                return Unauthorized(e.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -89,6 +93,10 @@ namespace VirtualTeacher.Controllers.API
             catch (EntityNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+            catch (UnauthorizedOperationException e)
+            {
+                return Unauthorized(e.Message);
             }
         }
 
