@@ -32,7 +32,8 @@ public class CourseService : ICourseService
 
     public Course CreateCourse(CourseCreateDto dto)
     {
-        var createdCourse = courseRepository.CreateCourse(dto);
+        var loggedUser = authService.GetLoggedUser();
+        var createdCourse = courseRepository.CreateCourse(dto, loggedUser);
 
         return createdCourse ?? throw new Exception($"The course could not be created.");
     }

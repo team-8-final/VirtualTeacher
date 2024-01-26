@@ -22,12 +22,12 @@ public class CourseRepository : ICourseRepository
         return context.Courses
             .Include(course => course.Lectures)
             .Include(course => course.Ratings)
+            .ThenInclude(rating => rating.Student)
             .Include(course => course.ActiveTeachers)
             .Include(course => course.EnrolledStudents)
             .Where(course => course.IsDeleted == false);
     }
 
-    // todo: currently logged in user should be added as an active teacher
     public Course? GetCourseById(int id)
     {
         Course? course = GetCourses().FirstOrDefault(u => u.Id == id);
@@ -35,7 +35,7 @@ public class CourseRepository : ICourseRepository
         return course;
     }
 
-    public Course? CreateCourse(CourseCreateDto dto)
+    public Course? CreateCourse(CourseCreateDto dto, User teacher)
     {
         var newCourse = new Course()
         {
@@ -47,7 +47,7 @@ public class CourseRepository : ICourseRepository
             EnrolledStudents = new List<User>(),
             Lectures = new List<Lecture>(),
             Ratings = new List<Rating>(),
-            ActiveTeachers = new List<User>()
+            ActiveTeachers = new List<User> { teacher }
         };
 
         context.Courses.Add(newCourse);
@@ -170,9 +170,8 @@ public class CourseRepository : ICourseRepository
             return courses;
         }
 
-        // todo: swap email and username property when implemented
         return courses.Where(course => course.ActiveTeachers
-            .Any(teacher => teacher.Email.ToLower().Equals(username.ToLower())));
+            .Any(teacher => teacher.Username.ToLower().Equals(username.ToLower())));
     }
 
     private static IQueryable<Course> FilterByTopic(IQueryable<Course> courses, CourseTopic? topic)

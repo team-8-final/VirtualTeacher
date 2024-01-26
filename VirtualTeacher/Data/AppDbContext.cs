@@ -81,6 +81,33 @@ public class AppDbContext : DbContext
             .WithMany(teacher => teacher.CreatedCourses)
             .UsingEntity(joinEntity => joinEntity.ToTable("CourseTeachers"));
 
+        // adds seed data to the CourseTeachers join table
+        modelBuilder.Entity<Course>()
+            .HasMany(course => course.ActiveTeachers)
+            .WithMany(teacher => teacher.CreatedCourses)
+            .UsingEntity<Dictionary<string, object>>(
+                "CourseTeachers",
+                j => j
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("ActiveTeachersId")
+                    .OnDelete(DeleteBehavior.Restrict),
+                j => j
+                    .HasOne<Course>()
+                    .WithMany()
+                    .HasForeignKey("CoursesId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                j =>
+                {
+                    j.HasData(
+                        new { CoursesId = 1, ActiveTeachersId = 3 },
+                        new { CoursesId = 2, ActiveTeachersId = 3 },
+                        new { CoursesId = 2, ActiveTeachersId = 2 },
+                        new { CoursesId = 3, ActiveTeachersId = 1 }
+                    );
+                }
+            );
+
         modelBuilder.Entity<Course>()
             .HasMany(course => course.EnrolledStudents)
             .WithMany(student => student.EnrolledCourses)

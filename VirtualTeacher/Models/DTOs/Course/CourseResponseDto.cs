@@ -20,11 +20,9 @@ public class CourseResponseDto
 
     public bool? Published { get; set; }
 
-    // todo fix Models.User path
-    public IList<Models.User> EnrolledStudents { get; set; } = null!;
-    public IList<Lecture> Lectures { get; set; } = null!;
-    public IList<Rating> Ratings { get; set; } = null!;
+    public IList<string> EnrolledStudents { get; set; } = null!;
+    public IList<string> Lectures { get; set; } = null!;
+    public IList<RatingResponseDto> Ratings { get; set; } = null!;
 
-    // todo fix Models.User path
-    public IList<Models.User> ActiveTeachers { get; set; } = null!;
+    public IList<string> ActiveTeachers { get; set; } = null!;
 }

@@ -59,10 +59,17 @@ public class ModelMapper
             CourseTopic = course.CourseTopic.ToString(),
             Published = course.Published,
 
-            EnrolledStudents = new List<User>(course.EnrolledStudents),
-            Lectures = new List<Lecture>(course.Lectures),
-            Ratings = new List<Rating>(course.Ratings),
-            ActiveTeachers = new List<User>(course.ActiveTeachers)
+            EnrolledStudents = new List<string>(
+                course.EnrolledStudents.Select(student => student.Username)),
+
+            Lectures = new List<string>(
+                course.Lectures.Select(lecture => lecture.Title)),
+
+            Ratings = new List<RatingResponseDto>(new List<RatingResponseDto>(
+                course.Ratings.Select(MapResponse))),
+
+            ActiveTeachers = new List<string>(
+                course.ActiveTeachers.Select(teacher => teacher.Username))
         };
     }
 

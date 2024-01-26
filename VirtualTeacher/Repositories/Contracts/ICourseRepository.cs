@@ -9,7 +9,7 @@ namespace VirtualTeacher.Repositories.Contracts
         IList<Course> FilterBy(CourseQueryParameters parameters);
 
         Course? GetCourseById(int id);
-        Course? CreateCourse(CourseCreateDto dto);
+        Course? CreateCourse(CourseCreateDto dto, User teacher);
         Course? UpdateCourse(int id, CourseUpdateDto dto);
         bool? DeleteCourse(int id);
         List<Rating> GetRatings(Course course);

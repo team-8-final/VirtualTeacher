@@ -27,11 +27,10 @@ namespace VirtualTeacher.Controllers.API
         {
             try
             {
-                var courses = courseService.FilterCoursesBy(parameters)
-                    .Select(course => mapper.MapResponse(course))
-                    .ToList();
+                var courses = courseService.FilterCoursesBy(parameters);
+                var dtosList = courses.Select(course => mapper.MapResponse(course)).ToList();
 
-                return Ok(courses);
+                return Ok(dtosList);
             }
             catch (EntityNotFoundException e)
             {

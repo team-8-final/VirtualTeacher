@@ -21,7 +21,6 @@ namespace VirtualTeacher.Controllers.API
             this.mapper = mapper;
         }
 
-
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginCredentials)
         {
