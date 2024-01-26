@@ -27,12 +27,12 @@ namespace VirtualTeacher.Controllers.API
         {
             if (loginCredentials == null)
             {
-                throw new InvalidUserInputException("Fields cannot be empty");
+                return Unauthorized("Fields cannot be empty");
             }
-
-            if (userService.GetUsers() == null)
+            IList<User> users = userService.GetUsers();
+            if (users.Any(u => u.Username != loginCredentials.Username) || users.Any(u => u.Password != loginCredentials.Password))
             {
-                //not implemented
+                return Unauthorized("Invalid username or password");
             }
 
             try

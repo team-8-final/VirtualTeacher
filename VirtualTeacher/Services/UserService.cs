@@ -33,8 +33,7 @@ namespace VirtualTeacher.Services
 
         public IList<User> GetUsers()
         {
-            IQueryable<User> list = userRepository.GetUsers();
-                return null;
+           return userRepository.GetUsers().ToList();
         }
         public IList<User> FilterBy(UserQueryParameters parameters)
         {
