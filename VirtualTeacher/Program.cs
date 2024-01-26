@@ -85,8 +85,6 @@ public class Program
         });
 
 
-
-
         //Session
         builder.Services.AddSession(options =>
         {

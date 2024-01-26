@@ -31,8 +31,9 @@ namespace VirtualTeacher.Services
             List<Claim> claims = new List<Claim>
             {
                 new Claim("UserID", user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username)
-                //new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, Enum.GetName(typeof(UserRole), user.UserRole))
             };
 
             if (user.UserRole == UserRole.Admin)
@@ -97,7 +98,7 @@ namespace VirtualTeacher.Services
         public int GetLoggedUserId()
         {
             int result = -1;
-
+            
             if (httpContextAccessor.HttpContext is not null)
             {
                 result = int.Parse(httpContextAccessor.HttpContext.User.FindFirstValue("UserID"));
