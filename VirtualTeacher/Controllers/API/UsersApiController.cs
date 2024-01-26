@@ -62,6 +62,8 @@ namespace VirtualTeacher.Controllers.API
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            int loggedUserId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserID").Value);
+
             try
             {
                 authService.ValidateAdminRole();
@@ -82,8 +84,6 @@ namespace VirtualTeacher.Controllers.API
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UserUpdateDto updateData)
         {
-            //int loggedId = authService.GetLoggedUserId(); test
-
             try
             {
                 authService.ValidateAuthorOrAdmin(id);
