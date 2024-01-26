@@ -1,6 +1,7 @@
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.Course;
+using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Services.Contracts;
@@ -40,6 +41,14 @@ public class CourseService : ICourseService
 
     public Course UpdateCourse(int id, CourseUpdateDto dto)
     {
+        var foundCourse = GetCourseById(id);
+        var loggedUser = authService.GetLoggedUser();
+
+        if (loggedUser.UserRole != UserRole.Admin && foundCourse.ActiveTeachers.All(t => t != loggedUser))
+        {
+            throw new UnauthorizedAccessException($"A course can be updated only by it's authors or an admin.");
+        }
+
         var updatedCourse = courseRepository.UpdateCourse(id, dto);
 
         return updatedCourse ?? throw new Exception($"The course could not be updated.");
@@ -48,6 +57,14 @@ public class CourseService : ICourseService
 
     public string DeleteCourse(int id)
     {
+        var foundCourse = GetCourseById(id);
+        var loggedUser = authService.GetLoggedUser();
+
+        if (loggedUser.UserRole != UserRole.Admin && foundCourse.ActiveTeachers.All(t => t != loggedUser))
+        {
+            throw new UnauthorizedAccessException($"A course can be deleted only by it's authors or an admin.");
+        }
+
         bool? courseDeleted = courseRepository.DeleteCourse(id);
 
         if (courseDeleted == true)

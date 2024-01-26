@@ -36,6 +36,10 @@ namespace VirtualTeacher.Controllers.API
             {
                 return NotFound(e.Message);
             }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+            }
         }
 
         [HttpGet("{id}")]
@@ -52,8 +56,13 @@ namespace VirtualTeacher.Controllers.API
             {
                 return NotFound(e.Message);
             }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+            }
         }
 
+        [Authorize(Roles = "Teacher, Admin")]
         [HttpPost("")]
         public IActionResult CreateCourse([FromBody] CourseCreateDto dto)
         {
@@ -67,6 +76,10 @@ namespace VirtualTeacher.Controllers.API
             catch (DuplicateEntityException e)
             {
                 return Conflict(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
             }
         }
 
@@ -84,8 +97,17 @@ namespace VirtualTeacher.Controllers.API
             {
                 return NotFound(e.Message);
             }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+            }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteCourse(int id)
         {
@@ -97,9 +119,16 @@ namespace VirtualTeacher.Controllers.API
             {
                 return NotFound(e.Message);
             }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+            }
         }
 
-        [Authorize]
         [HttpGet("{courseId}/Ratings")]
         public IActionResult GetRatings(int courseId)
         {
@@ -115,8 +144,13 @@ namespace VirtualTeacher.Controllers.API
             {
                 return NotFound(e.Message);
             }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+            }
         }
 
+        [Authorize]
         [HttpPut("{courseId}/Ratings")]
         public IActionResult RateCourse(int courseId, [FromBody] RatingCreateDto dto)
         {
@@ -136,6 +170,7 @@ namespace VirtualTeacher.Controllers.API
             }
         }
 
+        [Authorize]
         [HttpDelete("{courseId}/Ratings")]
         public IActionResult RemoveRating(int courseId)
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
@@ -24,12 +25,14 @@ namespace VirtualTeacher.Controllers.API
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginCredentials)
         {
-            if (loginCredentials == null)
+            if (string.IsNullOrEmpty(loginCredentials.Username) || string.IsNullOrEmpty(loginCredentials.Password))
             {
                 return Unauthorized("Fields cannot be empty");
             }
+
             IList<User> users = userService.GetUsers();
-            if (users.Any(u => u.Username != loginCredentials.Username) || users.Any(u => u.Password != loginCredentials.Password))
+
+            if (!users.Any(u => u.Username == loginCredentials.Username && u.Password == loginCredentials.Password))
             {
                 return Unauthorized("Invalid username or password");
             }
