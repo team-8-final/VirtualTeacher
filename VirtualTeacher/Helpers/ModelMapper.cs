@@ -12,6 +12,7 @@ namespace VirtualTeacher.Helpers
             return new User()
             {
                 Email = dto.Email,
+                Username = dto.Username,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Password = dto.Password,
@@ -25,6 +26,7 @@ namespace VirtualTeacher.Helpers
             return new UserResponseDto()
             {
                 Id = user.Id,
+                Username = user.Username,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

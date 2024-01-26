@@ -17,6 +17,11 @@ namespace VirtualTeacher.Services
 
         public User Create(User user)
         {
+            if (userRepository.CheckDuplicateUsername(user.Username))
+            {
+                throw new DuplicateEntityException($"Username {user.Username} is already in use!");
+            }
+
             if (userRepository.CheckDuplicateEmail(user.Email))
             {
                 throw new DuplicateEntityException($"Email {user.Email} is already in use!");
@@ -28,7 +33,7 @@ namespace VirtualTeacher.Services
         public IList<User> FilterBy(UserQueryParameters parameters)
         {
             if (userRepository.GetUserCount() == 0)
-                throw new EntityNotFoundException("No users!");
+                throw new EntityNotFoundException("No users found!");
 
             return userRepository.FilterBy(parameters);
         }
@@ -64,7 +69,7 @@ namespace VirtualTeacher.Services
 
         public int GetUserCount()
         {
-            throw new NotImplementedException();
+            return userRepository.GetUserCount();
         }
     }
 }

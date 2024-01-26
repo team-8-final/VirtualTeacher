@@ -23,22 +23,6 @@ namespace VirtualTeacher.Controllers.API
             this.mapper = mapper;
         }
 
-        //Move to auth controller
-        [HttpPost("")]
-        public IActionResult Create([FromBody] UserCreateDto userDto)
-        {
-            try
-            {
-                User createdUser = userService.Create(mapper.MapCreate(userDto));
-
-                return StatusCode(StatusCodes.Status201Created, createdUser);
-            }
-            catch (DuplicateEntityException e)
-            {
-                return Conflict(e.Message);
-            }
-        }
-
         [HttpGet("")]
         public IActionResult GetAll([FromQuery] UserQueryParameters parameters)
         {
@@ -73,7 +57,7 @@ namespace VirtualTeacher.Controllers.API
             }
         }
 
-        //Add loggedId, , authorization exception
+        //Add loggedId, authorization exception
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -96,8 +80,9 @@ namespace VirtualTeacher.Controllers.API
             try
             {
                 var updatedUser = userService.Update(id, mapper.MapUpdate(updateData));
+                var dto = mapper.MapResponse(updatedUser);
 
-                return Ok(mapper.MapResponse(updatedUser));
+                return Ok(dto);
             }
             catch (EntityNotFoundException e)
             {
@@ -112,8 +97,9 @@ namespace VirtualTeacher.Controllers.API
             try
             {
                 var promotedUser = userService.PromoteToTeacher(id);
+                var dto = mapper.MapResponse(promotedUser);
 
-                return Ok(mapper.MapResponse(promotedUser));
+                return Ok(dto);
             }
             catch (InvalidUserInputException e)
             {
@@ -132,8 +118,9 @@ namespace VirtualTeacher.Controllers.API
             try
             {
                 var demotedUser = userService.DemoteToStudent(id);
+                var dto = mapper.MapResponse(demotedUser);
 
-                return Ok(mapper.MapResponse(demotedUser));
+                return Ok(dto);
             }
             catch (InvalidUserInputException e)
             {

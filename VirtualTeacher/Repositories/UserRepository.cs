@@ -16,9 +16,11 @@ namespace VirtualTeacher.Repositories
             this.context = context;
         }
 
+        //add inclusions
         private IQueryable<User> GetUsers()
         {
-            return context.Users;
+            return context.Users
+                .Where(u => !u.IsDeleted);
         }
 
         public User Create(User user)
@@ -32,6 +34,13 @@ namespace VirtualTeacher.Repositories
         public User GetById(int id)
         {
             User user = GetUsers().FirstOrDefault(u => u.Id == id);
+
+            return user ?? throw new EntityNotFoundException($"User not found!");
+        }
+
+        public User GetByName(string username)
+        {
+            User user = context.Users.FirstOrDefault(u => u.Username == username);
 
             return user ?? throw new EntityNotFoundException($"User not found!");
         }
@@ -57,7 +66,6 @@ namespace VirtualTeacher.Repositories
             context.SaveChanges();
 
             return updatedUser;
-
         }
 
         public User PromoteToTeacher(int id)
@@ -104,6 +112,11 @@ namespace VirtualTeacher.Repositories
             return context.Users.Any(u => u.Email == email);
         }
 
+        public bool CheckDuplicateUsername(string username)
+        {
+            return context.Users.Any(u => u.Username == username);
+        }
+
         public int GetUserCount()
         {
             return context.Users.Count();
@@ -113,17 +126,36 @@ namespace VirtualTeacher.Repositories
         {
             IQueryable<User> result = GetUsers();
 
+            result = FilterByUsername(result, parameters.Username);
             result = FilterByEmail(result, parameters.Email);
             result = FilterByFirstName(result, parameters.FirstName);
             result = FilterByLastName(result, parameters.LastName);
             result = SortBy(result, parameters.SortBy);
             result = OrderBy(result, parameters.SortOrder);
 
-
             return new List<User>(result.ToList());
         }
 
         //Query methods
+        private static IQueryable<User> FilterByUsername(IQueryable<User> users, string username)
+        {
+            if (!string.IsNullOrEmpty(username))
+            {
+                username = username.ToLower();
+                return users.Where(u => u.Username.ToLower().Contains(username));
+            }
+            else return users;
+        }
+
+        private static IQueryable<User> FilterByEmail(IQueryable<User> users, string email)
+        {
+            if (!string.IsNullOrEmpty(email))
+            {
+                email = email.ToLower();
+                return users.Where(u => u.Email.ToLower().Contains(email));
+            }
+            else return users;
+        }
 
         private static IQueryable<User> FilterByFirstName(IQueryable<User> users, string firstName)
         {
@@ -145,16 +177,6 @@ namespace VirtualTeacher.Repositories
             else return users;
         }
 
-        private static IQueryable<User> FilterByEmail(IQueryable<User> users, string email)
-        {
-            if (!string.IsNullOrEmpty(email))
-            {
-                email = email.ToLower();
-                return users.Where(u => u.Email.ToLower().Contains(email));
-            }
-            else return users;
-        }
-
         private static IQueryable<User> OrderBy(IQueryable<User> users, string sortOrder)
         {
             return (sortOrder == "desc") ? users.Reverse() : users;
@@ -167,6 +189,8 @@ namespace VirtualTeacher.Repositories
                 {
                     case "id":
                         return users.OrderBy(u => u.Id);
+                    case "username":
+                        return users.OrderByDescending(u => u.Username);
                     case "email":
                         return users.OrderByDescending(u => u.Email);
                     case "firstname":

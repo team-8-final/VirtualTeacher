@@ -26,12 +26,13 @@ namespace VirtualTeacher.Services
 
         public string GenerateToken(LoginRequest loginRequest)
         {
-            var user = userRepository.GetByEmail(loginRequest.Email);
+            var user = userRepository.GetByName(loginRequest.Username);
 
             List<Claim> claims = new List<Claim>
             {
                 new Claim("UserID", user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Name, user.Username)
+                //new Claim(ClaimTypes.Email, user.Email)
             };
 
             if (user.UserRole == UserRole.Admin)
@@ -108,7 +109,7 @@ namespace VirtualTeacher.Services
         {
             try
             {
-                User user = userRepository.GetByEmail(loginRequest.Email);
+                User user = userRepository.GetByName(loginRequest.Username);
 
                 string encodedPassword = EncodePassword(loginRequest.Password);
 

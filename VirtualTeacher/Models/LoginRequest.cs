@@ -4,9 +4,13 @@ namespace VirtualTeacher.Models
 {
     public class LoginRequest
     {
+        //[Required]
+        //[EmailAddress(ErrorMessage = "Invalid email address.")]
+        //public string Email { get; set; }
+
         [Required]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
-        public string Email { get; set; }
+        [MinLength(4), MaxLength(20)]
+        public string Username { get; set; }
 
 
         [Required(ErrorMessage = "Password must be more than 8 characteds long")] //The password must be at least 8 symbols and

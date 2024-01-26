@@ -6,6 +6,10 @@ namespace VirtualTeacher.Models.DTOs.User
     public class UserCreateDto
     {
         [Required]
+        [MinLength(4), MaxLength(20)]
+        public string Username { get; set; } = null!;
+
+        [Required]
         [EmailAddress(ErrorMessage = "Invalid email")]
         [MaxLength(254)]
         public string Email { get; set; } = null!;

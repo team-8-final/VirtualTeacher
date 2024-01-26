@@ -9,6 +9,10 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     [Required]
+    [MinLength(4), MaxLength(20)]
+    public string Username { get; set; } = null!;
+
+    [Required]
     [EmailAddress]
     [MaxLength(254)] 
     public string Email { get; set; } = null!;
