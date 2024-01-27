@@ -16,7 +16,6 @@ public class ModelMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Password = dto.Password,
-            AvatarUrl = dto.AvatarUrl,
             UserRole = dto.UserRole
         };
     }
@@ -92,14 +91,6 @@ public class ModelMapper
             AuthorId = author.Id,
             Author = author,
             //LectureId = dto.LectureId,
-            Content = dto.Content
-        };
-    }
-
-    public Comment MapUpdate(CommentUpdateDto dto)
-    {
-        return new Comment()
-        {
             Content = dto.Content
         };
     }

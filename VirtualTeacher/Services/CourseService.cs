@@ -184,11 +184,8 @@ public class CourseService : ICourseService
 
     public Comment UpdateComment(int courseId, int lectureId, int commentId, CommentCreateDto dto)
     {
-        var comment = courseRepository.GetComment(lectureId, commentId);
+        var comment = GetCommentById(courseId, lectureId, commentId);
         var loggedUser = authService.GetLoggedUser();
-
-        if (comment == null)
-            throw new EntityNotFoundException($"Comment with id '{commentId}' was not found.");
 
         if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != comment.AuthorId)
             throw new UnauthorizedAccessException($"A comment can be updated only by its author or an admin.");
@@ -200,11 +197,8 @@ public class CourseService : ICourseService
 
     public string DeleteComment(int courseId, int lectureId, int commentId)
     {
-        var comment = courseRepository.GetComment(lectureId, commentId);
+        var comment = GetCommentById(courseId, lectureId, commentId);
         var loggedUser = authService.GetLoggedUser();
-
-        if (comment == null)
-            throw new EntityNotFoundException($"Comment with id '{commentId}' was not found.");
 
         if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != comment.AuthorId)
             throw new UnauthorizedAccessException($"A comment can be deleted only by its author or an admin.");

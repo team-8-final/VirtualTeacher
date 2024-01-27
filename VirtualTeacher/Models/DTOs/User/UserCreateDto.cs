@@ -27,10 +27,6 @@ namespace VirtualTeacher.Models.DTOs.User
         public string LastName { get; set; } = null!;
 
         [Required]
-        [MaxLength(32768)]
-        public string? AvatarUrl { get; set; }
-
-        [Required]
-        public UserRole UserRole { get; set; } = UserRole.Student;
+        public UserRole UserRole { get; set; }
     }
 }
