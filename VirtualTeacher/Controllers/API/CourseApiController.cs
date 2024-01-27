@@ -7,186 +7,225 @@ using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services.Contracts;
 
-namespace VirtualTeacher.Controllers.API
+namespace VirtualTeacher.Controllers.API;
+
+[ApiController]
+[Route("api/Courses")]
+public class CourseApiController : ControllerBase
 {
-    [ApiController]
-    [Route("api/Courses")]
-    public class CourseApiController : ControllerBase
+    private readonly ICourseService courseService;
+    private readonly ModelMapper mapper;
+
+    public CourseApiController(ICourseService courseService, ModelMapper mapper)
     {
-        private readonly ICourseService courseService;
-        private readonly ModelMapper mapper;
+        this.courseService = courseService;
+        this.mapper = mapper;
+    }
 
-        public CourseApiController(ICourseService courseService, ModelMapper mapper)
+    [HttpGet("")]
+    public IActionResult GetCourses([FromQuery] CourseQueryParameters parameters)
+    {
+        try
         {
-            this.courseService = courseService;
-            this.mapper = mapper;
+            var courses = courseService.FilterCoursesBy(parameters);
+            var dtosList = courses.Select(course => mapper.MapResponse(course)).ToList();
+
+            return Ok(dtosList);
         }
-
-        [HttpGet("")]
-        public IActionResult GetCourses([FromQuery] CourseQueryParameters parameters)
+        catch (EntityNotFoundException e)
         {
-            try
-            {
-                var courses = courseService.FilterCoursesBy(parameters);
-                var dtosList = courses.Select(course => mapper.MapResponse(course)).ToList();
-
-                return Ok(dtosList);
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
-            }
+            return NotFound(e.Message);
         }
-
-        [HttpGet("{id}")]
-        public IActionResult GetCourseById(int id)
+        catch (Exception)
         {
-            try
-            {
-                var course = courseService.GetCourseById(id);
-                var courseDto = mapper.MapResponse(course);
-
-                return Ok(courseDto);
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
-            }
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
         }
+    }
 
-        [Authorize(Roles = "Teacher, Admin")]
-        [HttpPost("")]
-        public IActionResult CreateCourse([FromBody] CourseCreateDto dto)
+    [HttpGet("{id}")]
+    public IActionResult GetCourseById(int id)
+    {
+        try
         {
-            try
-            {
-                Course createdCourse = courseService.CreateCourse(dto);
+            var course = courseService.GetCourseById(id);
+            var courseDto = mapper.MapResponse(course);
 
-                var responseDto = mapper.MapResponse(createdCourse);
-                return StatusCode(StatusCodes.Status201Created, responseDto);
-            }
-            catch (DuplicateEntityException e)
-            {
-                return Conflict(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
-            }
+            return Ok(courseDto);
         }
-
-        [Authorize]
-        [HttpPut("{id}")]
-        public IActionResult UpdateCourse(int id, [FromBody] CourseUpdateDto dto)
+        catch (EntityNotFoundException e)
         {
-            try
-            {
-                var updatedCourse = courseService.UpdateCourse(id, dto);
-
-                return Ok(mapper.MapResponse(updatedCourse));
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                return Unauthorized(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
-            }
+            return NotFound(e.Message);
         }
-
-        [Authorize]
-        [HttpDelete("{id}")]
-        public IActionResult DeleteCourse(int id)
+        catch (Exception)
         {
-            try
-            {
-                return Ok(courseService.DeleteCourse(id));
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                return Unauthorized(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
-            }
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
         }
+    }
 
-        [HttpGet("{courseId}/Ratings")]
-        public IActionResult GetRatings(int courseId)
+    [Authorize(Roles = "Teacher, Admin")]
+    [HttpPost("")]
+    public IActionResult CreateCourse([FromBody] CourseCreateDto dto)
+    {
+        try
         {
-            try
-            {
-                var ratings = courseService.GetRatings(courseId)
-                    .Select(rating => mapper.MapResponse(rating))
-                    .ToList();
+            Course createdCourse = courseService.CreateCourse(dto);
 
-                return Ok(ratings);
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
-            }
+            var responseDto = mapper.MapResponse(createdCourse);
+            return StatusCode(StatusCodes.Status201Created, responseDto);
         }
-
-        [Authorize]
-        [HttpPut("{courseId}/Ratings")]
-        public IActionResult RateCourse(int courseId, [FromBody] RatingCreateDto dto)
+        catch (DuplicateEntityException e)
         {
-            try
-            {
-                var rating = courseService.RateCourse(courseId, dto);
-
-                return Ok(mapper.MapResponse(rating));
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
-            }
+            return Conflict(e.Message);
         }
-
-        [Authorize]
-        [HttpDelete("{courseId}/Ratings")]
-        public IActionResult RemoveRating(int courseId)
+        catch (Exception)
         {
-            try
-            {
-                var response = courseService.RemoveRating(courseId);
-                return Ok(response);
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
-            }
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{id}")]
+    public IActionResult UpdateCourse(int id, [FromBody] CourseUpdateDto dto)
+    {
+        try
+        {
+            var updatedCourse = courseService.UpdateCourse(id, dto);
+
+            return Ok(mapper.MapResponse(updatedCourse));
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        }
+    }
+
+    [Authorize]
+    [HttpDelete("{id}")]
+    public IActionResult DeleteCourse(int id)
+    {
+        try
+        {
+            return Ok(courseService.DeleteCourse(id));
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        }
+    }
+
+    [HttpGet("{courseId}/Ratings")]
+    public IActionResult GetRatings(int courseId)
+    {
+        try
+        {
+            var ratings = courseService.GetRatings(courseId)
+                .Select(rating => mapper.MapResponse(rating))
+                .ToList();
+
+            return Ok(ratings);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{courseId}/Ratings")]
+    public IActionResult RateCourse(int courseId, [FromBody] RatingCreateDto dto)
+    {
+        try
+        {
+            var rating = courseService.RateCourse(courseId, dto);
+
+            return Ok(mapper.MapResponse(rating));
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        }
+    }
+
+    [Authorize]
+    [HttpDelete("{courseId}/Ratings")]
+    public IActionResult RemoveRating(int courseId)
+    {
+        try
+        {
+            var response = courseService.RemoveRating(courseId);
+            return Ok(response);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        }
+    }
+
+    [HttpGet("{courseId}/Lectures")]
+    public IActionResult GetLectures(int courseId)
+    {
+        try
+        {
+            var lectures = courseService.GetLectures(courseId);
+            var lecturesDto = lectures.Select(lecture => mapper.MapResponse(lecture));
+
+            return Ok(lecturesDto);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        }
+    }
+
+    [HttpGet("{courseId}/Lectures/{lectureId}")]
+    public IActionResult GetLectures(int courseId, int lectureId)
+    {
+        try
+        {
+            var lecture = courseService.GetLectureById(courseId, lectureId);
+            var lectureDto = mapper.MapResponse(lecture);
+
+            return Ok(lectureDto);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
         }
     }
 }

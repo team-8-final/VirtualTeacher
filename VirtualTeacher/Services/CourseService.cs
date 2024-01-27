@@ -46,7 +46,7 @@ public class CourseService : ICourseService
 
         if (loggedUser.UserRole != UserRole.Admin && foundCourse.ActiveTeachers.All(t => t != loggedUser))
         {
-            throw new UnauthorizedAccessException($"A course can be updated only by it's authors or an admin.");
+            throw new UnauthorizedAccessException($"A course can be updated only by its authors or an admin.");
         }
 
         var updatedCourse = courseRepository.UpdateCourse(id, dto);
@@ -62,7 +62,7 @@ public class CourseService : ICourseService
 
         if (loggedUser.UserRole != UserRole.Admin && foundCourse.ActiveTeachers.All(t => t != loggedUser))
         {
-            throw new UnauthorizedAccessException($"A course can be deleted only by it's authors or an admin.");
+            throw new UnauthorizedAccessException($"A course can be deleted only by its authors or an admin.");
         }
 
         bool? courseDeleted = courseRepository.DeleteCourse(id);
@@ -129,5 +129,26 @@ public class CourseService : ICourseService
         var ratingRemoved = courseRepository.RemoveRating(foundRating);
 
         return ratingRemoved ? "Rating was removed." : "Rating could not be removed.";
+    }
+
+    public List<Lecture> GetLectures(int courseId)
+    {
+        var course = GetCourseById(courseId);
+        var lectures = courseRepository.GetLectures(course);
+
+        if (lectures.Count == 0)
+        {
+            throw new EntityNotFoundException($"No lectures found for course with id '{courseId}'.");
+        }
+
+        return lectures;
+    }
+
+    public Lecture GetLectureById(int courseId, int lectureId)
+    {
+        var course = GetCourseById(courseId);
+        var foundLecture = courseRepository.GetLecture(courseId, lectureId);
+
+        return foundLecture ?? throw new EntityNotFoundException($"Lecture with id '{lectureId}' was not found.");
     }
 }

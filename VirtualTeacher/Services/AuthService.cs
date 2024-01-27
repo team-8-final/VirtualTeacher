@@ -99,7 +99,12 @@ namespace VirtualTeacher.Services
         {
             int result = -1;
 
-            if (httpContextAccessor.HttpContext.User.FindFirstValue("UserID") is not null 
+            if (httpContextAccessor.HttpContext is null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            if (httpContextAccessor.HttpContext.User.FindFirstValue("UserID") is not null
                 && httpContextAccessor.HttpContext.User.FindFirstValue("UserID") != null)
             {
                 result = int.Parse(httpContextAccessor.HttpContext.User.FindFirstValue("UserID"));

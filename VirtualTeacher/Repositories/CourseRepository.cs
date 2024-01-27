@@ -136,6 +136,34 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
+    public List<Lecture> GetLectures(Course course)
+    {
+        var lecturesList = context.Lectures
+            .Include(lecture => lecture.Course)
+            .Include(lecture => lecture.Teacher)
+            .Include(lecture => lecture.WatchedBy)
+            .Include(lecture => lecture.Notes)
+            .Include(lecture => lecture.Comments)
+            .Where(lecture => lecture.Course == course)
+            .ToList();
+
+        return lecturesList;
+    }
+
+    public Lecture? GetLecture(int courseId, int lectureId)
+    {
+        var lecture = context.Lectures
+            .Include(lecture => lecture.Course)
+            .Include(lecture => lecture.Teacher)
+            .Include(lecture => lecture.WatchedBy)
+            .Include(lecture => lecture.Notes)
+            .Include(lecture => lecture.Comments)
+            .Where(lecture => lecture.Course.Id == courseId)
+            .FirstOrDefault(lecture => lecture.Id == lectureId);
+
+        return lecture;
+    }
+
     public IList<Course> FilterBy(CourseQueryParameters parameters)
     {
         IQueryable<Course> result = GetCourses();

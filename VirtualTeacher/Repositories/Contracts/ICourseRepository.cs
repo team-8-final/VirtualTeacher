@@ -12,9 +12,13 @@ namespace VirtualTeacher.Repositories.Contracts
         Course? CreateCourse(CourseCreateDto dto, User teacher);
         Course? UpdateCourse(int id, CourseUpdateDto dto);
         bool? DeleteCourse(int id);
+
         List<Rating> GetRatings(Course course);
         Rating? CreateRating(Course course, User user, RatingCreateDto dto);
         Rating? UpdateRating(Rating rating, RatingCreateDto dto);
         bool RemoveRating(Rating rating);
+
+        List<Lecture> GetLectures(Course course);
+        Lecture? GetLecture(int courseId, int lectureId);
     }
 }

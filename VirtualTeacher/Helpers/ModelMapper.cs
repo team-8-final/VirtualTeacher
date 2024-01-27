@@ -83,7 +83,31 @@ public class ModelMapper
         };
     }
 
-    //Comment DTOs
+    // Lecture DTOs
+    public LectureResponseDto MapResponse(Lecture lecture)
+    {
+        return new LectureResponseDto
+        {
+            Title = lecture.Title,
+            Description = lecture.Description,
+            VideoLink = lecture.VideoLink,
+            AssignmentLink = lecture.AssignmentLink,
+            CourseTitle = lecture.Course.Title,
+            TeacherUsername = lecture.Teacher.Username,
+
+
+            WatchedBy = new List<string>(
+                lecture.WatchedBy.Select(student => student.Username)),
+
+            Notes = new List<string>(
+                lecture.Notes.Select(note => note.Content)),
+
+            Comments = new List<string>(
+                lecture.Comments.Select(comment => comment.Content)),
+        };
+    }
+
+    // Comment DTOs
 
     public Comment MapCreate(CommentCreateDto dto, User author)
     {
