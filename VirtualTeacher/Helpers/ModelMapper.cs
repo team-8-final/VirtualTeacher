@@ -81,6 +81,26 @@ public class ModelMapper
         };
     }
 
+    //Lecture DTOs
+
+
+    public LectureResponseDto MapResponse(Lecture lecture)
+    {
+        return new LectureResponseDto()
+        {
+            Title = lecture.Title,
+            Description = lecture.Description,
+            VideoLink = lecture.VideoLink,
+            AssignmentLink = lecture.AssignmentLink,
+            CourseTitle = lecture.Course.Title,
+            TeacherUsername = lecture.Teacher.Username,
+            TeacherFirstName = lecture.Teacher.FirstName,
+            TeacherLastName = lecture.Teacher.LastName
+        };
+    }
+
+
+
     //Comment DTOs
 
     public Comment MapCreate(CommentCreateDto dto, User author)

@@ -10,7 +10,8 @@ public class LectureResponseDto
     public string AssignmentLink { get; set; } = null!;
     public string CourseTitle { get; set; } = null!;
     public string TeacherUsername { get; set; } = null!;
-
+    public string TeacherFirstName { get; set; } = null!;
+    public string TeacherLastName { get; set; } = null!;
     public IList<string> WatchedBy { get; set; } = null!;
     public IList<string> Notes { get; set; } = null!;
     public IList<string> Comments { get; set; } = null!;

@@ -195,9 +195,9 @@ public class CourseApiController : ControllerBase
         try
         {
             var lectures = courseService.GetLectures(courseId);
-            //var lecturesDto = lectures.Select(lecture => mapper.MapResponse(lecture));
+            var lecturesDto = lectures.Select(lecture => mapper.MapResponse(lecture));
 
-            return Ok(lectures);
+            return Ok(lecturesDto);
         }
         catch (EntityNotFoundException e)
         {
@@ -210,14 +210,14 @@ public class CourseApiController : ControllerBase
     }
 
     [HttpGet("{courseId}/Lectures/{lectureId}")]
-    public IActionResult GetLectures(int courseId, int lectureId)
+    public IActionResult GetLecture(int courseId, int lectureId)
     {
         try
         {
             var lecture = courseService.GetLectureById(courseId, lectureId);
-            //var lectureDto = mapper.MapResponse(lecture);
+            var lectureDto = mapper.MapResponse(lecture);
 
-            return Ok(lecture);
+            return Ok(lectureDto);
         }
         catch (EntityNotFoundException e)
         {
