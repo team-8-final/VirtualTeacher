@@ -20,5 +20,11 @@ namespace VirtualTeacher.Repositories.Contracts
 
         List<Lecture> GetLectures(Course course);
         Lecture? GetLecture(int courseId, int lectureId);
+
+        List<Comment> GetComments(Lecture lecture);
+        Comment? GetComment(int lectureId, int commentId);
+        Comment? CreateComment(Lecture lecture, User user, CommentCreateDto dto);
+        Comment? UpdateComment(Comment comment, CommentCreateDto dto);
+        bool DeleteComment(Comment comment);
     }
 }

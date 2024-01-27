@@ -1,5 +1,4 @@
 ﻿using VirtualTeacher.Models;
-using VirtualTeacher.Models.DTOs.Comment;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.DTOs.User;
 
@@ -83,31 +82,7 @@ public class ModelMapper
         };
     }
 
-    // Lecture DTOs
-    public LectureResponseDto MapResponse(Lecture lecture)
-    {
-        return new LectureResponseDto
-        {
-            Title = lecture.Title,
-            Description = lecture.Description,
-            VideoLink = lecture.VideoLink,
-            AssignmentLink = lecture.AssignmentLink,
-            CourseTitle = lecture.Course.Title,
-            TeacherUsername = lecture.Teacher.Username,
-
-
-            WatchedBy = new List<string>(
-                lecture.WatchedBy.Select(student => student.Username)),
-
-            Notes = new List<string>(
-                lecture.Notes.Select(note => note.Content)),
-
-            Comments = new List<string>(
-                lecture.Comments.Select(comment => comment.Content)),
-        };
-    }
-
-    // Comment DTOs
+    //Comment DTOs
 
     public Comment MapCreate(CommentCreateDto dto, User author)
     {
@@ -116,7 +91,7 @@ public class ModelMapper
             CreatedOn = DateTime.Now,
             AuthorId = author.Id,
             Author = author,
-            LectureId = dto.LectureId,
+            //LectureId = dto.LectureId,
             Content = dto.Content
         };
     }
@@ -126,6 +101,17 @@ public class ModelMapper
         return new Comment()
         {
             Content = dto.Content
+        };
+    }
+
+    public CommentResponseDto MapResponse(Comment comment)
+    {
+        return new CommentResponseDto()
+        {
+            Id = comment.Id,
+            AuthorUsername = comment.Author.Username,
+            Content = comment.Content,
+            CreatedOn = comment.CreatedOn
         };
     }
 }

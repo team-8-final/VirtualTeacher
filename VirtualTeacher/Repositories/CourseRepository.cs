@@ -244,4 +244,65 @@ public class CourseRepository : ICourseRepository
             }
         }
     }
+
+    //Comments
+
+    public List<Comment> GetComments(Lecture lecture)
+    {
+        var commentList = context.Comments
+            .Include(c => c.Lecture)
+            .Include(c => c.Author)
+            .Where(c => c.Lecture == lecture)
+            .ToList();
+
+        return commentList;
+    }
+
+    public Comment? GetComment(int lectureId, int commentId)
+    {
+        var comment = context.Comments
+            .Include(c => c.Lecture)
+            .Include(c => c.Author)
+            .Where(c => c.LectureId == lectureId)
+            .FirstOrDefault(c => c.Id == commentId);
+
+        return comment;
+    }
+
+
+    public Comment? CreateComment(Lecture lecture, User user, CommentCreateDto dto)
+    {
+        var comment = new Comment()
+        {
+            Lecture = lecture,
+            Author = user,
+            Content = dto.Content
+        };
+
+        context.Comments.Add(comment);
+        context.SaveChanges();
+
+        return comment;
+    }
+
+    public Comment? UpdateComment(Comment comment, CommentCreateDto dto)
+    {
+        comment.Content = dto.Content;
+        comment.IsEdited = true;
+        comment.EditDate = DateTime.Now;
+
+        context.SaveChanges();
+
+        return comment;
+    }
+
+    public bool DeleteComment(Comment comment)
+    {
+        context.Comments.Remove(comment);
+        context.SaveChanges();
+
+        return true;
+    }
+
+
 }

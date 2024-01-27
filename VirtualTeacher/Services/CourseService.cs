@@ -151,4 +151,69 @@ public class CourseService : ICourseService
 
         return foundLecture ?? throw new EntityNotFoundException($"Lecture with id '{lectureId}' was not found.");
     }
+
+
+    //Comments
+    public List<Comment> GetComments(int courseId, int lectureId)
+    {
+        var lecture = GetLectureById(courseId, lectureId);
+        var commentList = courseRepository.GetComments(lecture);
+
+        if (commentList.Count == 0)
+            throw new EntityNotFoundException($"No comments found for lecture with id '{lectureId}'.");
+
+        return commentList;
+    }
+
+    public Comment CreateComment(int courseId, int lectureId, CommentCreateDto dto)
+    {
+        var lecture = GetLectureById(courseId, lectureId);
+        var loggedUser = authService.GetLoggedUser();
+
+        var createdComment = courseRepository.CreateComment(lecture, loggedUser, dto);
+
+        return createdComment ?? throw new Exception($"The comment could not be created.");
+    }
+
+    public Comment GetCommentById(int courseId, int lectureId, int commentId)
+    {
+        var comment = courseRepository.GetComment(lectureId, commentId);
+
+        return comment ?? throw new Exception($"Comment with id '{commentId}' was not found.");
+    }
+
+    public Comment UpdateComment(int courseId, int lectureId, int commentId, CommentCreateDto dto)
+    {
+        var comment = courseRepository.GetComment(lectureId, commentId);
+        var loggedUser = authService.GetLoggedUser();
+
+        if (comment == null)
+            throw new EntityNotFoundException($"Comment with id '{commentId}' was not found.");
+
+        if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != comment.AuthorId)
+            throw new UnauthorizedAccessException($"A comment can be updated only by its author or an admin.");
+
+        var updatedComment = courseRepository.UpdateComment(comment, dto);
+
+        return updatedComment ?? throw new Exception($"The comment could not be updated.");
+    }
+
+    public string DeleteComment(int courseId, int lectureId, int commentId)
+    {
+        var comment = courseRepository.GetComment(lectureId, commentId);
+        var loggedUser = authService.GetLoggedUser();
+
+        if (comment == null)
+            throw new EntityNotFoundException($"Comment with id '{commentId}' was not found.");
+
+        if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != comment.AuthorId)
+            throw new UnauthorizedAccessException($"A comment can be deleted only by its author or an admin.");
+
+        bool? commentDeleted = courseRepository.DeleteComment(comment);
+
+        if (commentDeleted == true)
+            return $"Comment with id '{commentId}' was deleted.";
+
+        throw new Exception($"Comment with id '{commentId}' could not be deleted.");
+    }
 }

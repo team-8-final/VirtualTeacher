@@ -195,9 +195,9 @@ public class CourseApiController : ControllerBase
         try
         {
             var lectures = courseService.GetLectures(courseId);
-            var lecturesDto = lectures.Select(lecture => mapper.MapResponse(lecture));
+            //var lecturesDto = lectures.Select(lecture => mapper.MapResponse(lecture));
 
-            return Ok(lecturesDto);
+            return Ok(lectures);
         }
         catch (EntityNotFoundException e)
         {
@@ -215,9 +215,9 @@ public class CourseApiController : ControllerBase
         try
         {
             var lecture = courseService.GetLectureById(courseId, lectureId);
-            var lectureDto = mapper.MapResponse(lecture);
+            //var lectureDto = mapper.MapResponse(lecture);
 
-            return Ok(lectureDto);
+            return Ok(lecture);
         }
         catch (EntityNotFoundException e)
         {
@@ -228,4 +228,78 @@ public class CourseApiController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
         }
     }
+
+    //Comments
+    [HttpGet("{courseId}/Lectures/{lectureId}/Comments")]
+    public IActionResult GetComments(int courseId, int lectureId)
+    {
+        try
+        {
+            var comments = courseService.GetComments(courseId, lectureId);
+            var commentsDto = comments.Select(comment => mapper.MapResponse(comment));
+
+            return Ok(commentsDto);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+    [Authorize]
+    [HttpPost("{courseId}/Lectures/{lectureId}/Comments")]
+    public IActionResult CreateComment(int courseId, int lectureId, [FromBody] CommentCreateDto dto)
+    {
+        try
+        {
+            Comment createdComment = courseService.CreateComment(courseId, lectureId, dto);
+            var commentDto = mapper.MapResponse(createdComment);
+
+            return StatusCode(StatusCodes.Status201Created, commentDto);
+        }
+        catch (DuplicateEntityException e)
+        {
+            return Conflict(e.Message);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
+    public IActionResult UpdateComment(int courseId, int lectureId, int commentId, [FromBody] CommentCreateDto dto)
+    {
+        try
+        {
+            var updatedcomment = courseService.UpdateComment(courseId, lectureId, commentId, dto);
+            var commentDto = mapper.MapResponse(updatedcomment);
+
+            return Ok(commentDto);
+        }
+        catch (DuplicateEntityException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            return Unauthorized(e.Message);
+        }
+    }
+
+    [Authorize]
+    [HttpDelete("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
+    public IActionResult DeleteComment(int courseId, int lectureId, int commentId)
+    {
+        try
+        {
+            return Ok(courseService.DeleteComment(courseId, lectureId, commentId));
+        }
+        catch (DuplicateEntityException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            return Unauthorized(e.Message);
+        }
+    }
+
 }
