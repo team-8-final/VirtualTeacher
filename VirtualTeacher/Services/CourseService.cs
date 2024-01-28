@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.Course;
@@ -154,9 +155,25 @@ public class CourseService : ICourseService
     }
 
     //delete
-    //create
     //update
 
+    public Lecture UpdateLecture(LectureUpdateDto dto, int courseId, int lectureId)
+    {
+        var lecture = GetLectureById(courseId, lectureId);
+        var loggedUser = authService.GetLoggedUser();
+
+        if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != lecture.TeacherId)
+            throw new UnauthorizedAccessException($"A lecture can be updated only by its author or an admin.");
+
+        lecture.Title = dto.Title;
+        lecture.Description = dto.Description;
+        lecture.VideoLink = dto.VideoLink;
+        lecture.AssignmentLink = dto.AssignmentLink;
+        //lecture.CourseId = dto.CourseId;
+        //lecture.TeacherId = dto.TeacherId;
+        
+        return courseRepository.UpdateLecture(lecture);
+    }
 
     public Lecture CreateLecture(LectureCreateDto dto, int courseId)
     {

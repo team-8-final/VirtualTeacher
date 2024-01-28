@@ -1,4 +1,6 @@
-﻿using VirtualTeacher.Models;
+﻿using System.Collections.Generic;
+using VirtualTeacher.Models;
+using VirtualTeacher.Models.DTOs;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.DTOs.User;
 
@@ -60,8 +62,13 @@ public class ModelMapper
             EnrolledStudents = new List<string>(
                 course.EnrolledStudents.Select(student => student.Username)),
 
-            Lectures = new List<string>(
-                course.Lectures.Select(lecture => lecture.Title)),
+            Lectures = new List<LectureTitleIdDto>(
+
+                course.Lectures.Select(lecture => new LectureTitleIdDto
+                {
+                    Id = lecture.Id,
+                    Title = lecture.Title
+                }).ToList()),
 
             Ratings = new List<RatingResponseDto>(new List<RatingResponseDto>(
                 course.Ratings.Select(MapResponse))),

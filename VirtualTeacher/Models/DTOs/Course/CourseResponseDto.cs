@@ -21,7 +21,7 @@ public class CourseResponseDto
     public bool? Published { get; set; }
 
     public IList<string> EnrolledStudents { get; set; } = null!;
-    public IList<string> Lectures { get; set; } = null!;
+    public IList<LectureTitleIdDto> Lectures { get; set; } = null!;
     public IList<RatingResponseDto> Ratings { get; set; } = null!;
 
     public IList<string> ActiveTeachers { get; set; } = null!;

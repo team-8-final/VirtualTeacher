@@ -22,7 +22,7 @@ public class CourseRepository : ICourseRepository
         return context.Courses
             .Include(course => course.Lectures)
             .Include(course => course.Ratings)
-            .ThenInclude(rating => rating.Student)
+                .ThenInclude(rating => rating.Student)
             .Include(course => course.ActiveTeachers)
             .Include(course => course.EnrolledStudents)
             .Where(course => course.IsDeleted == false);
@@ -141,6 +141,7 @@ public class CourseRepository : ICourseRepository
     public List<Lecture> GetLectures(Course course)
     {
         var lecturesList = context.Lectures
+            .Include(lecture => lecture.Id)
             .Include(lecture => lecture.Course)
             .Include(lecture => lecture.Teacher)
             .Include(lecture => lecture.WatchedBy)
@@ -167,12 +168,17 @@ public class CourseRepository : ICourseRepository
     }
 
     //delete
-    //create
     //update
+
+    public Lecture UpdateLecture(Lecture lecture)
+    {
+        context.SaveChanges();
+        return lecture;
+    }
+
 
     public Lecture? CreateLecture(LectureCreateDto dto, User teacher, int courseId)
     {
-
         var lecture = new Lecture()
         {
             Title = dto.Title,
