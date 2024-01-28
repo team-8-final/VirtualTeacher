@@ -238,7 +238,7 @@ public class CourseApiController : ControllerBase
     //todo delete
 
 
-    //[Authorize]
+    [Authorize]
     [HttpPut("{courseId}/Lectures/{lectureId}/")]
     public IActionResult UpdateLecture(int courseId, int lectureId, [FromBody] LectureUpdateDto dto)
     {
@@ -247,10 +247,6 @@ public class CourseApiController : ControllerBase
             Lecture newLecture = courseService.UpdateLecture(dto, courseId, lectureId);
             var lectureResponseDto = mapper.MapResponse(newLecture);
             return StatusCode(StatusCodes.Status201Created, lectureResponseDto);
-        }
-        catch (ArgumentNullException e)
-        {
-            return Conflict(e.Message);
         }
         catch (EntityNotFoundException e)
         {
@@ -265,9 +261,6 @@ public class CourseApiController : ControllerBase
             return Conflict("Something went wrong");
         }
 
-
-
-        return BadRequest();
     }
 
     [Authorize]

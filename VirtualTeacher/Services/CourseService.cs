@@ -159,6 +159,7 @@ public class CourseService : ICourseService
 
     public Lecture UpdateLecture(LectureUpdateDto dto, int courseId, int lectureId)
     {
+
         var lecture = GetLectureById(courseId, lectureId);
         var loggedUser = authService.GetLoggedUser();
 
