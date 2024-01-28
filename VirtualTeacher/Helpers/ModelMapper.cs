@@ -84,23 +84,31 @@ public class ModelMapper
 
     //Lecture DTOs
 
-
     public LectureResponseDto MapResponse(Lecture lecture)
     {
         return new LectureResponseDto()
         {
+            Id = lecture.Id,
             Title = lecture.Title,
             Description = lecture.Description,
             VideoLink = lecture.VideoLink,
             AssignmentLink = lecture.AssignmentLink,
-            CourseTitle = lecture.Course.Title,
             TeacherUsername = lecture.Teacher.Username,
             TeacherFirstName = lecture.Teacher.FirstName,
             TeacherLastName = lecture.Teacher.LastName
         };
     }
 
-
+    public Lecture MapCreate(LectureCreateDto dto, int courseId)
+    {
+        return new Lecture()
+        {
+            Description = dto.Description,
+            VideoLink = dto.VideoLink,
+            AssignmentLink = dto.AssignmentLink,
+            CourseId = courseId
+        };
+    }
 
     //Comment DTOs
 

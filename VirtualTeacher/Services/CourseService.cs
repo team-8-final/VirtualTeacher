@@ -131,6 +131,7 @@ public class CourseService : ICourseService
         return ratingRemoved ? "Rating was removed." : "Rating could not be removed.";
     }
 
+    //Lectures
     public List<Lecture> GetLectures(int courseId)
     {
         var course = GetCourseById(courseId);
@@ -150,6 +151,20 @@ public class CourseService : ICourseService
         var foundLecture = courseRepository.GetLecture(courseId, lectureId);
 
         return foundLecture ?? throw new EntityNotFoundException($"Lecture with id '{lectureId}' was not found.");
+    }
+
+    //delete
+    //create
+    //update
+
+
+    public Lecture CreateLecture(LectureCreateDto dto, int courseId)
+    {
+        var loggedUser = authService.GetLoggedUser();
+
+        var createdLecture = courseRepository.CreateLecture(dto, loggedUser, courseId);
+
+        return createdLecture ?? throw new ArgumentNullException($"The lecture could not be created.");
     }
 
 

@@ -5,6 +5,7 @@ using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.QueryParameters;
+using VirtualTeacher.Services;
 using VirtualTeacher.Services.Contracts;
 
 namespace VirtualTeacher.Controllers.API;
@@ -189,6 +190,8 @@ public class CourseApiController : ControllerBase
         }
     }
 
+    // Lectures
+
     [HttpGet("{courseId}/Lectures")]
     public IActionResult GetLectures(int courseId)
     {
@@ -209,6 +212,8 @@ public class CourseApiController : ControllerBase
         }
     }
 
+
+
     [HttpGet("{courseId}/Lectures/{lectureId}")]
     public IActionResult GetLecture(int courseId, int lectureId)
     {
@@ -228,6 +233,33 @@ public class CourseApiController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
         }
     }
+
+
+    //todo delete
+ 
+    //todo update
+
+    [HttpPost("{courseId}")]
+    public IActionResult CreateLecture([FromRoute] int courseId, LectureCreateDto dto)
+    {
+        try
+        {
+            Lecture newLecture = courseService.CreateLecture(dto, courseId);
+            var lectureResponseDto = mapper.MapResponse (newLecture);
+            return StatusCode(StatusCodes.Status201Created, lectureResponseDto);
+        }
+        catch(ArgumentNullException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (Exception)
+        {
+            return Conflict("Something went wrong");
+        }
+    }
+
+
+
 
     //Comments
     [HttpGet("{courseId}/Lectures/{lectureId}/Comments")]

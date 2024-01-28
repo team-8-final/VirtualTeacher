@@ -19,6 +19,8 @@ public interface ICourseService
     List<Lecture> GetLectures(int courseId);
     Lecture GetLectureById(int courseId, int lectureId);
 
+    Lecture CreateLecture(LectureCreateDto dto, int courseId);
+
     List<Comment> GetComments(int courseId, int lectureId);
     Comment GetCommentById(int courseId, int lectureId, int commentId);
     Comment CreateComment(int courseId, int lectureId, CommentCreateDto dto);

@@ -136,6 +136,8 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
+
+    //Lectures
     public List<Lecture> GetLectures(Course course)
     {
         var lecturesList = context.Lectures
@@ -163,6 +165,30 @@ public class CourseRepository : ICourseRepository
 
         return lecture;
     }
+
+    //delete
+    //create
+    //update
+
+    public Lecture? CreateLecture(LectureCreateDto dto, User teacher, int courseId)
+    {
+
+        var lecture = new Lecture()
+        {
+            Title = dto.Title,
+            Description = dto.Description,
+            VideoLink = dto.VideoLink,
+            AssignmentLink = dto.AssignmentLink,
+            TeacherId = teacher.Id,
+            CourseId = courseId
+        };
+
+        context.Lectures.Add(lecture);
+        context.SaveChanges();
+
+        return lecture;
+    }
+
 
     public IList<Course> FilterBy(CourseQueryParameters parameters)
     {
@@ -268,7 +294,6 @@ public class CourseRepository : ICourseRepository
 
         return comment;
     }
-
 
     public Comment? CreateComment(Lecture lecture, User user, CommentCreateDto dto)
     {
