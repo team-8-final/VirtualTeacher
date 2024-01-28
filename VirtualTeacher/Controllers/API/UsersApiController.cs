@@ -6,6 +6,7 @@ using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.QueryParameters;
+using VirtualTeacher.Services;
 using VirtualTeacher.Services.Contracts;
 
 namespace VirtualTeacher.Controllers.API
@@ -67,9 +68,7 @@ namespace VirtualTeacher.Controllers.API
             try
             {
                 authService.ValidateAdminRole();
-                bool userDeleted = userService.Delete(id);
-
-                return Ok(userDeleted);
+                return Ok (userService.Delete(id));
             }
             catch (EntityNotFoundException e)
             {
@@ -87,10 +86,10 @@ namespace VirtualTeacher.Controllers.API
             try
             {
                 authService.ValidateAuthorOrAdmin(id);
-                var updatedUser = userService.Update(id, mapper.MapUpdate(updateData));
-                var dto = mapper.MapResponse(updatedUser);
+                var updatedUser = userService.Update(id, updateData);
+                var userDto = mapper.MapResponse(updatedUser);
 
-                return Ok(dto);
+                return Ok(userDto);
             }
             catch (EntityNotFoundException e)
             {
@@ -109,9 +108,9 @@ namespace VirtualTeacher.Controllers.API
             {
                 authService.ValidateAdminRole();
                 var updatedUser = userService.ChangeRole(id, roleId);
-                var dto = mapper.MapResponse(updatedUser);
+                var userDto = mapper.MapResponse(updatedUser);
 
-                return Ok(dto);
+                return Ok(userDto);
             }
             catch (InvalidUserInputException e)
             {

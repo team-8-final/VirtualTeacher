@@ -29,9 +29,7 @@ public class User
     [MinLength(2), MaxLength(20)]
     public string LastName { get; set; } = null!;
 
-    [Required]
-    [MaxLength(32768)]
-    public string? AvatarUrl { get; set; }
+    public string? AvatarUrl { get; set; } = "default.jpg";
 
     [Required]
     public UserRole UserRole { get; set; }

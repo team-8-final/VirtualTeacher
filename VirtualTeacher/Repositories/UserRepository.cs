@@ -4,6 +4,7 @@ using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models.Enums;
+using VirtualTeacher.Models.DTOs.User;
 
 namespace VirtualTeacher.Repositories
 {
@@ -23,31 +24,44 @@ namespace VirtualTeacher.Repositories
                 .Where(u => !u.IsDeleted);
         }
 
-        public User Create(User user)
+        public User? Create(UserCreateDto dto)
         {
-            context.Users.Add(user);
+            var newUser = new User()
+            {
+                Username = dto.Username,
+                Email = dto.Email,
+                Password = dto.Password,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                UserRole = dto.UserRole
+            };
+
+            context.Users.Add(newUser);
             context.SaveChanges();
+
+            return newUser;
+        }
+
+        public User? GetById(int id)
+        {
+            User? user = GetUsers().FirstOrDefault(u => u.Id == id);
 
             return user;
         }
 
-        public User GetById(int id)
+        public User? GetByName(string username)
         {
-            User user = GetUsers().FirstOrDefault(u => u.Id == id);
+            User? user = GetUsers().FirstOrDefault(u => u.Username == username);
 
-            return user ?? throw new EntityNotFoundException($"User not found!");
+            return user;
         }
 
-        public User GetByName(string username)
-        {
-            User user = context.Users.FirstOrDefault(u => u.Username == username);
-
-            return user ?? throw new EntityNotFoundException($"User not found!");
-        }
-
-        public User Update(int id, User updateData)
+        public User? Update(int id, UserUpdateDto updateData)
         {
             var updatedUser = GetById(id);
+
+            if (updatedUser == null)
+                return null;
 
             updatedUser.FirstName = updateData.FirstName ?? updatedUser.FirstName;
             updatedUser.LastName = updateData.LastName ?? updatedUser.LastName;
@@ -61,14 +75,12 @@ namespace VirtualTeacher.Repositories
             return updatedUser;
         }
 
-        public User ChangeRole(int id, int roleId)
+        public User? ChangeRole(int id, int roleId)
         {
             var user = GetById(id);
 
-            if (Convert.ToInt32(user.UserRole) == roleId)
-            {
-                throw new InvalidUserInputException($"User is already a {user.UserRole}!");
-            }
+            if (user == null)
+                return null;
 
             user.UserRole = (UserRole)roleId;
             context.SaveChanges();
@@ -76,12 +88,16 @@ namespace VirtualTeacher.Repositories
             return user;
         }
 
-        public bool Delete(int id)
+        public bool? Delete(int id)
         {
-            User user = GetById(id);
-            user.IsDeleted = true;
+            User? user = GetById(id);
 
+            if (user == null)
+                return null;
+
+            user.IsDeleted = true;
             context.SaveChanges();
+
             return true;
         }
 

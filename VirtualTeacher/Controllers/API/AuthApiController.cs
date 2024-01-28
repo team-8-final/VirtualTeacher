@@ -69,7 +69,7 @@ namespace VirtualTeacher.Controllers.API
                     throw new InvalidOperationException("You cannot create an account with this role");
                 }
 
-                User createdUser = userService.Create(mapper.MapCreate(userDto));
+                User createdUser = userService.Create(userDto);
 
                 UserResponseDto createdUserDto = new UserResponseDto();
                 createdUserDto = mapper.MapResponse(createdUser);
