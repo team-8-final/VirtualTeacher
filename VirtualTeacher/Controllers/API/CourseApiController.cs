@@ -236,8 +236,16 @@ public class CourseApiController : ControllerBase
 
 
     //todo delete
- 
+
     //todo update
+
+
+    [HttpPut]
+    public IActionResult UpdateLecture(int courseId, int lectureId)
+    {
+
+    }
+
 
     [HttpPost("{courseId}")]
     public IActionResult CreateLecture([FromRoute] int courseId, LectureCreateDto dto)
@@ -249,6 +257,10 @@ public class CourseApiController : ControllerBase
             return StatusCode(StatusCodes.Status201Created, lectureResponseDto);
         }
         catch(ArgumentNullException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch(EntityNotFoundException e)
         {
             return Conflict(e.Message);
         }
