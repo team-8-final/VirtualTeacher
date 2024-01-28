@@ -34,6 +34,7 @@ public class CourseService : ICourseService
 
     public Course CreateCourse(CourseCreateDto dto)
     {
+
         var loggedUser = authService.GetLoggedUser();
         var createdCourse = courseRepository.CreateCourse(dto, loggedUser);
 
@@ -164,7 +165,7 @@ public class CourseService : ICourseService
         var loggedUser = authService.GetLoggedUser();
 
         if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != lecture.TeacherId)
-            throw new UnauthorizedAccessException($"A lecture can be updated only by its author or an admin.");
+            throw new UnauthorizedAccessException($"A lecture can be updated only by its Author or an Admin.");
 
         lecture.Title = dto.Title;
         lecture.Description = dto.Description;
@@ -180,20 +181,18 @@ public class CourseService : ICourseService
     {
         var loggedUser = authService.GetLoggedUser();
 
-        if (loggedUser == null)
-        {
-
-        }
-
         var course = GetCourseById(courseId);
         if (course == null)
         {
             throw new EntityNotFoundException($"Course with id {courseId} not found");
         }
+        //check if the user has created the course
+        if (loggedUser.UserRole != UserRole.Admin && loggedUser.CreatedCourses.Any(c => c.Id == courseId))
+            throw new UnauthorizedAccessException($"A lecture can be created only by the Course creator or an Admin.");
 
-        var createdLecture = courseRepository.CreateLecture(dto, loggedUser, courseId);
+        Lecture createdLecture = courseRepository.CreateLecture(dto, loggedUser, courseId);
 
-        return createdLecture ?? throw new ArgumentNullException($"The lecture could not be created.");
+        return createdLecture!;
     }
 
 
@@ -216,14 +215,20 @@ public class CourseService : ICourseService
 
         var createdComment = courseRepository.CreateComment(lecture, loggedUser, dto);
 
-        return createdComment ?? throw new Exception($"The comment could not be created.");
+        if (string.IsNullOrEmpty(dto.Content))
+        {
+            throw new InvalidUserInputException("The content of the comment cannot be empty");
+        }
+
+        return createdComment!;
     }
 
     public Comment GetCommentById(int courseId, int lectureId, int commentId)
     {
+        var course = courseRepository.GetCourseById(courseId); // checks for exception for the course
         var comment = courseRepository.GetComment(lectureId, commentId);
 
-        return comment ?? throw new Exception($"Comment with id '{commentId}' was not found.");
+        return comment ?? throw new EntityNotFoundException($"Comment with id '{commentId}' was not found.");
     }
 
     public Comment UpdateComment(int courseId, int lectureId, int commentId, CommentCreateDto dto)

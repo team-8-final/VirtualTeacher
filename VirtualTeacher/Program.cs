@@ -11,6 +11,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace VirtualTeacher;
 
@@ -82,6 +84,14 @@ public class Program
                     new string[]{}
                     }
                 });
+
+            //options.TagActionsBy(api => new List<string> { api.GroupName ?? "Default" });
+            options.OperationFilter<SwaggerTagsFilter>();
+
+            // using System.Reflection;
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
         });
 
 
@@ -126,6 +136,7 @@ public class Program
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
+
         }
 
 
