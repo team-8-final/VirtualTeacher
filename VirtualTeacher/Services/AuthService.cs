@@ -116,8 +116,6 @@ namespace VirtualTeacher.Services
         {
             int loggedId = GetLoggedUserId();
 
-
-
             if (loggedId != -1)
             {
                 var loggedUser = userRepository.GetById(loggedId);

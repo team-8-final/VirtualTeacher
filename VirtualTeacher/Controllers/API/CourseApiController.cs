@@ -240,11 +240,11 @@ public class CourseApiController : ControllerBase
     //todo update
 
 
-    [HttpPut]
-    public IActionResult UpdateLecture(int courseId, int lectureId)
-    {
+    //[HttpPut]
+    //public IActionResult UpdateLecture(int courseId, int lectureId)
+    //{
 
-    }
+    //}
 
 
     [HttpPost("{courseId}")]
@@ -261,6 +261,10 @@ public class CourseApiController : ControllerBase
             return Conflict(e.Message);
         }
         catch(EntityNotFoundException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch(UnauthorizedOperationException e)
         {
             return Conflict(e.Message);
         }

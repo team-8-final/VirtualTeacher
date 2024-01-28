@@ -162,6 +162,17 @@ public class CourseService : ICourseService
     {
         var loggedUser = authService.GetLoggedUser();
 
+        if (loggedUser == null)
+        {
+
+        }
+
+        var course = GetCourseById(courseId);
+        if (course == null)
+        {
+            throw new EntityNotFoundException($"Course with id {courseId} not found");
+        }
+
         var createdLecture = courseRepository.CreateLecture(dto, loggedUser, courseId);
 
         return createdLecture ?? throw new ArgumentNullException($"The lecture could not be created.");
