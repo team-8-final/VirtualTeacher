@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using System.ComponentModel.Design;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models;
@@ -170,7 +171,7 @@ public class CourseService : ICourseService
             && loggedUser.Id != lecture.TeacherId
             && loggedUser != course.ActiveTeachers.FirstOrDefault(at => at.Id == loggedUser.Id))
         {
-            throw new UnauthorizedAccessException($"A lecture can be updated only by the Courses' Teachers or an Admin.");
+            throw new UnauthorizedAccessException($"A lecture can be updated only by Teachers in the same Course or an Admin.");
         }
 
 
@@ -195,6 +196,35 @@ public class CourseService : ICourseService
         Lecture createdLecture = courseRepository.CreateLecture(dto, loggedUser, courseId);
 
         return createdLecture!;
+    }
+
+    public string DeleteLecture(int courseId, int lectureId)
+    {
+        Lecture lectureToDelete = GetLectureById(courseId, lectureId);
+        string lectureTitle = lectureToDelete.Title;
+
+        var course = GetCourseById(courseId);
+        var loggedUser = authService.GetLoggedUser();
+
+        if (loggedUser.UserRole != UserRole.Admin
+           && loggedUser.Id != lectureToDelete.TeacherId
+           && loggedUser != course.ActiveTeachers.FirstOrDefault(at => at.Id == loggedUser.Id))
+        {
+            throw new UnauthorizedAccessException($"A lecture can be deleted only by Teachers in the same Course or an Admin.");
+        }
+
+
+
+        bool lectureDeleted = courseRepository.DeleteLecture(lectureToDelete);
+
+        if (lectureDeleted)
+        {
+            return $"Lecture \"{lectureTitle}\" was successfully deleted from Course {course.Title}";
+        }
+        else
+        {
+            return "The Lecture was not deleted. It may have been null";
+        }
     }
 
 

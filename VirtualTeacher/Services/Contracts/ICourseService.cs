@@ -23,6 +23,7 @@ public interface ICourseService
 
     Lecture UpdateLecture(LectureUpdateDto dto, int courseId, int lectureId);
 
+    public string DeleteLecture(int courseId, int lectureId);
     List<Comment> GetComments(int courseId, int lectureId);
     Comment GetCommentById(int courseId, int lectureId, int commentId);
     Comment CreateComment(int courseId, int lectureId, CommentCreateDto dto);

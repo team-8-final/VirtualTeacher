@@ -281,6 +281,18 @@ public class CourseRepository : ICourseRepository
         }
     }
 
+    public bool DeleteLecture (Lecture lectureToDelete)
+    {
+        if (lectureToDelete == null)
+        {
+            return false;
+        }
+        
+        context.Lectures.Remove(lectureToDelete);
+        return context.SaveChanges() > 0;
+    } 
+
+
     //Comments
 
     public List<Comment> GetComments(Lecture lecture)

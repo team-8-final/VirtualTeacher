@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
@@ -407,7 +408,7 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="404">A Course with this id was not found</response>
     /// <response code="201">The Lecture was succesfully created</response>
-    /// <response code="401">A Lecrute can only be created by the COurse creator or an Admin</response>
+    /// <response code="401">A Lecrute can only be created by the Course Teachers or an Admin</response>
     [Authorize]
     [HttpPost("{courseId}")]
     [Authorize(Roles = "Teacher, Admin")]
@@ -437,30 +438,35 @@ public class CourseApiController : ControllerBase
         }
     }
 
-
-
-    //public IActionResult DeleteLecture(int courseId, int lectureId)
-    //{
-    //    try
-    //    {
-    //        Lecture newLecture = courseService.UpdateLecture(dto, courseId, lectureId);
-    //        var lectureResponseDto = mapper.MapResponse(newLecture);
-    //        return Ok(lectureResponseDto);
-    //    }
-
-    //    catch (EntityNotFoundException e)
-    //    {
-    //        return NotFound(e.Message);
-    //    }
-    //    catch (UnauthorizedAccessException e)
-    //    {
-    //        return Unauthorized(e.Message);
-    //    }
-    //    catch (Exception)
-    //    {
-    //        return Conflict("Something went wrong");
-    //    }
-    //}
+    /// <summary>
+    /// Deletes a Lecture from a Course
+    /// <returns>
+    /// A message with the result
+    /// </returns>
+    /// <response code="404">A Course or Lecture with this id was not found</response>
+    /// <response code="200">The Lecture was succesfully deleted</response>
+    /// <response code="401">A Lecrute can only be deleted by the Course Teachers or an Admin</response>
+    [Authorize]
+    [HttpDelete]
+    [Authorize(Roles = "Teacher, Admin")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    public IActionResult DeleteLecture(int courseId, int lectureId)
+    {
+        try
+        {
+            return Ok(courseService.DeleteLecture(courseId, lectureId));
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
 
     //Comments
 

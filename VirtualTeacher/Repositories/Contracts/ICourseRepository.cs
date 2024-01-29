@@ -21,6 +21,7 @@ namespace VirtualTeacher.Repositories.Contracts
         List<Lecture> GetLectures(Course course);
         Lecture? GetLecture(int courseId, int lectureId);
         public Lecture? CreateLecture(LectureCreateDto dto, User teacher,int courseId);
+        public bool DeleteLecture(Lecture lectureToDelete);
 
         Lecture UpdateLecture(Lecture lecture, LectureUpdateDto dto);
         List<Comment> GetComments(Lecture lecture);
