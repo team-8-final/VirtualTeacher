@@ -437,6 +437,7 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The list was successfully retrieved</response>
     /// <response code="404">The Course or Lecture was not found. Or there are no Comments under this Lecture. See message for details</response>
     [HttpGet("{courseId}/Lectures/{lectureId}/Comments")]
+    [Tags("Lecture comments")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
 
@@ -464,10 +465,12 @@ public class CourseApiController : ControllerBase
     /// <returns>
     /// The newly created Comment details
     /// </returns>
+    /// <response code="201">The comment was successfully created</response>
     /// <response code="400">If the item is null</response>
     /// <response code="404">The item was not found</response>
     [Authorize]
     [HttpPost("{courseId}/Lectures/{lectureId}/Comments")]
+    [Tags("Lecture comments")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     public IActionResult CreateComment(int courseId, int lectureId, [FromBody] CommentCreateDto dto)
@@ -482,6 +485,10 @@ public class CourseApiController : ControllerBase
         catch (InvalidUserInputException e)
         {
             return Conflict(e.Message);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
         }
     }
 
@@ -500,6 +507,7 @@ public class CourseApiController : ControllerBase
     /// <response code="404">Either the Course the Lecture or the Comment were not found. See message for details</response>
     [Authorize]
     [HttpPut("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
+    [Tags("Lecture comments")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(404)]
@@ -541,6 +549,7 @@ public class CourseApiController : ControllerBase
     /// <response code="404">Either the Course the Lecture or the Comment were not found. See message for details</response>
     [Authorize]
     [HttpDelete("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
+    [Tags("Lecture comments")]
     public IActionResult DeleteComment(int courseId, int lectureId, int commentId)
     {
         try
@@ -550,6 +559,10 @@ public class CourseApiController : ControllerBase
         catch (UnauthorizedAccessException e)
         {
             return Unauthorized(e.Message);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
         }
     }
 
