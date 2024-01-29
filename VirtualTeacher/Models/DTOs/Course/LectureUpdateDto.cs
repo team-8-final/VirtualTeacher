@@ -13,7 +13,6 @@ namespace VirtualTeacher.Models.DTOs.Course
         public string? Description { get; set; }
         public string VideoLink { get; set; } = null!;
         public string AssignmentLink { get; set; } = null!;
-        //public int CourseId { get; set; }
-        //public int TeacherId { get; set; }
+
     }
 }

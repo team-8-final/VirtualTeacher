@@ -166,13 +166,13 @@ public class CourseService : ICourseService
 
         if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != lecture.TeacherId)
             throw new UnauthorizedAccessException($"A lecture can be updated only by its Author or an Admin.");
+        // todo to allow the co-teachers to be able to edit the lecture of the other teachers in the
 
         lecture.Title = dto.Title;
         lecture.Description = dto.Description;
         lecture.VideoLink = dto.VideoLink;
         lecture.AssignmentLink = dto.AssignmentLink;
-        //lecture.CourseId = dto.CourseId;
-        //lecture.TeacherId = dto.TeacherId;
+
         
         return courseRepository.UpdateLecture(lecture);
     }

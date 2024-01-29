@@ -34,6 +34,7 @@ public class CourseApiController : ControllerBase
     ///<response code="200">The collection has been successfully retrieved</response>
     [HttpGet("")]
     [ProducesResponseType(200)]
+    [Tags("Course")]
     public IActionResult GetCourses([FromQuery] CourseQueryParameters parameters)
     {
         try
@@ -62,6 +63,7 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The Course has been successfully retrieved</response>
     [ProducesResponseType(404)]
     [HttpGet("{id}")]
+    [Tags("Course")]
     public IActionResult GetCourseById(int id)
     {
         try
@@ -91,6 +93,7 @@ public class CourseApiController : ControllerBase
     [Authorize(Roles = "Teacher, Admin")]
     [ProducesResponseType(201)]
     [HttpPost("")]
+    [Tags("Course")]
     public IActionResult CreateCourse([FromBody] CourseCreateDto dto)
     {
         try
@@ -123,6 +126,7 @@ public class CourseApiController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(401)]
+    [Tags("Course")]
     public IActionResult UpdateCourse(int id, [FromBody] CourseUpdateDto dto)
     {
         try
@@ -163,6 +167,7 @@ public class CourseApiController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(401)]
+    [Tags("Course")]
     public IActionResult DeleteCourse(int id)
     {
         try
@@ -183,6 +188,8 @@ public class CourseApiController : ControllerBase
         }
     }
 
+    // Ratings
+
     /// <summary>
     /// Retrieves all ratings pertaining to a Course, retrieves the Course by id
     /// </summary>
@@ -194,6 +201,7 @@ public class CourseApiController : ControllerBase
     [HttpGet("{courseId}/Ratings")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
+    [Tags("Course > Rating")]
     public IActionResult GetRatings(int courseId)
     {
         try
@@ -226,6 +234,7 @@ public class CourseApiController : ControllerBase
     [HttpPut("{courseId}/Ratings")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
+    [Tags("Course > Rating")]
     public IActionResult RateCourse(int courseId, [FromBody] RatingCreateDto dto)
     {
         try
@@ -261,6 +270,7 @@ public class CourseApiController : ControllerBase
     [HttpDelete("{courseId}/Ratings")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
+    [Tags("Course > Rating")]
     public IActionResult RemoveRating(int courseId)
     {
         try
@@ -279,6 +289,7 @@ public class CourseApiController : ControllerBase
     }
 
 
+
     // Lectures
 
 
@@ -293,6 +304,7 @@ public class CourseApiController : ControllerBase
     [HttpGet("{courseId}/Lectures")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
+    [Tags("Course > Lecture")]
     public IActionResult GetLectures(int courseId)
     {
         try
@@ -324,6 +336,7 @@ public class CourseApiController : ControllerBase
     [HttpGet("{courseId}/Lectures/{lectureId}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
+    [Tags("Course > Lecture")]
     public IActionResult GetLecture(int courseId, int lectureId)
     {
         try
@@ -363,6 +376,7 @@ public class CourseApiController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(409)]
+    [Tags("Course > Lecture")]
     public IActionResult UpdateLecture(int courseId, int lectureId, [FromBody] LectureUpdateDto dto)
     {
         try
@@ -402,6 +416,7 @@ public class CourseApiController : ControllerBase
     [ProducesResponseType(201)]
     [ProducesResponseType(404)]
     [ProducesResponseType(401)]
+    [Tags("Course > Lecture")]
     public IActionResult CreateLecture([FromRoute] int courseId, LectureCreateDto dto)
     {
         try
@@ -437,9 +452,9 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The list was successfully retrieved</response>
     /// <response code="404">The Course or Lecture was not found. Or there are no Comments under this Lecture. See message for details</response>
     [HttpGet("{courseId}/Lectures/{lectureId}/Comments")]
-    [Tags("Lecture comments")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
+    [Tags("Course > Lecture > Comment")]
 
     public IActionResult GetComments(int courseId, int lectureId)
     {
@@ -470,9 +485,9 @@ public class CourseApiController : ControllerBase
     /// <response code="404">The item was not found</response>
     [Authorize]
     [HttpPost("{courseId}/Lectures/{lectureId}/Comments")]
-    [Tags("Lecture comments")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
+    [Tags("Course > Lecture > Comment")]
     public IActionResult CreateComment(int courseId, int lectureId, [FromBody] CommentCreateDto dto)
     {
         try
@@ -507,10 +522,10 @@ public class CourseApiController : ControllerBase
     /// <response code="404">Either the Course the Lecture or the Comment were not found. See message for details</response>
     [Authorize]
     [HttpPut("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
-    [Tags("Lecture comments")]
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(404)]
+    [Tags("Course > Lecture > Comment")]
     public IActionResult UpdateComment(int courseId, int lectureId, int commentId, [FromBody] CommentCreateDto dto)
     {
         try
@@ -549,7 +564,7 @@ public class CourseApiController : ControllerBase
     /// <response code="404">Either the Course the Lecture or the Comment were not found. See message for details</response>
     [Authorize]
     [HttpDelete("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
-    [Tags("Lecture comments")]
+    [Tags("Course > Lecture > Comment")]
     public IActionResult DeleteComment(int courseId, int lectureId, int commentId)
     {
         try

@@ -106,7 +106,6 @@ public class CourseRepository : ICourseRepository
 
     public Rating? CreateRating(Course course, User user, RatingCreateDto dto)
     {
-
         var rating = new Rating()
         {
             Course = course,

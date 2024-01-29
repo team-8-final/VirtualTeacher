@@ -20,10 +20,8 @@ public class Lecture
 
     public int CourseId { get; set; }
     public Course Course { get; set; } = null!;
-
     public int TeacherId { get; set; }
     public User Teacher { get; set; } = null!;
-
     public IList<User> WatchedBy { get; set; } = null!;
     public IList<Note> Notes { get; set; } = null!;
     public IList<Comment> Comments { get; set; } = null!;
