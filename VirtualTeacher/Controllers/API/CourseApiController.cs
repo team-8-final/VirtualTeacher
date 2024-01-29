@@ -317,12 +317,6 @@ public class CourseApiController : ControllerBase
         }
         catch (EntityNotFoundException e)
         {
-            var errorResponse = new ErrorResponse
-            {
-                StatusCode = StatusCodes.Status404NotFound,
-                Message = e.Message
-            };
-
             return NotFound(e.Message);
         }
         catch (Exception)
@@ -362,9 +356,6 @@ public class CourseApiController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
         }
     }
-
-
-    //todo delete
 
 
     /// <summary>
@@ -446,6 +437,30 @@ public class CourseApiController : ControllerBase
         }
     }
 
+
+
+    //public IActionResult DeleteLecture(int courseId, int lectureId)
+    //{
+    //    try
+    //    {
+    //        Lecture newLecture = courseService.UpdateLecture(dto, courseId, lectureId);
+    //        var lectureResponseDto = mapper.MapResponse(newLecture);
+    //        return Ok(lectureResponseDto);
+    //    }
+
+    //    catch (EntityNotFoundException e)
+    //    {
+    //        return NotFound(e.Message);
+    //    }
+    //    catch (UnauthorizedAccessException e)
+    //    {
+    //        return Unauthorized(e.Message);
+    //    }
+    //    catch (Exception)
+    //    {
+    //        return Conflict("Something went wrong");
+    //    }
+    //}
 
     //Comments
 

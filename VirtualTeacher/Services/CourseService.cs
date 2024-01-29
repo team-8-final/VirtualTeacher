@@ -162,21 +162,21 @@ public class CourseService : ICourseService
 
     public Lecture UpdateLecture(LectureUpdateDto dto, int courseId, int lectureId)
     {
-
+        var course = GetCourseById(courseId);
         var lecture = GetLectureById(courseId, lectureId);
         var loggedUser = authService.GetLoggedUser();
 
-        if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != lecture.TeacherId)
-            throw new UnauthorizedAccessException($"A lecture can be updated only by its Author or an Admin.");
+        if (loggedUser.UserRole != UserRole.Admin
+            && loggedUser.Id != lecture.TeacherId
+            && loggedUser != course.ActiveTeachers.FirstOrDefault(at => at.Id == loggedUser.Id))
+        {
+            throw new UnauthorizedAccessException($"A lecture can be updated only by the Courses' Teachers or an Admin.");
+        }
+
+
         // todo to allow the co-teachers to be able to edit the lecture of the other teachers in the
 
-        lecture.Title = dto.Title;
-        lecture.Description = dto.Description;
-        lecture.VideoLink = dto.VideoLink;
-        lecture.AssignmentLink = dto.AssignmentLink;
-
-        
-        return courseRepository.UpdateLecture(lecture);
+        return courseRepository.UpdateLecture(lecture, dto);
     }
 
     public Lecture CreateLecture(LectureCreateDto dto, int courseId)

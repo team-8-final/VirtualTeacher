@@ -35,8 +35,8 @@ namespace VirtualTeacher.Controllers.API
         /// <response code="200">The list of Users was successfully retrieved</response>
         /// <response code="404">The system has no registered Users yet.</response>
         [HttpGet("")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public IActionResult GetAll([FromQuery] UserQueryParameters parameters)
         {
             try
@@ -63,8 +63,8 @@ namespace VirtualTeacher.Controllers.API
         /// <response code="200">The User was succesfully retrieved</response>
         /// <response code="404">A User with this id was not found</response>
         [HttpGet("{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public IActionResult GetById(int id)
         {
             try
@@ -94,9 +94,9 @@ namespace VirtualTeacher.Controllers.API
         /// <response code="404">A User with this id was not found</response>
         [Authorize]
         [HttpDelete("{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
             int loggedUserId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserID").Value);
@@ -130,9 +130,9 @@ namespace VirtualTeacher.Controllers.API
         /// <response code="404">A User with this id was not found</response>
         [Authorize]
         [HttpPut("{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public IActionResult Update(int id, [FromBody] UserUpdateDto updateData)
         {
             try
@@ -168,10 +168,10 @@ namespace VirtualTeacher.Controllers.API
         /// <response code="409">A Role with this id was not found</response>
         [Authorize]
         [HttpPut("{id}/role/{roleId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
         public IActionResult ChangeRole(int id, int roleId)
         {
             try

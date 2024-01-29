@@ -168,8 +168,14 @@ public class CourseRepository : ICourseRepository
     //delete
     //update
 
-    public Lecture UpdateLecture(Lecture lecture)
+    public Lecture UpdateLecture(Lecture lecture, LectureUpdateDto dto)
     {
+
+        lecture.Title = dto.Title;
+        lecture.Description = dto.Description;
+        lecture.VideoLink = dto.VideoLink;
+        lecture.AssignmentLink = dto.AssignmentLink;
+
         context.SaveChanges();
         return lecture;
     }

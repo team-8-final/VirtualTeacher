@@ -22,7 +22,7 @@ namespace VirtualTeacher.Repositories.Contracts
         Lecture? GetLecture(int courseId, int lectureId);
         public Lecture? CreateLecture(LectureCreateDto dto, User teacher,int courseId);
 
-        Lecture UpdateLecture(Lecture lecture);
+        Lecture UpdateLecture(Lecture lecture, LectureUpdateDto dto);
         List<Comment> GetComments(Lecture lecture);
         Comment? GetComment(int lectureId, int commentId);
         Comment? CreateComment(Lecture lecture, User user, CommentCreateDto dto);
