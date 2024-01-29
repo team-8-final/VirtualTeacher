@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
-using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.QueryParameters;
-using VirtualTeacher.Services;
 using VirtualTeacher.Services.Contracts;
 
 namespace VirtualTeacher.Controllers.API
@@ -16,13 +14,13 @@ namespace VirtualTeacher.Controllers.API
     public class UsersApiController : ControllerBase
     {
         private readonly IUserService userService;
-        private readonly IAuthService authService;
+        private readonly IAccountService accountService;
         private readonly ModelMapper mapper;
 
-        public UsersApiController(IUserService userService, IAuthService authService, ModelMapper mapper)
+        public UsersApiController(IUserService userService, IAccountService accountService, ModelMapper mapper)
         {
             this.userService = userService;
-            this.authService = authService;
+            this.accountService = accountService;
             this.mapper = mapper;
         }
 
@@ -85,25 +83,25 @@ namespace VirtualTeacher.Controllers.API
         /// </summary>
         /// <remarks>
         /// Only an Admin can delete other Users.
-        /// </remarks> 
+        /// </remarks>
         /// <returns>
         /// A string response
         /// </returns>
         /// <response code="200">The User was deleted</response>
         /// <response code="401">You are unauthorized to complete this request</response>
         /// <response code="404">A User with this id was not found</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
-            int loggedUserId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserID").Value);
+            int loggedUserId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
 
             try
             {
-                authService.ValidateAdminRole();
+                accountService.ValidateAdminRole();
                 return Ok(userService.Delete(id));
             }
             catch (EntityNotFoundException e)
@@ -121,14 +119,14 @@ namespace VirtualTeacher.Controllers.API
         /// </summary>
         /// <remarks>
         /// Only an Admin or the User themselves can edit their data.
-        /// </remarks> 
+        /// </remarks>
         /// <returns>
         /// The newly updated User and their data.
         /// </returns>
         /// <response code="200">The User data was updated.</response>
         /// <response code="401">You are unauthorized to complete this request</response>
         /// <response code="404">A User with this id was not found</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
@@ -137,7 +135,7 @@ namespace VirtualTeacher.Controllers.API
         {
             try
             {
-                authService.ValidateAuthorOrAdmin(id);
+                accountService.ValidateAuthorOrAdmin(id);
                 var updatedUser = userService.Update(id, updateData);
                 var userDto = mapper.MapResponse(updatedUser);
 
@@ -158,7 +156,7 @@ namespace VirtualTeacher.Controllers.API
         /// </summary>
         /// <remarks>
         /// Only an Admin can change User roles.
-        /// </remarks> 
+        /// </remarks>
         /// <returns>
         /// The newly updated User and their data.
         /// </returns>
@@ -166,7 +164,7 @@ namespace VirtualTeacher.Controllers.API
         /// <response code="401">You are unauthorized to complete this request</response>
         /// <response code="404">A User with this id was not found</response>
         /// <response code="409">A Role with this id was not found</response>
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("{id}/role/{roleId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
@@ -176,7 +174,7 @@ namespace VirtualTeacher.Controllers.API
         {
             try
             {
-                authService.ValidateAdminRole();
+                accountService.ValidateAdminRole();
                 var updatedUser = userService.ChangeRole(id, roleId);
                 var userDto = mapper.MapResponse(updatedUser);
 

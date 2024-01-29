@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using System.ComponentModel.Design;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models;
@@ -13,12 +12,12 @@ namespace VirtualTeacher.Services;
 public class CourseService : ICourseService
 {
     private readonly ICourseRepository courseRepository;
-    private readonly IAuthService authService;
+    private readonly IAccountService accountService;
 
-    public CourseService(ICourseRepository courseRepository, IAuthService authService)
+    public CourseService(ICourseRepository courseRepository, IAccountService accountService)
     {
         this.courseRepository = courseRepository;
-        this.authService = authService;
+        this.accountService = accountService;
     }
 
     public IList<Course> FilterCoursesBy(CourseQueryParameters parameters)
@@ -36,7 +35,7 @@ public class CourseService : ICourseService
     public Course CreateCourse(CourseCreateDto dto)
     {
 
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
         var createdCourse = courseRepository.CreateCourse(dto, loggedUser);
 
         return createdCourse ?? throw new Exception($"The course could not be created.");
@@ -45,11 +44,11 @@ public class CourseService : ICourseService
     public Course UpdateCourse(int id, CourseUpdateDto dto)
     {
         var foundCourse = GetCourseById(id);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
 
         if (loggedUser.UserRole != UserRole.Admin && foundCourse.ActiveTeachers.All(t => t != loggedUser))
         {
-            throw new UnauthorizedAccessException($"A course can be updated only by its authors or an admin.");
+            throw new UnauthorizedOperationException($"A course can be updated only by its authors or an admin.");
         }
 
         var updatedCourse = courseRepository.UpdateCourse(id, dto);
@@ -61,11 +60,11 @@ public class CourseService : ICourseService
     public string DeleteCourse(int id)
     {
         var foundCourse = GetCourseById(id);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
 
         if (loggedUser.UserRole != UserRole.Admin && foundCourse.ActiveTeachers.All(t => t != loggedUser))
         {
-            throw new UnauthorizedAccessException($"A course can be deleted only by its authors or an admin.");
+            throw new UnauthorizedOperationException($"A course can be deleted only by its authors or an admin.");
         }
 
         bool? courseDeleted = courseRepository.DeleteCourse(id);
@@ -99,7 +98,7 @@ public class CourseService : ICourseService
     public Rating RateCourse(int courseId, RatingCreateDto dto)
     {
         var course = GetCourseById(courseId);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
         var ratings = courseRepository.GetRatings(course);
 
         var foundRating = ratings.FirstOrDefault(rating => rating.Student.Id == loggedUser.Id
@@ -118,7 +117,7 @@ public class CourseService : ICourseService
     public string RemoveRating(int courseId)
     {
         var course = GetCourseById(courseId);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
         var ratings = courseRepository.GetRatings(course);
 
         var foundRating = ratings.FirstOrDefault(rating => rating.Student.Id == loggedUser.Id
@@ -165,7 +164,7 @@ public class CourseService : ICourseService
     {
         var course = GetCourseById(courseId);
         var lecture = GetLectureById(courseId, lectureId);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
 
         if (loggedUser.UserRole != UserRole.Admin
             && loggedUser.Id != lecture.TeacherId
@@ -182,7 +181,7 @@ public class CourseService : ICourseService
 
     public Lecture CreateLecture(LectureCreateDto dto, int courseId)
     {
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
 
         var course = GetCourseById(courseId);
         if (course == null)
@@ -191,7 +190,7 @@ public class CourseService : ICourseService
         }
         //check if the user has created the course
         if (loggedUser.UserRole != UserRole.Admin && loggedUser.CreatedCourses.Any(c => c.Id == courseId))
-            throw new UnauthorizedAccessException($"A lecture can be created only by the Course creator or an Admin.");
+            throw new UnauthorizedOperationException($"A lecture can be created only by the Course creator or an Admin.");
 
         Lecture createdLecture = courseRepository.CreateLecture(dto, loggedUser, courseId);
 
@@ -243,7 +242,7 @@ public class CourseService : ICourseService
     public Comment CreateComment(int courseId, int lectureId, CommentCreateDto dto)
     {
         var lecture = GetLectureById(courseId, lectureId);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
 
         var createdComment = courseRepository.CreateComment(lecture, loggedUser, dto);
 
@@ -266,10 +265,10 @@ public class CourseService : ICourseService
     public Comment UpdateComment(int courseId, int lectureId, int commentId, CommentCreateDto dto)
     {
         var comment = GetCommentById(courseId, lectureId, commentId);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
 
         if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != comment.AuthorId)
-            throw new UnauthorizedAccessException($"A comment can be updated only by its author or an admin.");
+            throw new UnauthorizedOperationException($"A comment can be updated only by its author or an admin.");
 
         var updatedComment = courseRepository.UpdateComment(comment, dto);
 
@@ -279,10 +278,10 @@ public class CourseService : ICourseService
     public string DeleteComment(int courseId, int lectureId, int commentId)
     {
         var comment = GetCommentById(courseId, lectureId, commentId);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
 
         if (loggedUser.UserRole != UserRole.Admin && loggedUser.Id != comment.AuthorId)
-            throw new UnauthorizedAccessException($"A comment can be deleted only by its author or an admin.");
+            throw new UnauthorizedOperationException($"A comment can be deleted only by its author or an admin.");
 
         bool? commentDeleted = courseRepository.DeleteComment(comment);
 

@@ -1,4 +1,5 @@
 ﻿using VirtualTeacher.Models;
+using VirtualTeacher.Models.DTOs.Account;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.QueryParameters;
 
@@ -12,11 +13,12 @@ namespace VirtualTeacher.Repositories.Contracts
         User? GetById(int id);
         User? GetByName(string username);
         User? Create(UserCreateDto dto);
-        User? Update(int id, UserUpdateDto updateData);
+        User? UpdateUser(int id, UserUpdateDto updateData);
         bool? Delete(int id);
         int GetUserCount();
         bool CheckDuplicateEmail(string email);
         bool CheckDuplicateUsername(string username);
         User? ChangeRole(int id, int roleId);
+        User? GetByEmail(string email);
     }
 }

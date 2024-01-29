@@ -83,7 +83,6 @@ public class ModelMapper
         return new RatingResponseDto
         {
             Rating = rating.Value,
-            Course = rating.Course.Title,
             Student = rating.Student.Username
         };
     }

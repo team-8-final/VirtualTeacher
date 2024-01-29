@@ -1,0 +1,50 @@
+@model RegisterViewModel;
+
+@{
+    ViewData["Title"] = "Register Account";
+}
+
+<div style="max-width: 400px; margin: auto">
+    <form asp-controller="Account" asp-action="Register" method="post">
+
+        <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">Register New Account</h3>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Username" type="text" class="form-control" id="floatingUsername" placeholder="First Name" required>
+            <label asp-for="Username" for="floatingUsername">Username</label>
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="New Password">
+            <label asp-for="Password" for="floatingPassword">New Password</label>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="PasswordConfirmation" type="password" class="form-control" id="floatingPasswordConfirmation" placeholder="Confirm New Password">
+            <label asp-for="PasswordConfirmation" for="floatingPasswordConfirmation">Confirm New Password</label>
+            <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="FirstName" type="text" class="form-control" id="floatingFirstName" placeholder="First Name" required>
+            <label asp-for="FirstName" for="floatingFirstName">First Name</label>
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="LastName" type="text" class="form-control" id="floatingLastName" placeholder="Last Name" required>
+            <label asp-for="LastName">Last Name</label>
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Email" type="email" class="form-control" placeholder="Email" required>
+            <label asp-for="Email">Email</label>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <input style="margin: 25px auto 0 auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Create Account"/>
+    </form>
+</div>

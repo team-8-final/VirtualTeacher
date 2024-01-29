@@ -14,5 +14,6 @@ namespace VirtualTeacher.Services.Contracts
         string Delete(int id);
         User ChangeRole(int id, int roleId);
         int GetUserCount();
+        User GetByEmail(string email);
     }
 }

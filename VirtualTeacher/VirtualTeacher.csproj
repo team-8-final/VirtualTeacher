@@ -31,7 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\MVC\" />
+    <Compile Remove="Controllers\API\AuthApiController.cs" />
+    <Compile Remove="Models\LoginRequest.cs" />
+    <Compile Remove="Services\Contracts\IAuthService.cs" />
   </ItemGroup>
 
 </Project>

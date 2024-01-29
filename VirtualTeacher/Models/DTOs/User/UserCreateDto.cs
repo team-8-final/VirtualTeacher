@@ -15,7 +15,10 @@ namespace VirtualTeacher.Models.DTOs.User
         public string Email { get; set; } = null!;
 
         [Required]
-        [MinLength(8), MaxLength(64)]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[\W]).+$",
+            ErrorMessage = "Password must contain at least one uppercase letter, one digit, and one special character.")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
+        [MaxLength(64, ErrorMessage = "Password cannot be longer than 64 characters.")]
         public string Password { get; set; } = null!;
 
         [Required]

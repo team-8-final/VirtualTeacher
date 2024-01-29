@@ -3,6 +3,7 @@ using VirtualTeacher.Models;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Exceptions;
+using VirtualTeacher.Models.DTOs.Account;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.DTOs.User;
 
@@ -56,7 +57,15 @@ namespace VirtualTeacher.Repositories
             return user;
         }
 
-        public User? Update(int id, UserUpdateDto updateData)
+        public User? GetByEmail(string email)
+        {
+            var test = GetUsers().ToList();
+            User? user = GetUsers().FirstOrDefault(u => u.Email == email);
+
+            return user;
+        }
+
+        public User? UpdateUser(int id, UserUpdateDto updateData)
         {
             var updatedUser = GetById(id);
 

@@ -12,21 +12,25 @@ namespace VirtualTeacher.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
-        private readonly IAuthService authService;
+        private readonly IAccountService accountService;
 
-        public UserService(IUserRepository userRepository, IAuthService authService)
+        public UserService(IUserRepository userRepository, IAccountService accountService)
         {
             this.userRepository = userRepository;
-            this.authService = authService;
+            this.accountService = accountService;
         }
 
         public User Create(UserCreateDto user)
         {
             if (userRepository.CheckDuplicateUsername(user.Username))
+            {
                 throw new DuplicateEntityException($"Username {user.Username} is already in use!");
+            }
 
             if (userRepository.CheckDuplicateEmail(user.Email))
+            {
                 throw new DuplicateEntityException($"Email {user.Email} is already in use!");
+            }
 
             var createdUser = userRepository.Create(user);
 
@@ -53,6 +57,13 @@ namespace VirtualTeacher.Services
             return foundUser ?? throw new EntityNotFoundException($"User with id '{id}' was not found.");
         }
 
+        public User GetByEmail(string email)
+        {
+            var foundUser = userRepository.GetByEmail(email);
+
+            return foundUser ?? throw new EntityNotFoundException($"User with email '{email}' was not found.");
+        }
+
         public User Update(int idToUpdate, UserUpdateDto updateData)
         {
             var foundUser = GetById(idToUpdate);
@@ -60,7 +71,7 @@ namespace VirtualTeacher.Services
             if (userRepository.CheckDuplicateEmail(updateData.Email))
                 throw new DuplicateEntityException($"Email {updateData.Email} is already in use!");
 
-            var updatedUser = userRepository.Update(idToUpdate, updateData);
+            var updatedUser = userRepository.UpdateUser(idToUpdate, updateData);
 
             return updatedUser ?? throw new Exception($"Your profile could not be updated.");
         }
@@ -68,10 +79,10 @@ namespace VirtualTeacher.Services
         public string Delete(int id)
         {
             var foundUser = GetById(id);
-            var loggedUser = authService.GetLoggedUser();
+            var loggedUser = accountService.GetLoggedUser();
 
             if (loggedUser.UserRole != UserRole.Admin && foundUser.Id != loggedUser.Id)
-                throw new UnauthorizedAccessException($"A user can be deleted only by themselves or an admin.");
+                throw new UnauthorizedOperationException($"A user can be deleted only by themselves or an admin.");
 
             bool? userDeleted = userRepository.Delete(id);
 

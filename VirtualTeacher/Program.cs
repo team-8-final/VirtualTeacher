@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace VirtualTeacher;
 
@@ -22,38 +23,33 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-
-        //  JWT setup start  //
-
         var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
         var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
+        builder.Services.AddAuthentication(options =>
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-                ValidateIssuer = false,
-                ValidIssuer = jwtIssuer,
-                ValidateLifetime = true,
-                ValidateAudience = false,
-            };
-        });
-
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(o => o.LoginPath="/account/login")
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    ValidateIssuer = false,
+                    ValidateLifetime = true,
+                    ValidateAudience = false,
+                    ValidIssuer = jwtIssuer,
+                };
+            });
 
         builder.Services.AddAuthorization();
-        builder.Services.AddHttpContextAccessor(); // claim reader
-
-        //  JWT setup end  //
-
-
+        builder.Services.AddHttpContextAccessor();
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddEndpointsApiExplorer();
-
 
         builder.Services.AddSwaggerGen(options =>
         {
@@ -118,7 +114,7 @@ public class Program
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
-        builder.Services.AddSwaggerGenNewtonsoftSupport(); // this is necessary for Newtonsoft to work with Swagger 
+        builder.Services.AddSwaggerGenNewtonsoftSupport(); // this is necessary for Newtonsoft to work with Swagger
 
         //Repos
         builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -126,7 +122,7 @@ public class Program
 
         //Services
         builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IAccountService, AccountService>();
         builder.Services.AddScoped<ICourseService, CourseService>();
 
         //Helpers
