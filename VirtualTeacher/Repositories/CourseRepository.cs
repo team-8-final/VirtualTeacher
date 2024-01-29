@@ -140,13 +140,12 @@ public class CourseRepository : ICourseRepository
     public List<Lecture> GetLectures(Course course)
     {
         var lecturesList = context.Lectures
-            .Include(lecture => lecture.Id)
             .Include(lecture => lecture.Course)
             .Include(lecture => lecture.Teacher)
             .Include(lecture => lecture.WatchedBy)
             .Include(lecture => lecture.Notes)
             .Include(lecture => lecture.Comments)
-            .Where(lecture => lecture.Course == course)
+            .Where(lecture => lecture.Course.Id == course.Id)
             .ToList();
 
         return lecturesList;

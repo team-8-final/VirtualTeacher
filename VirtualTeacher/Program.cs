@@ -117,6 +117,8 @@ public class Program
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
+        builder.Services.AddSwaggerGenNewtonsoftSupport(); // this is necessary for Newtonsoft to work with Swagger 
+
         //Repos
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ICourseRepository, CourseRepository>();

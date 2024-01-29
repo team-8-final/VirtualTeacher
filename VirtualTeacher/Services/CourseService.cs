@@ -136,8 +136,15 @@ public class CourseService : ICourseService
     //Lectures
     public List<Lecture> GetLectures(int courseId)
     {
+        List<Lecture> lectures = new List<Lecture>();
         var course = GetCourseById(courseId);
-        var lectures = courseRepository.GetLectures(course);
+
+        if (course.Lectures.Count() == 0)
+        {
+            return lectures;
+        }
+
+        lectures = courseRepository.GetLectures(course);
 
         if (lectures.Count == 0)
         {

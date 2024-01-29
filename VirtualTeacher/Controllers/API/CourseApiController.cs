@@ -33,7 +33,8 @@ public class CourseApiController : ControllerBase
     /// </returns>
     ///<response code="200">The collection has been successfully retrieved</response>
     [HttpGet("")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(500)]
     [Tags("Course")]
     public IActionResult GetCourses([FromQuery] CourseQueryParameters parameters)
     {
@@ -61,7 +62,7 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="404">A course with this Id was not found</response>
     /// <response code="200">The Course has been successfully retrieved</response>
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     [Tags("Course")]
     public IActionResult GetCourseById(int id)
@@ -91,7 +92,7 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="201">The course was successfully created</response>
     [Authorize(Roles = "Teacher, Admin")]
-    [ProducesResponseType(201)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [HttpPost("")]
     [Tags("Course")]
     public IActionResult CreateCourse([FromBody] CourseCreateDto dto)
@@ -123,9 +124,9 @@ public class CourseApiController : ControllerBase
     /// <response code="401">Unauthorized, you need to be the author of the course or an admin to edit it</response>
     [Authorize]
     [HttpPut("{id}")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
-    [ProducesResponseType(401)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Tags("Course")]
     public IActionResult UpdateCourse(int id, [FromBody] CourseUpdateDto dto)
     {
@@ -164,9 +165,9 @@ public class CourseApiController : ControllerBase
     /// <response code="401">Unauthorized, you need to be the author of the course or an admin to delete it</response>
     [Authorize]
     [HttpDelete("{id}")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
-    [ProducesResponseType(401)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Tags("Course")]
     public IActionResult DeleteCourse(int id)
     {
@@ -199,8 +200,8 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The list of Ratings was successfully retrieved</response>
     /// <response code="404">The Course with that id was not found or there are no Ratings for this Course</response>
     [HttpGet("{courseId}/Ratings")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Tags("Course > Rating")]
     public IActionResult GetRatings(int courseId)
     {
@@ -232,8 +233,8 @@ public class CourseApiController : ControllerBase
     /// <response code="404">The Course with that id was not found</response>
     [Authorize]
     [HttpPut("{courseId}/Ratings")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Tags("Course > Rating")]
     public IActionResult RateCourse(int courseId, [FromBody] RatingCreateDto dto)
     {
@@ -268,8 +269,8 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The Rating was successfully removed</response>
     [Authorize]
     [HttpDelete("{courseId}/Ratings")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Tags("Course > Rating")]
     public IActionResult RemoveRating(int courseId)
     {
@@ -302,8 +303,8 @@ public class CourseApiController : ControllerBase
     /// <response code="404">A Course with this id was not found or the Course has no Lectures yet</response>
     /// <response code="200">The list of Lectures was successfully retrieved</response>
     [HttpGet("{courseId}/Lectures")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Tags("Course > Lecture")]
     public IActionResult GetLectures(int courseId)
     {
@@ -334,8 +335,8 @@ public class CourseApiController : ControllerBase
     /// <response code="404">A Course with this id was not found or the Lecture was not found</response>
     /// <response code="200">The lecture was succesfully retrieved</response>
     [HttpGet("{courseId}/Lectures/{lectureId}")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Tags("Course > Lecture")]
     public IActionResult GetLecture(int courseId, int lectureId)
     {
@@ -369,13 +370,13 @@ public class CourseApiController : ControllerBase
     /// <remarks>Only the author or an Admin can edit the Lecture</remarks>
     /// <response code="404">A Course with this id was not found or the Lecture was not found</response>
     /// <response code="200">The lecture was succesfully updated</response>
-    /// <response code="409">You are not authorized to change the Lecture, only the author or an Admin can edit it</response>
+    /// <response code="401">You are not authorized to change the Lecture, only the author or an Admin can edit it</response>
     [Authorize]
     [HttpPut("{courseId}/Lectures/{lectureId}/")]
     [Authorize(Roles = "Teacher, Admin")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
-    [ProducesResponseType(409)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Tags("Course > Lecture")]
     public IActionResult UpdateLecture(int courseId, int lectureId, [FromBody] LectureUpdateDto dto)
     {
@@ -392,7 +393,7 @@ public class CourseApiController : ControllerBase
         }
         catch (UnauthorizedAccessException e)
         {
-            return Conflict(e.Message);
+            return Unauthorized(e.Message);
         }
         catch (Exception)
         {
@@ -413,9 +414,9 @@ public class CourseApiController : ControllerBase
     [Authorize]
     [HttpPost("{courseId}")]
     [Authorize(Roles = "Teacher, Admin")]
-    [ProducesResponseType(201)]
-    [ProducesResponseType(404)]
-    [ProducesResponseType(401)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Tags("Course > Lecture")]
     public IActionResult CreateLecture([FromRoute] int courseId, LectureCreateDto dto)
     {
@@ -452,8 +453,8 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The list was successfully retrieved</response>
     /// <response code="404">The Course or Lecture was not found. Or there are no Comments under this Lecture. See message for details</response>
     [HttpGet("{courseId}/Lectures/{lectureId}/Comments")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Tags("Course > Lecture > Comment")]
 
     public IActionResult GetComments(int courseId, int lectureId)
@@ -485,8 +486,8 @@ public class CourseApiController : ControllerBase
     /// <response code="404">The item was not found</response>
     [Authorize]
     [HttpPost("{courseId}/Lectures/{lectureId}/Comments")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Tags("Course > Lecture > Comment")]
     public IActionResult CreateComment(int courseId, int lectureId, [FromBody] CommentCreateDto dto)
     {
@@ -522,9 +523,9 @@ public class CourseApiController : ControllerBase
     /// <response code="404">Either the Course the Lecture or the Comment were not found. See message for details</response>
     [Authorize]
     [HttpPut("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(401)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Tags("Course > Lecture > Comment")]
     public IActionResult UpdateComment(int courseId, int lectureId, int commentId, [FromBody] CommentCreateDto dto)
     {
