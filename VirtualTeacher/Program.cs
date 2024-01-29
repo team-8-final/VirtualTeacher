@@ -92,6 +92,7 @@ public class Program
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
+
         });
 
 
@@ -140,7 +141,7 @@ public class Program
             app.UseExceptionHandler("/Home/Error");
 
         }
-
+        //app.UseExceptionHandler("/Home/Error");
 
         app.UseRouting();
         app.UseSession();
