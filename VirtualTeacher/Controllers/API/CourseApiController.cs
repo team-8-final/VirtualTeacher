@@ -479,19 +479,20 @@ public class CourseApiController : ControllerBase
 
     /// <summary>
     /// Deletes a Lecture from a Course
+    /// </summary>
     /// <returns>
     /// A message with the result
     /// </returns>
     /// <response code="404">A Course or Lecture with this id was not found</response>
     /// <response code="200">The Lecture was succesfully deleted</response>
     /// <response code="401">A Lecrute can only be deleted by the Course Teachers or an Admin</response>
-    [Authorize]
-    [HttpDelete]
+    [Tags("Course > Lecture")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Authorize(Roles = "Teacher, Admin")]
+    [HttpDelete("{courseId}/Lectures/{lectureId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
-    [Tags("Course > Lecture")]
     public IActionResult DeleteLecture(int courseId, int lectureId)
     {
         try
