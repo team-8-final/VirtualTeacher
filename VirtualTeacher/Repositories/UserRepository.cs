@@ -6,6 +6,7 @@ using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models.DTOs.Account;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.DTOs.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace VirtualTeacher.Repositories
 {
@@ -22,6 +23,7 @@ namespace VirtualTeacher.Repositories
         public IQueryable<User> GetUsers()
         {
             return context.Users
+                .Include(u => u.EnrolledCourses)
                 .Where(u => !u.IsDeleted);
         }
 

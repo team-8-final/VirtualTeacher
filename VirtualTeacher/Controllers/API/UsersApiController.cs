@@ -11,6 +11,7 @@ namespace VirtualTeacher.Controllers.API
 {
     [ApiController]
     [Route("api/users")]
+    [Tags("Users")]
     public class UsersApiController : ControllerBase
     {
         private readonly IUserService userService;

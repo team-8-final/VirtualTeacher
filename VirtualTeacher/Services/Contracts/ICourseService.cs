@@ -29,4 +29,6 @@ public interface ICourseService
     Comment CreateComment(int courseId, int lectureId, CommentCreateDto dto);
     Comment UpdateComment(int courseId, int lectureId, int commentId, CommentCreateDto dto);
     string DeleteComment(int courseId, int lectureId, int commentId);
+
+    string Enroll(int courseId);
 }

@@ -29,5 +29,6 @@ namespace VirtualTeacher.Repositories.Contracts
         Comment? CreateComment(Lecture lecture, User user, CommentCreateDto dto);
         Comment? UpdateComment(Comment comment, CommentCreateDto dto);
         bool DeleteComment(Comment comment);
+        bool Enroll(int courseId, User user);
     }
 }

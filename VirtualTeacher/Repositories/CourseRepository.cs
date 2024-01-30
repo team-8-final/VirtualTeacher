@@ -290,7 +290,18 @@ public class CourseRepository : ICourseRepository
         
         context.Lectures.Remove(lectureToDelete);
         return context.SaveChanges() > 0;
-    } 
+    }
+    public bool Enroll(int courseId, User user)
+    {
+        var course = GetCourseById(courseId);
+
+        if (course == null)
+            return false;
+
+        course.EnrolledStudents.Add(user);
+
+        return context.SaveChanges() > 0;
+    }
 
 
     //Comments
@@ -351,5 +362,5 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
-
+    
 }

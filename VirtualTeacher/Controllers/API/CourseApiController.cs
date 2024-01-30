@@ -191,6 +191,38 @@ public class CourseApiController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Currently logged user enrolls to a Course by it's id.
+    /// </summary>
+    /// <returns>
+    /// Confirmation if the enroll request was completed or not
+    /// </returns>
+    /// <response code="200">The enroll request was successful.</response>
+    /// <response code="404">The Course with that id was not found</response>
+    /// <response code="409">The current user is already an enrolled student or an active teacher in the course.</response>
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("{courseId}/Enroll")]
+    [Tags("Course")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    public IActionResult Enroll(int courseId)
+    {
+        try
+        {
+            return Ok(courseService.Enroll(courseId));
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (DuplicateEntityException e)
+        {
+            return Conflict(e.Message);
+        }
+    }
+
     // Ratings
 
     /// <summary>
@@ -453,6 +485,7 @@ public class CourseApiController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    [Tags("Course > Lecture")]
     public IActionResult DeleteLecture(int courseId, int lectureId)
     {
         try
@@ -609,5 +642,6 @@ public class CourseApiController : ControllerBase
             return NotFound(e.Message);
         }
     }
+
 
 }

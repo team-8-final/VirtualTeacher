@@ -12,5 +12,7 @@ namespace VirtualTeacher.Models.DTOs.User
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserRole { get; set; }
+        public IList<string> EnrolledCourses { get; set; } = null!;
+
     }
 }

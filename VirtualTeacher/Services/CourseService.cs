@@ -133,6 +133,26 @@ public class CourseService : ICourseService
         return ratingRemoved ? "Rating was removed." : "Rating could not be removed.";
     }
 
+    //Course enroll
+    public string Enroll(int courseId)
+    {
+        var loggedUser = accountService.GetLoggedUser();
+        var course = GetCourseById(courseId);
+
+        if (course.EnrolledStudents.Contains(loggedUser))
+            throw new DuplicateEntityException("You are already enrolled in this course.");
+
+        if (course.ActiveTeachers.Contains(loggedUser))
+            throw new DuplicateEntityException("You are already an active teacher in this course.");
+
+        bool? enrollStatus = courseRepository.Enroll(courseId, loggedUser);
+
+        if (enrollStatus == true)
+            return $"Successfully enrolled to course '{course.Title}'.";
+
+        throw new Exception($"The enroll request could not be completed.");
+    }
+
     //Lectures
     public List<Lecture> GetLectures(int courseId)
     {
@@ -203,7 +223,7 @@ public class CourseService : ICourseService
         string lectureTitle = lectureToDelete.Title;
 
         var course = GetCourseById(courseId);
-        var loggedUser = authService.GetLoggedUser();
+        var loggedUser = accountService.GetLoggedUser();
 
         if (loggedUser.UserRole != UserRole.Admin
            && loggedUser.Id != lectureToDelete.TeacherId
@@ -247,9 +267,7 @@ public class CourseService : ICourseService
         var createdComment = courseRepository.CreateComment(lecture, loggedUser, dto);
 
         if (string.IsNullOrEmpty(dto.Content))
-        {
             throw new InvalidUserInputException("The content of the comment cannot be empty");
-        }
 
         return createdComment!;
     }
