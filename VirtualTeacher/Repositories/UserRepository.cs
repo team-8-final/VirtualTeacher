@@ -135,6 +135,7 @@ namespace VirtualTeacher.Repositories
             result = FilterByEmail(result, parameters.Email);
             result = FilterByFirstName(result, parameters.FirstName);
             result = FilterByLastName(result, parameters.LastName);
+            result = FilterByRole(result, parameters.Role);
             result = SortBy(result, parameters.SortBy);
             result = OrderBy(result, parameters.SortOrder);
 
@@ -178,6 +179,27 @@ namespace VirtualTeacher.Repositories
             {
                 lastName = lastName.ToLower();
                 return users.Where(u => u.LastName.ToLower().Contains(lastName));
+            }
+            else return users;
+        }
+
+        private static IQueryable<User> FilterByRole(IQueryable<User> users, string role)
+        {
+            if (!string.IsNullOrEmpty(role))
+            {
+                role = role.ToLower();
+
+                switch (role)
+                {
+                    case "admin":
+                        return users.Where(u => u.UserRole == UserRole.Admin);
+                    case "teacher":
+                        return users.Where(u => u.UserRole == UserRole.Teacher);
+                    case "student":
+                        return users.Where(u => u.UserRole == UserRole.Student);
+                    default:
+                        return users;
+                }
             }
             else return users;
         }

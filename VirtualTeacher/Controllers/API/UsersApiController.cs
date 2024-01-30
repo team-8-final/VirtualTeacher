@@ -33,6 +33,7 @@ namespace VirtualTeacher.Controllers.API
         /// </returns>
         /// <response code="200">The list of Users was successfully retrieved</response>
         /// <response code="404">The system has no registered Users yet.</response>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -40,6 +41,7 @@ namespace VirtualTeacher.Controllers.API
         {
             try
             {
+                accountService.ValidateAdminRole();
                 //maybe move all mapping to the service
                 var users = userService.FilterBy(parameters)
                     .Select(user => mapper.MapResponse(user))
@@ -50,6 +52,10 @@ namespace VirtualTeacher.Controllers.API
             catch (EntityNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+            catch (UnauthorizedOperationException e)
+            {
+                return Unauthorized(e.Message);
             }
         }
 
@@ -98,8 +104,6 @@ namespace VirtualTeacher.Controllers.API
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
-            int loggedUserId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
-
             try
             {
                 accountService.ValidateAdminRole();
@@ -167,6 +171,7 @@ namespace VirtualTeacher.Controllers.API
         /// <response code="409">A Role with this id was not found</response>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("{id}/role/{roleId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -175,7 +180,7 @@ namespace VirtualTeacher.Controllers.API
         {
             try
             {
-                accountService.ValidateAdminRole();
+                //accountService.ValidateAdminRole();
                 var updatedUser = userService.ChangeRole(id, roleId);
                 var userDto = mapper.MapResponse(updatedUser);
 
