@@ -22,8 +22,6 @@ public class ModelMapper
         };
     }
 
-    // EnrolledStudents = new List<string>(
-    //course.EnrolledStudents.Select(student => student.Username)),
 
     public UserResponseDto MapResponse(User user)
     {
@@ -35,7 +33,7 @@ public class ModelMapper
             FirstName = user.FirstName,
             LastName = user.LastName,
             UserRole = user.UserRole.ToString(),
-            EnrolledCourses = new List<string>(user.EnrolledCourses.Select(c => c.Title))
+            EnrolledCourses = user.EnrolledCourses?.Select(c => c.Title).ToList() ?? new List<string>()
         };
     }
 
