@@ -12,6 +12,9 @@ namespace VirtualTeacher.Repositories.Contracts
         Course? CreateCourse(CourseCreateDto dto, User teacher);
         Course? UpdateCourse(int id, CourseUpdateDto dto);
         bool? DeleteCourse(int id);
+        bool AddTeacher(int courseId, User teacher);
+        bool Enroll(int courseId, User user);
+
 
         List<Rating> GetRatings(Course course);
         Rating? CreateRating(Course course, User user, RatingCreateDto dto);
@@ -29,6 +32,5 @@ namespace VirtualTeacher.Repositories.Contracts
         Comment? CreateComment(Lecture lecture, User user, CommentCreateDto dto);
         Comment? UpdateComment(Comment comment, CommentCreateDto dto);
         bool DeleteComment(Comment comment);
-        bool Enroll(int courseId, User user);
     }
 }

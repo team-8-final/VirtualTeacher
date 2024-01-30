@@ -12,6 +12,9 @@ public interface ICourseService
     Course UpdateCourse(int id, CourseUpdateDto dto);
     string DeleteCourse(int id);
 
+    string Enroll(int courseId);
+    string AddTeacher(int courseId, int teacherId);
+
     List<Rating> GetRatings(int courseId);
     Rating RateCourse(int courseId, RatingCreateDto dto);
     string RemoveRating(int courseId);
@@ -30,5 +33,4 @@ public interface ICourseService
     Comment UpdateComment(int courseId, int lectureId, int commentId, CommentCreateDto dto);
     string DeleteComment(int courseId, int lectureId, int commentId);
 
-    string Enroll(int courseId);
 }

@@ -13,11 +13,13 @@ public class CourseService : ICourseService
 {
     private readonly ICourseRepository courseRepository;
     private readonly IAccountService accountService;
+    private readonly IUserService userService;
 
-    public CourseService(ICourseRepository courseRepository, IAccountService accountService)
+    public CourseService(ICourseRepository courseRepository, IAccountService accountService, IUserService userService)
     {
         this.courseRepository = courseRepository;
         this.accountService = accountService;
+        this.userService = userService;
     }
 
     public IList<Course> FilterCoursesBy(CourseQueryParameters parameters)
@@ -82,6 +84,53 @@ public class CourseService : ICourseService
         throw new Exception($"Course with id '{id}' could not be deleted.");
     }
 
+    //Course enroll
+    public string Enroll(int courseId)
+    {
+        var loggedUser = accountService.GetLoggedUser();
+        var course = GetCourseById(courseId);
+
+        if (course.EnrolledStudents.Any(u => u.Id == loggedUser.Id))
+            throw new DuplicateEntityException("You are already enrolled in this course.");
+
+        if (course.ActiveTeachers.Any(u => u.Id == loggedUser.Id))
+            throw new DuplicateEntityException("You are already an active teacher in this course.");
+
+        bool? enrollStatus = courseRepository.Enroll(courseId, loggedUser);
+
+        if (enrollStatus == true)
+            return $"Successfully enrolled to course '{course.Title}'.";
+
+        throw new Exception($"The enroll request could not be completed.");
+    }
+
+    //Add new active teacher
+    public string AddTeacher(int courseId, int teacherId)
+    {
+        var loggedUser = accountService.GetLoggedUser();
+        var course = GetCourseById(courseId);
+
+        if (!course.ActiveTeachers.Any(t => t.Id == loggedUser.Id)
+            && loggedUser.UserRole != UserRole.Admin)
+            throw new UnauthorizedOperationException("Only active course teachers or admins can assign new teachers.");
+
+        if (course.ActiveTeachers.Any(t => t.Id == teacherId))
+            throw new DuplicateEntityException("User is already an active teacher in the course");
+
+        var teacher = userService.GetById(teacherId);
+
+        if (teacher.UserRole != UserRole.Teacher)
+            throw new InvalidOperationException("Only teachers can be assigned to the list of active course teachers.");
+
+        bool? additionStatus = courseRepository.AddTeacher(courseId, teacher);
+
+        if (additionStatus == true)
+            return $"Successfully added teacher {teacher.Username} to course '{course.Title}'";
+
+        throw new Exception($"The addition request could not be completed.");
+    }
+
+    // Ratings
     public List<Rating> GetRatings(int courseId)
     {
         var course = GetCourseById(courseId);
@@ -133,26 +182,6 @@ public class CourseService : ICourseService
         return ratingRemoved ? "Rating was removed." : "Rating could not be removed.";
     }
 
-    //Course enroll
-    public string Enroll(int courseId)
-    {
-        var loggedUser = accountService.GetLoggedUser();
-        var course = GetCourseById(courseId);
-
-        if (course.EnrolledStudents.Any(u => u.Id == loggedUser.Id))
-            throw new DuplicateEntityException("You are already enrolled in this course.");
-
-        if (course.ActiveTeachers.Any(u => u.Id == loggedUser.Id))
-            throw new DuplicateEntityException("You are already an active teacher in this course.");
-
-        bool? enrollStatus = courseRepository.Enroll(courseId, loggedUser);
-
-        if (enrollStatus == true)
-            return $"Successfully enrolled to course '{course.Title}'.";
-
-        throw new Exception($"The enroll request could not be completed.");
-    }
-
     //Lectures
     public List<Lecture> GetLectures(int courseId)
     {
@@ -173,8 +202,6 @@ public class CourseService : ICourseService
         return lectures;
     }
 
-    
-
     public Lecture GetLectureById(int courseId, int lectureId)
     {
         var loggedUser = accountService.GetLoggedUser();
@@ -186,9 +213,6 @@ public class CourseService : ICourseService
 
         return foundLecture ?? throw new EntityNotFoundException($"Lecture with id '{lectureId}' was not found.");
     }
-
-    //delete
-    //update
 
     public Lecture UpdateLecture(LectureUpdateDto dto, int courseId, int lectureId)
     {

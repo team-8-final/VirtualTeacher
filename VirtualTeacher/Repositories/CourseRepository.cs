@@ -93,6 +93,7 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
+    // Ratings
     public List<Rating> GetRatings(Course course)
     {
         var ratingsList = context.Ratings
@@ -291,6 +292,7 @@ public class CourseRepository : ICourseRepository
         context.Lectures.Remove(lectureToDelete);
         return context.SaveChanges() > 0;
     }
+
     public bool Enroll(int courseId, User user)
     {
         var course = GetCourseById(courseId);
@@ -299,6 +301,18 @@ public class CourseRepository : ICourseRepository
             return false;
 
         course.EnrolledStudents.Add(user);
+
+        return context.SaveChanges() > 0;
+    }
+
+    public bool AddTeacher(int courseId, User teacher)
+    {
+        var course = GetCourseById(courseId);
+
+        if (course == null)
+            return false;
+
+        course.ActiveTeachers.Add(teacher);
 
         return context.SaveChanges() > 0;
     }
@@ -362,5 +376,5 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
-    
+
 }
