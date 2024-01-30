@@ -32,5 +32,9 @@ namespace VirtualTeacher.Repositories.Contracts
         Comment? CreateComment(Lecture lecture, User user, CommentCreateDto dto);
         Comment? UpdateComment(Comment comment, CommentCreateDto dto);
         bool DeleteComment(Comment comment);
+
+        public string GetNoteContent(int userId, int lectureId);
+
+        public string UpdateNoteContent(int userId, int lectureId, string updatedContent);
     }
 }

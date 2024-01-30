@@ -663,6 +663,9 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The Comment was successfully deleted</response>
     /// <response code="404">Either the Course the Lecture or the Comment were not found. See message for details</response>
     [HttpDelete("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [Tags("Course > Lecture > Comment")]
     public IActionResult DeleteComment(int courseId, int lectureId, int commentId)
     {
@@ -682,16 +685,78 @@ public class CourseApiController : ControllerBase
 
     // Notes
 
-    //[HttpGet("{courseId}/Lectures/{lectureId}/Comments/{noteId}")]
-    //public IActionResult GetNote(int courseId, int lectureId, int noteId)
-    //{
-    //    throw new NotImplementedException();
-    //}
 
-    //[HttpGet]
-    //public IActionResult UpdateNote()
-    //{
-    //    throw new NotImplementedException();
-    //}
+
+    /// <summary>
+    /// Retrieves the Note.Content string of the logged user for a specified Lecture
+    /// </summary>
+    /// <remarks>
+    /// Only the author can retrieve their Note
+    /// </remarks>
+    /// <returns>
+    /// A string with confirmation:
+    ///     ""
+    /// </returns>
+    /// <response code="401">The user is not the Author of the Note</response>
+    /// <response code="200">The Note was successfully retrieved</response>
+    /// <response code="404">Either the Course, the Lecture or the Note were not found. See message for details</response>
+    [HttpGet("{courseId}/Lectures/{lectureId}/Note")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Tags("Course > Lecture > Note")]
+
+    public IActionResult GetNoteContent(int courseId, int lectureId)
+    {
+        try
+        {
+            return Ok(courseService.GetNoteContent(courseId, lectureId));
+        }
+        catch(UnauthorizedOperationException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch(EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+
+
+    /// <summary>
+    /// Updates the Note.Content for a specified Lecture. If it doesn't exist, creates it.
+    /// </summary>
+    /// <remarks>
+    /// Only the author can update their Note
+    /// </remarks>
+    /// <returns>
+    /// A string with the content. Example:
+    ///     ""Baka" is an important Japanese word"
+    /// </returns>
+    /// <response code="401">The user is not the Author of the Note</response>
+    /// <response code="200">The Note was successfully updated</response>
+    /// <response code="404">Either the Course, the Lecture or the Note were not found. See message for details</response>
+    [HttpPut("{courseId}/Lectures/{lectureId}/Note")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [Tags("Course > Lecture > Note")]
+
+    public IActionResult UpdateNoteContent(int courseId, int lectureId, [FromBody] string newContent)
+    {
+        try
+        {
+            return Ok(courseService.UpdateNoteContent(courseId, lectureId, newContent));
+        }
+        catch (UnauthorizedOperationException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
 
 }

@@ -354,6 +354,27 @@ public class CourseService : ICourseService
         throw new Exception($"Comment with id '{commentId}' could not be deleted.");
     }
 
+    //Notes
+
+    public string GetNoteContent(int courseId, int lectureId)
+    {
+        var loggedUser = accountService.GetLoggedUser();
+        _ = GetLectureById(courseId, lectureId); // checks if the lecture exists
+
+        string cont = courseRepository.GetNoteContent(loggedUser.Id, lectureId);
+
+        return courseRepository.GetNoteContent(loggedUser.Id, lectureId);
+    }
+
+    public string UpdateNoteContent(int courseId, int lectureId, string updatedContent)
+    {
+        var loggedUser = accountService.GetLoggedUser();
+        _ = GetLectureById(courseId, lectureId); // checks if the lecture exists
+
+        return courseRepository.UpdateNoteContent(loggedUser.Id, lectureId, updatedContent);
+    }
+
+
     // Validations
     public void ValidateUserEnrolledOrAdmin(Course course, User user)
     {

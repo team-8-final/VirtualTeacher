@@ -5,6 +5,7 @@ using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.QueryParameters;
+using VirtualTeacher.Exceptions;
 
 namespace VirtualTeacher.Repositories;
 
@@ -376,5 +377,49 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
+    //Notes
+
+    public string GetNoteContent(int userId, int lectureId)
+    {
+        if (context.Notes == null)
+        {
+            throw new EntityNotFoundException("Not found");
+        }
+
+        if (context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId) == null)  // if the Note does not exist
+        {
+            throw new EntityNotFoundException("You have no notes for this Lecture");
+        }
+
+        string cont = context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId).Content;
+
+        return context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId).Content
+        ?? throw new EntityNotFoundException("Not found");                                                          // something doesn't match, this shouldn't be reached ever if everything works fine
+    }
+
+    public string UpdateNoteContent(int userId, int lectureId, string updatedContent)
+    {
+
+
+        if (context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId) == null)  // if the Note does not exist yet...
+        {
+            if (!AddNote(new Note { LectureId = lectureId, StudentId = userId }))                                   // ...create it
+            {
+                throw new Exception("What the hell?");
+            }
+        }
+
+        Note note = context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId);
+        note.Content = updatedContent;
+        context.SaveChanges();
+
+        return $"Note content updated to \"{updatedContent}\" ";
+    }
+
+    public bool AddNote(Note noteToAdd)
+    {
+        context.Notes.Add(noteToAdd);
+        return context.SaveChanges() > 0;
+    }
 
 }
