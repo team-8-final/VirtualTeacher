@@ -15,6 +15,7 @@ namespace VirtualTeacher.Controllers.API;
 [ApiController]
 [Route("api/Courses")]
 [Produces("application/json")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class CourseApiController : ControllerBase
 {
     private readonly ICourseService courseService;
@@ -37,6 +38,7 @@ public class CourseApiController : ControllerBase
     [HttpGet("")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(500)]
+    [AllowAnonymous]
     [Tags("Course")]
     public IActionResult GetCourses([FromQuery] CourseQueryParameters parameters)
     {
@@ -66,6 +68,7 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The Course has been successfully retrieved</response>
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
+    [AllowAnonymous]
     [Tags("Course")]
     public IActionResult GetCourseById(int id)
     {
@@ -124,7 +127,6 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The Course was updated successfully</response>
     /// <response code="404">A Course with that id was not found</response>
     /// <response code="401">Unauthorized, you need to be the author of the course or an admin to edit it</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -165,7 +167,6 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The Course was deleted successfully</response>
     /// <response code="404">A Course with that id was not found</response>
     /// <response code="401">Unauthorized, you need to be the author of the course or an admin to delete it</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -200,8 +201,6 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The enroll request was successful.</response>
     /// <response code="404">The Course with that id was not found</response>
     /// <response code="409">The current user is already an enrolled student or an active teacher in the course.</response>
-
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("{courseId}/Students/")]
     [Tags("Course")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -236,6 +235,7 @@ public class CourseApiController : ControllerBase
     [HttpGet("{courseId}/Ratings")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [AllowAnonymous]
     [Tags("Course > Rating")]
     public IActionResult GetRatings(int courseId)
     {
@@ -265,7 +265,6 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="200">The Rating was successfully added</response>
     /// <response code="404">The Course with that id was not found</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("{courseId}/Ratings")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -301,7 +300,6 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="404">A Course with this id was not found</response>
     /// <response code="200">The Rating was successfully removed</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete("{courseId}/Ratings")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -336,7 +334,6 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="404">A Course with this id was not found or the Course has no Lectures yet</response>
     /// <response code="200">The list of Lectures was successfully retrieved</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("{courseId}/Lectures")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -373,7 +370,6 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="404">A Course with this id was not found or the Lecture was not found</response>
     /// <response code="200">The lecture was succesfully retrieved</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("{courseId}/Lectures/{lectureId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -408,7 +404,6 @@ public class CourseApiController : ControllerBase
     /// <response code="404">A Course with this id was not found or the Lecture was not found</response>
     /// <response code="200">The lecture was succesfully updated</response>
     /// <response code="401">You are not authorized to change the Lecture, only the author or an Admin can edit it</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("{courseId}/Lectures/{lectureId}/")]
     [Authorize(Roles = "Teacher, Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -448,7 +443,6 @@ public class CourseApiController : ControllerBase
     /// <response code="404">A Course with this id was not found</response>
     /// <response code="201">The Lecture was succesfully created</response>
     /// <response code="401">A Lecrute can only be created by the Course Teachers or an Admin</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("{courseId}")]
     [Authorize(Roles = "Teacher, Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -487,7 +481,6 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The Lecture was succesfully deleted</response>
     /// <response code="401">A Lecrute can only be deleted by the Course Teachers or an Admin</response>
     [Tags("Course > Lecture")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Authorize(Roles = "Teacher, Admin")]
     [HttpDelete("{courseId}/Lectures/{lectureId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -520,7 +513,6 @@ public class CourseApiController : ControllerBase
     /// <remarks> To find the lecture is necessary to have the Course id and Lecture id</remarks>
     /// <response code="200">The list was successfully retrieved</response>
     /// <response code="404">The Course or Lecture was not found. Or there are no Comments under this Lecture. See message for details</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("{courseId}/Lectures/{lectureId}/Comments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -553,7 +545,6 @@ public class CourseApiController : ControllerBase
     /// <response code="201">The comment was successfully created</response>
     /// <response code="400">If the item is null</response>
     /// <response code="404">The item was not found</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("{courseId}/Lectures/{lectureId}/Comments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -590,7 +581,6 @@ public class CourseApiController : ControllerBase
     /// <response code="401">The user is not Admin or the Author of the Comment</response>
     /// <response code="200">The Comment was successfully updated</response>
     /// <response code="404">Either the Course the Lecture or the Comment were not found. See message for details</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
@@ -632,7 +622,6 @@ public class CourseApiController : ControllerBase
     /// <response code="401">The user is not Admin or the Author of the Comment</response>
     /// <response code="200">The Comment was successfully deleted</response>
     /// <response code="404">Either the Course the Lecture or the Comment were not found. See message for details</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete("{courseId}/Lectures/{lectureId}/Comments/{commentId}")]
     [Tags("Course > Lecture > Comment")]
     public IActionResult DeleteComment(int courseId, int lectureId, int commentId)
@@ -651,5 +640,18 @@ public class CourseApiController : ControllerBase
         }
     }
 
+    // Notes
+
+    //[HttpGet("{courseId}/Lectures/{lectureId}/Comments/{noteId}")]
+    //public IActionResult GetNote(int courseId, int lectureId, int noteId)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //[HttpGet]
+    //public IActionResult UpdateNote()
+    //{
+    //    throw new NotImplementedException();
+    //}
 
 }
