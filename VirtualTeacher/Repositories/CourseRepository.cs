@@ -391,8 +391,6 @@ public class CourseRepository : ICourseRepository
             throw new EntityNotFoundException("You have no notes for this Lecture");
         }
 
-        string cont = context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId).Content;
-
         return context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId).Content
         ?? throw new EntityNotFoundException("Not found");                                                          // something doesn't match, this shouldn't be reached ever if everything works fine
     }

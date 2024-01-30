@@ -361,7 +361,6 @@ public class CourseService : ICourseService
         var loggedUser = accountService.GetLoggedUser();
         _ = GetLectureById(courseId, lectureId); // checks if the lecture exists
 
-        string cont = courseRepository.GetNoteContent(loggedUser.Id, lectureId);
 
         return courseRepository.GetNoteContent(loggedUser.Id, lectureId);
     }
