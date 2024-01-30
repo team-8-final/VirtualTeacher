@@ -202,7 +202,7 @@ public class CourseApiController : ControllerBase
     /// <response code="409">The current user is already an enrolled student or an active teacher in the course.</response>
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpPost("{courseId}/Enroll")]
+    [HttpPost("{courseId}/Students/")]
     [Tags("Course")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -336,6 +336,7 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="404">A Course with this id was not found or the Course has no Lectures yet</response>
     /// <response code="200">The list of Lectures was successfully retrieved</response>
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("{courseId}/Lectures")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -353,6 +354,10 @@ public class CourseApiController : ControllerBase
         {
             return NotFound(e.Message);
         }
+        catch (UnauthorizedOperationException e)
+        {
+            return Unauthorized(e.Message);
+        }
         catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
@@ -368,6 +373,7 @@ public class CourseApiController : ControllerBase
     /// </returns>
     /// <response code="404">A Course with this id was not found or the Lecture was not found</response>
     /// <response code="200">The lecture was succesfully retrieved</response>
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("{courseId}/Lectures/{lectureId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -513,6 +519,7 @@ public class CourseApiController : ControllerBase
     /// <remarks> To find the lecture is necessary to have the Course id and Lecture id</remarks>
     /// <response code="200">The list was successfully retrieved</response>
     /// <response code="404">The Course or Lecture was not found. Or there are no Comments under this Lecture. See message for details</response>
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("{courseId}/Lectures/{lectureId}/Comments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

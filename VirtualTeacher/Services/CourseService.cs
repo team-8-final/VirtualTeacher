@@ -139,10 +139,10 @@ public class CourseService : ICourseService
         var loggedUser = accountService.GetLoggedUser();
         var course = GetCourseById(courseId);
 
-        if (course.EnrolledStudents.Contains(loggedUser))
+        if (course.EnrolledStudents.Any(u => u.Id == loggedUser.Id))
             throw new DuplicateEntityException("You are already enrolled in this course.");
 
-        if (course.ActiveTeachers.Contains(loggedUser))
+        if (course.ActiveTeachers.Any(u => u.Id == loggedUser.Id))
             throw new DuplicateEntityException("You are already an active teacher in this course.");
 
         bool? enrollStatus = courseRepository.Enroll(courseId, loggedUser);
@@ -156,10 +156,14 @@ public class CourseService : ICourseService
     //Lectures
     public List<Lecture> GetLectures(int courseId)
     {
-        List<Lecture> lectures = new List<Lecture>();
+        var loggedUser = accountService.GetLoggedUser();
         var course = GetCourseById(courseId);
 
+        ValidateUserEnrolledOrAdmin(course, loggedUser);
+
+        List<Lecture> lectures = new List<Lecture>();
         lectures = courseRepository.GetLectures(course);
+
 
         if (lectures.Count == 0)
         {
@@ -169,9 +173,15 @@ public class CourseService : ICourseService
         return lectures;
     }
 
+    
+
     public Lecture GetLectureById(int courseId, int lectureId)
     {
+        var loggedUser = accountService.GetLoggedUser();
         var course = GetCourseById(courseId);
+
+        ValidateUserEnrolledOrAdmin(course, loggedUser);
+
         var foundLecture = courseRepository.GetLecture(courseId, lectureId);
 
         return foundLecture ?? throw new EntityNotFoundException($"Lecture with id '{lectureId}' was not found.");
@@ -250,6 +260,11 @@ public class CourseService : ICourseService
     //Comments
     public List<Comment> GetComments(int courseId, int lectureId)
     {
+        var course = GetCourseById(courseId);
+        var loggedUser = accountService.GetLoggedUser();
+
+        ValidateUserEnrolledOrAdmin(course, loggedUser);
+
         var lecture = GetLectureById(courseId, lectureId);
         var commentList = courseRepository.GetComments(lecture);
 
@@ -261,8 +276,11 @@ public class CourseService : ICourseService
 
     public Comment CreateComment(int courseId, int lectureId, CommentCreateDto dto)
     {
-        var lecture = GetLectureById(courseId, lectureId);
+        var course = GetCourseById(courseId);
         var loggedUser = accountService.GetLoggedUser();
+
+        ValidateUserEnrolledOrAdmin(course, loggedUser);
+        var lecture = GetLectureById(courseId, lectureId);
 
         var createdComment = courseRepository.CreateComment(lecture, loggedUser, dto);
 
@@ -275,6 +293,9 @@ public class CourseService : ICourseService
     public Comment GetCommentById(int courseId, int lectureId, int commentId)
     {
         var course = courseRepository.GetCourseById(courseId); // checks for exception for the course
+        var loggedUser = accountService.GetLoggedUser();
+
+        ValidateUserEnrolledOrAdmin(course, loggedUser);
         var comment = courseRepository.GetComment(lectureId, commentId);
 
         return comment ?? throw new EntityNotFoundException($"Comment with id '{commentId}' was not found.");
@@ -307,5 +328,16 @@ public class CourseService : ICourseService
             return $"Comment with id '{commentId}' was deleted.";
 
         throw new Exception($"Comment with id '{commentId}' could not be deleted.");
+    }
+
+    // Validations
+    public void ValidateUserEnrolledOrAdmin(Course course, User user)
+    {
+        if (!course.EnrolledStudents.Any(u => u.Id == user.Id)
+        && !course.ActiveTeachers.Any(u => u.Id == user.Id)
+        && user.UserRole != UserRole.Admin)
+        {
+            throw new UnauthorizedOperationException("You are not enrolled in this course.");
+        }
     }
 }
