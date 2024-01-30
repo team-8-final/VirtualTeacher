@@ -28,24 +28,28 @@ public class AccountController : Controller
         {
             var loggedUser = accountService.GetLoggedUser();
 
-            var model = new AccountViewModel
+            var model = new AccountInfoModel
             {
                 Username = loggedUser.Username,
                 FirstName = loggedUser.FirstName,
                 LastName = loggedUser.LastName,
                 Email = loggedUser.Email,
+                EnrolledCourses = loggedUser.EnrolledCourses,
+                CreatedCourses = loggedUser.CreatedCourses
             };
 
             return View("Index", model);
         }
-        catch (UnauthorizedOperationException e)
+        catch (Exception e)
         {
-            return View("Login");
+            TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+            TempData["ErrorMessage"] = e.Message;
+            return RedirectToAction("Error", "Shared");
         }
     }
 
     [HttpPost]
-    public IActionResult Index(AccountViewModel model)
+    public IActionResult Index(AccountInfoModel model)
     {
         try
         {
@@ -71,6 +75,79 @@ public class AccountController : Controller
         catch (UnauthorizedOperationException)
         {
             return RedirectToAction("login");
+        }
+        catch (DuplicateEntityException)
+        {
+            ModelState.AddModelError("Email", "The email is already in use.");
+
+            return View("Index", model);
+        }
+        catch (Exception e)
+        {
+            TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+            TempData["ErrorMessage"] = e.Message;
+            return RedirectToAction("Error", "Shared");
+        }
+    }
+
+    [HttpGet]
+    public IActionResult Update()
+    {
+        try
+        {
+            var loggedUser = accountService.GetLoggedUser();
+
+            var model = new AccountViewModel
+            {
+                Username = loggedUser.Username,
+                FirstName = loggedUser.FirstName,
+                LastName = loggedUser.LastName,
+                Email = loggedUser.Email,
+            };
+
+            return View("Update", model);
+        }
+        catch (Exception e)
+        {
+            TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+            TempData["ErrorMessage"] = e.Message;
+            return RedirectToAction("Error", "Shared");
+        }
+    }
+
+    [HttpPost]
+    public IActionResult Update(AccountViewModel model)
+    {
+        try
+        {
+            var loggedUser = accountService.GetLoggedUser();
+            model.Username = loggedUser.Username;
+
+            if (!ModelState.IsValid)
+            {
+                return View("Update", model);
+            }
+
+            var dto = new UserUpdateDto
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+            };
+
+            accountService.AccountUpdate(dto);
+
+            return RedirectToAction("Update");
+        }
+        catch (UnauthorizedOperationException)
+        {
+            return RedirectToAction("login");
+        }
+        catch (DuplicateEntityException)
+        {
+            ModelState.AddModelError("Email", "The email is already in use.");
+
+            return View("Update", model);
         }
         catch (Exception e)
         {

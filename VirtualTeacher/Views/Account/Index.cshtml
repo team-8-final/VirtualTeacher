@@ -1,4 +1,4 @@
-@model AccountViewModel;
+@model AccountInfoModel;
 
 @{
     ViewData["Title"] = "Profile Info";
@@ -7,31 +7,49 @@
 <div style="max-width: 400px; margin: auto">
     <form asp-controller="Account" asp-action="Index" method="post">
 
-        <img class="user-avatar-photo" src="images/avatar-default.png"/>
+        <img class="user-avatar-photo img-fluid" src="~/images/avatar-default.png"/>
         <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">@Model.Username</h3>
 
-        <div class="form-floating mb-3">
-            <input asp-for="FirstName" type="text" class="form-control" id="floatingFirstName" placeholder="First Name" required>
-            <label asp-for="FirstName" for="floatingFirstName">First Name</label>
-            <span asp-validation-for="FirstName" class="text-danger"></span>
+        <div class="">
+            <label for="displayFirstName">First Name</label>
+            <p id="displayFirstName">@Model.FirstName</p>
         </div>
 
-        <div class="form-floating mb-3">
-            <input asp-for="LastName" type="text" class="form-control" id="floatingLastName" placeholder="Last Name" required>
-            <label asp-for="LastName">Last Name</label>
-            <span asp-validation-for="LastName" class="text-danger"></span>
+        <div class="">
+            <label for="displayLastName">Last Name</label>
+            <p id="displayLastName">@Model.LastName</p>
         </div>
 
-        <div class="form-floating mb-3">
-            <input asp-for="Email" type="email" class="form-control" placeholder="Email" required>
-            <label asp-for="Email">Email</label>
-            <span asp-validation-for="Email" class="text-danger"></span>
+        <div class="">
+            <label for="displayEmail">Email</label>
+            <p id="displayEmail">@Model.Email</p>
         </div>
-
-        <input style="margin: 25px auto 0 auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Update Profile"/>
     </form>
 
-    <form asp-controller="Account" asp-action="Delete" method="get">
-        <input style="margin: 15px auto 0 auto; display: block; width: 100%" class="btn btn-danger" type="submit" value="Delete Account"/>
+    <form asp-controller="Account" asp-action="Update" method="get">
+        <input style="margin: 25px auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Update Profile"/>
     </form>
+
+    <br>
+
+    <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">Enrolled Courses</h3>
+
+    @foreach (var course in Model.EnrolledCourses)
+    {
+        <div class="">
+            <p>@course.Title</p>
+        </div>
+    }
+
+    <br>
+
+    <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">Created Courses</h3>
+
+    @foreach (var course in Model.CreatedCourses)
+    {
+        <div class="">
+            <p>@course.Title</p>
+        </div>
+    }
+
 </div>

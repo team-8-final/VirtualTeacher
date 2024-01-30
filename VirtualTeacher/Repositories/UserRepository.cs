@@ -24,6 +24,7 @@ namespace VirtualTeacher.Repositories
         {
             return context.Users
                 .Include(u => u.EnrolledCourses)
+                .Include(u => u.CreatedCourses)
                 .Where(u => !u.IsDeleted);
         }
 

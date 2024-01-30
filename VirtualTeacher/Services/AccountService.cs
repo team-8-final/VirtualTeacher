@@ -106,10 +106,6 @@ namespace VirtualTeacher.Services
                 throw new UnauthorizedOperationException("You are not logged in!");
             }
 
-
-            // TODO remove test
-            var test = httpContextAccessor.HttpContext.User.FindFirstValue("UserId");
-
             if (httpContextAccessor.HttpContext.User.FindFirstValue("UserId") is not null
                 && httpContextAccessor.HttpContext.User.FindFirstValue("UserId") != null)
             {
@@ -135,14 +131,9 @@ namespace VirtualTeacher.Services
 
         public bool UserIsLoggedIn()
         {
-            var loggedId = GetLoggedUserId();
+            var isLoggedIn = httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
 
-            if (loggedId == -1)
-            {
-                return false;
-            }
-
-            return true;
+            return isLoggedIn;
         }
 
         public void ValidateAdminRole()
