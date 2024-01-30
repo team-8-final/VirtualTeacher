@@ -220,6 +220,46 @@ public class CourseApiController : ControllerBase
         {
             return Conflict(e.Message);
         }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        }
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("{courseId}/Teachers/{teacherId}")]
+    [Tags("Course")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    public IActionResult AddTeacher(int courseId, int teacherId)
+    {
+        try
+        {
+            return Ok(courseService.AddTeacher(courseId, teacherId));
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (DuplicateEntityException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (UnauthorizedOperationException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        //catch (Exception)
+        //{
+        //    return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong.");
+        //}
     }
 
     // Ratings
