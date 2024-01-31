@@ -13,6 +13,31 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+html, body {
+    height: 100%;
+    margin: 0;
 }
+
+body {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-areas: "nav" "main" "footer";
+    grid-template-rows: 100px 1fr 80px;
+}
+
+nav {
+    grid-area: nav;
+}
+
+main {
+    grid-area: main;
+}
+
+footer {
+    grid-area: footer;
+    height: 50px;
+    margin-top: 0px;
+    margin-left: 250px;
+    margin-right: 250px;
+}
+
