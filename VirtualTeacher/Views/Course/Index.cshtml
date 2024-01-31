@@ -11,7 +11,12 @@
          @{
             foreach (var course in Model)
             {
-                <li>@course.Title</li>   
+                <li>
+                <a asp-controller="Course" asp-action="Details">@course.Title</a>
+                Teacher: @course.ActiveTeachers[0].Username 
+                Rating: @(course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0.0)
+                Number of enrolled students: @course.EnrolledStudents.Count()
+                </li>
             }
          }
     </ul>
