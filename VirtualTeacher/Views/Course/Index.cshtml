@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Courses";
+    bool isLogged = Context.Session.Keys.Contains("CurrentUser");
+
+}
+
+@model PaginatedList<Course>
+
+ <div>
+    <ul>
+         @{
+            foreach (var course in Model)
+            {
+                <li>@course.Title</li>   
+            }
+         }
+    </ul>
+</div>

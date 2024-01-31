@@ -20,12 +20,15 @@ namespace VirtualTeacher.Controllers.MVC
         [HttpGet]
         public IActionResult Index(CourseQueryParameters queryParameters)
         {
-            //ViewData["SortOrder"] = string.IsNullOrEmpty(queryParameters.SortOrder) ? "desc" : "";
-            //ViewData["LanguageSearch"] = string.IsNullOrEmpty(queryParameters.Author) ? "" : queryParameters.Author;
-            //ViewData["Popularity"] = string.IsNullOrEmpty(queryParameters.Title) ? "" : queryParameters.Title;  //based on ratings? 
-            var threads = courseService.FilterCoursesBy(queryParameters);
+            ViewData["SortOrder"] = string.IsNullOrEmpty(queryParameters.SortOrder) ? "desc" : "";
+            ViewData["Topic"] = string.IsNullOrEmpty(queryParameters.Topic.ToString()) ? "" : queryParameters.Topic; //todo to test this 
+            ViewData["TeacherUsername"] = string.IsNullOrEmpty(queryParameters.TeacherUsername) ? "" : queryParameters.TeacherUsername;
 
-            return View(threads);
+            // ViewData["Rating"] = string.IsNullOrEmpty(queryParameters.TeacherUsername) ? "" : queryParameters.Rating; //based on ratings?
+
+            var courses = courseService.FilterCoursesBy(queryParameters);
+
+            return View(courses);
         }
     }
 }

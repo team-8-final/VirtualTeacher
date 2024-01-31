@@ -109,7 +109,7 @@ public class CourseApiController : ControllerBase
             var responseDto = mapper.MapResponse(createdCourse);
             return StatusCode(StatusCodes.Status201Created, responseDto);
         }
-        catch (DuplicateEntityException e) //todo we are not checking if course with that name exists, it will need GetCourseByName() method to work
+        catch (DuplicateEntityException e)
         {
             return Conflict(e.Message);
         }

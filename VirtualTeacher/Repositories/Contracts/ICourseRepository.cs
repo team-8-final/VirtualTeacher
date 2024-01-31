@@ -6,7 +6,7 @@ namespace VirtualTeacher.Repositories.Contracts
 {
     public interface ICourseRepository
     {
-        IList<Course> FilterBy(CourseQueryParameters parameters);
+        PaginatedList<Course> FilterBy(CourseQueryParameters parameters);
 
         Course? GetCourseById(int id);
         Course? CreateCourse(CourseCreateDto dto, User teacher);

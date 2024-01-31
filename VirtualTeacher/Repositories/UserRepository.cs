@@ -19,7 +19,6 @@ namespace VirtualTeacher.Repositories
             this.context = context;
         }
 
-        // todo add inclusions
         public IQueryable<User> GetUsers()
         {
             return context.Users

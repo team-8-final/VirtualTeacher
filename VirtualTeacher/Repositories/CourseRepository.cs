@@ -202,7 +202,7 @@ public class CourseRepository : ICourseRepository
     }
 
 
-    public IList<Course> FilterBy(CourseQueryParameters parameters)
+    public PaginatedList<Course> FilterBy(CourseQueryParameters parameters)
     {
         IQueryable<Course> result = GetCourses();
 
@@ -214,8 +214,9 @@ public class CourseRepository : ICourseRepository
         result = SortBy(result, parameters.SortBy);
         result = OrderBy(result, parameters.SortOrder);
 
+        int totalPages = (int)Math.Ceiling(((double)result.Count()) / parameters.PageSize);
 
-        return new List<Course>(result.ToList());
+        return new PaginatedList<Course>(result.ToList(), totalPages, parameters.PageNumber);
     }
 
     private static IQueryable<Course> FilterByTitle(IQueryable<Course> courses, string? title)

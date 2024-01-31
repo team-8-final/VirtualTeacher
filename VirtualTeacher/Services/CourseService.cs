@@ -22,7 +22,7 @@ public class CourseService : ICourseService
         this.userService = userService;
     }
 
-    public IList<Course> FilterCoursesBy(CourseQueryParameters parameters)
+    public PaginatedList<Course> FilterCoursesBy(CourseQueryParameters parameters)
     {
         return courseRepository.FilterBy(parameters);
     }
