@@ -9,8 +9,8 @@ namespace VirtualTeacher.Services.Contracts
         IList<User> FilterBy(UserQueryParameters parameters);
         IList<User> GetUsers();
         User GetById(int id);
-        User Create(UserCreateDto user);
-        User Update(int idToUpdate, UserUpdateDto updateData);
+        User Create(UserCreateDto dto);
+        User Update(int idToUpdate, UserUpdateDto dto);
         string Delete(int id);
         User ChangeRole(int id, int roleId);
         int GetUserCount();

@@ -17,5 +17,6 @@ namespace VirtualTeacher.Services.Contracts
         User GetLoggedUser();
         bool UserIsLoggedIn();
         User AccountUpdate(UserUpdateDto dto);
+        string Sha512(string input);
     }
 }

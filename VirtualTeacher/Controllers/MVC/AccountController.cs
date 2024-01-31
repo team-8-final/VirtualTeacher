@@ -215,7 +215,7 @@ public class AccountController : Controller
             var loginViewModel = new LoginViewModel
             {
                 Email = user.Email,
-                Password = user.Password,
+                Password = model.Password,
                 RememberLogin = false,
             };
 

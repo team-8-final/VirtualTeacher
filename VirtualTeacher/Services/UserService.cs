@@ -20,19 +20,21 @@ namespace VirtualTeacher.Services
             this.accountService = accountService;
         }
 
-        public User Create(UserCreateDto user)
+        public User Create(UserCreateDto dto)
         {
-            if (userRepository.CheckDuplicateUsername(user.Username))
+            if (userRepository.CheckDuplicateUsername(dto.Username))
             {
-                throw new DuplicateEntityException($"Username {user.Username} is already in use!");
+                throw new DuplicateEntityException($"Username {dto.Username} is already in use!");
             }
 
-            if (userRepository.CheckDuplicateEmail(user.Email))
+            if (userRepository.CheckDuplicateEmail(dto.Email))
             {
-                throw new DuplicateEntityException($"Email {user.Email} is already in use!");
+                throw new DuplicateEntityException($"Email {dto.Email} is already in use!");
             }
 
-            var createdUser = userRepository.Create(user);
+            dto.Password = accountService.Sha512(dto.Password);
+
+            var createdUser = userRepository.Create(dto);
 
             return createdUser ?? throw new Exception($"The registration could not be completed.");
         }
@@ -64,16 +66,19 @@ namespace VirtualTeacher.Services
             return foundUser ?? throw new EntityNotFoundException($"User with email '{email}' was not found.");
         }
 
-        public User Update(int idToUpdate, UserUpdateDto updateData)
+        public User Update(int idToUpdate, UserUpdateDto dto)
         {
-            var foundUser = GetById(idToUpdate);
+            if (userRepository.CheckDuplicateEmail(dto.Email))
+                throw new DuplicateEntityException($"Email {dto.Email} is already in use!");
 
-            if (userRepository.CheckDuplicateEmail(updateData.Email))
-                throw new DuplicateEntityException($"Email {updateData.Email} is already in use!");
+            if (dto.Password != null)
+            {
+                dto.Password = accountService.Sha512(dto.Password);
+            }
 
-            var updatedUser = userRepository.UpdateUser(idToUpdate, updateData);
+            var updatedUser = userRepository.UpdateUser(idToUpdate, dto);
 
-            return updatedUser ?? throw new Exception($"Your profile could not be updated.");
+            return updatedUser ?? throw new Exception("Your profile could not be updated.");
         }
 
         public string Delete(int id)

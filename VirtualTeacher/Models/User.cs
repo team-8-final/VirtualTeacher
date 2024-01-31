@@ -14,11 +14,11 @@ public class User
 
     [Required]
     [EmailAddress]
-    [MaxLength(254)] 
+    [MaxLength(254)]
     public string Email { get; set; } = null!;
 
     [Required]
-    [MinLength(8), MaxLength(64)]
+    [MinLength(8), MaxLength(128)]
     public string Password { get; set; } = null!;
 
     [Required]

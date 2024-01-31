@@ -27,9 +27,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>().HasData(
             new List<User>
             {
-                new() { Id = 1, Username = "admin", FirstName = "Admin", LastName = "Admin", Password = "securepass", Email = "admin@example.com", UserRole = UserRole.Admin, AvatarUrl="randomurl.com" },
-                new() { Id = 2, Username = "johndoe", FirstName = "John", LastName = "Doe", Password = "securepass", Email = "johndoe@example.com", UserRole = UserRole.Student, AvatarUrl="randomurl.com" },
-                new() { Id = 3, Username = "steviej", FirstName = "Stevie", LastName = "Johnson", Password = "securepass", Email = "stevie@example.com", UserRole = UserRole.Teacher, AvatarUrl="randomurl.com" },
+                new() { Id = 1, Username = "admin", FirstName = "Admin", LastName = "Admin", Password = "qCs2FMBZ9j2q/7MYMah70BgC92dIHOMkTHsdoSP/G6ULPpc7yeyqwoBB5cm8f4QFy089RiV0q1ebCz8QsGa83w==", Email = "admin@example.com", UserRole = UserRole.Admin, AvatarUrl="randomurl.com" },
+                new() { Id = 2, Username = "johndoe", FirstName = "John", LastName = "Doe", Password = "qCs2FMBZ9j2q/7MYMah70BgC92dIHOMkTHsdoSP/G6ULPpc7yeyqwoBB5cm8f4QFy089RiV0q1ebCz8QsGa83w==", Email = "johndoe@example.com", UserRole = UserRole.Student, AvatarUrl="randomurl.com" },
+                new() { Id = 3, Username = "steviej", FirstName = "Stevie", LastName = "Johnson", Password = "qCs2FMBZ9j2q/7MYMah70BgC92dIHOMkTHsdoSP/G6ULPpc7yeyqwoBB5cm8f4QFy089RiV0q1ebCz8QsGa83w==", Email = "stevie@example.com", UserRole = UserRole.Teacher, AvatarUrl="randomurl.com" },
             });
 
         modelBuilder.Entity<Course>().HasData(
