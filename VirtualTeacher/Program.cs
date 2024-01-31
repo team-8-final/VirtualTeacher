@@ -14,6 +14,8 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Newtonsoft.Json.Converters;
 
 namespace VirtualTeacher;
 
@@ -44,11 +46,16 @@ public class Program
                 };
             });
 
+
+
         builder.Services.AddAuthorization();
         builder.Services.AddHttpContextAccessor();
 
         // Add services to the container.
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllersWithViews()
+            .AddNewtonsoftJson(options =>
+        options.SerializerSettings.Converters.Add(new StringEnumConverter()));   //necessary to convert enums into strings in Swagger
+
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddSwaggerGen(options =>
