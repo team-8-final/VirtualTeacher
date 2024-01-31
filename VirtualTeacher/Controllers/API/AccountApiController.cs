@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
@@ -8,7 +10,11 @@ using VirtualTeacher.Services.Contracts;
 
 namespace VirtualTeacher.Controllers.API;
 
-public class AccountApiController : Controller
+[ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Route("api/account")]
+[Tags("Account")]
+public class AccountApiController : ControllerBase
 {
     private readonly IAccountService accountService;
     private readonly IUserService userService;
@@ -21,6 +27,14 @@ public class AccountApiController : Controller
         this.mapper = mapper;
     }
 
+    /// <summary>
+    /// Post credentials to get a token.
+    /// </summary>
+    /// <returns>
+    /// Returns a token if credentials are valid.
+    /// </returns>
+    ///<response code="200">Token successfully issued.</response>
+    [AllowAnonymous]
     [HttpPost("token")]
     public IActionResult Token([FromBody] CredentialsDto dto)
     {
@@ -46,17 +60,79 @@ public class AccountApiController : Controller
         {
             return Unauthorized(e.Message);
         }
-        catch (EntityNotFoundException)
-        {
-            return Unauthorized("Invalid credentials.");
-        }
         catch (InvalidUserInputException)
         {
             return Unauthorized("Invalid credentials.");
         }
     }
 
-    [HttpPost("register")]
+    /// <summary>
+    /// Gets information about the currently logged in user.
+    /// </summary>
+    /// <returns>
+    /// Returns json with information about the currently logged in user.
+    /// </returns>
+    ///<response code="200">User json returned</response>
+    [HttpGet]
+    public IActionResult GetAccount()
+    {
+        try
+        {
+            var loggedUser = accountService.GetLoggedUser();
+            var loggedUserDto = mapper.MapResponse(loggedUser);
+
+            return Ok(loggedUserDto);
+        }
+        catch (UnauthorizedOperationException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Conflict(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Deletes the currently logged in user.
+    /// </summary>
+    /// <returns>
+    /// Returns a success message string.
+    /// </returns>
+    ///<response code="200"></response>
+    [HttpDelete]
+    public IActionResult DeleteAccount()
+    {
+        try
+        {
+            var loggedUserId = accountService.GetLoggedUserId();
+            var result  = userService.Delete(loggedUserId);
+
+            return Ok(result);
+        }
+        catch (EntityNotFoundException)
+        {
+            return Unauthorized("You are not logged in.");
+        }
+        catch (UnauthorizedOperationException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Registers a new user in the system.
+    /// </summary>
+    /// <returns>
+    /// Returns json with information about the newly registered user.
+    /// </returns>
+    ///<response code="200">User json returned</response>
+    [AllowAnonymous]
+    [HttpPost]
     public IActionResult Register([FromBody] UserCreateDto userDto)
     {
         try

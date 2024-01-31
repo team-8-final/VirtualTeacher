@@ -290,7 +290,7 @@ public class CourseRepository : ICourseRepository
         {
             return false;
         }
-        
+
         context.Lectures.Remove(lectureToDelete);
         return context.SaveChanges() > 0;
     }

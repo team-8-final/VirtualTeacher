@@ -27,7 +27,6 @@ public class CourseApiController : ControllerBase
         this.mapper = mapper;
     }
 
-
     /// <summary>
     /// Retrieves all Courses
     /// </summary>
