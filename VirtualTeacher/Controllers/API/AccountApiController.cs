@@ -161,4 +161,70 @@ public class AccountApiController : ControllerBase
             return Conflict(e.Message);
         }
     }
+
+    /// <summary>
+    /// Updates the currently logged in user.
+    /// </summary>
+    /// <returns>
+    /// Returns json with information about the updated user.
+    /// </returns>
+    ///<response code="200">User json returned</response>
+    [HttpPut]
+    public IActionResult Update([FromBody] UserUpdateDto userDto)
+    {
+        try
+        {
+            var loggedUserId = accountService.GetLoggedUserId();
+            var updatedUser = userService.Update(loggedUserId, userDto);
+            var updatedUserDto = mapper.MapResponse(updatedUser);
+
+            return Ok(updatedUserDto);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (DuplicateEntityException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Conflict(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Changes the password of the currently logged in user.
+    /// </summary>
+    /// <returns>
+    /// Returns a success message string.
+    /// </returns>
+    ///<response code="200"></response>
+    [HttpPut("password")]
+    public IActionResult ChangePassword([FromBody] UserPasswordDto dto)
+    {
+        try
+        {
+            var loggedUser = accountService.GetLoggedUser();
+
+            if (!accountService.ValidateCredentials(loggedUser.Email, dto.CurrentPassword))
+            {
+                return BadRequest("Invalid credentials.");
+            }
+
+            var userUpdateDto = new UserUpdateDto
+            {
+                Password = dto.NewPassword
+            };
+
+            _ = userService.Update(loggedUser.Id, userUpdateDto);
+
+            return Ok("Password changed successfully.");
+        }
+        catch (InvalidOperationException e)
+        {
+            return Conflict(e.Message);
+        }
+    }
 }
