@@ -81,8 +81,15 @@ namespace VirtualTeacher.Services
             var foundUser = GetById(id);
             var loggedUser = accountService.GetLoggedUser();
 
+            if (foundUser.Username == "admin")
+            {
+                throw new InvalidOperationException("The admin user cannot be deleted.");
+            }
+
             if (loggedUser.UserRole != UserRole.Admin && foundUser.Id != loggedUser.Id)
-                throw new UnauthorizedOperationException($"A user can be deleted only by themselves or an admin.");
+            {
+                throw new UnauthorizedOperationException("A user can be deleted only by themselves or an admin.");
+            }
 
             bool? userDeleted = userRepository.Delete(id);
 

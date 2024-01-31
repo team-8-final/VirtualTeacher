@@ -146,7 +146,6 @@ public class AccountController : Controller
         catch (DuplicateEntityException)
         {
             ModelState.AddModelError("Email", "The email is already in use.");
-
             return View("Update", model);
         }
         catch (Exception e)
@@ -395,8 +394,6 @@ public class AccountController : Controller
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
                 new AuthenticationProperties { IsPersistent = model.RememberLogin });
 
-            var test = HttpContext.User.FindFirstValue("UserId");
-
             return RedirectToAction("Index");
         }
         catch (UnauthorizedOperationException e)
@@ -442,19 +439,27 @@ public class AccountController : Controller
 
             Logout();
 
-            return RedirectToAction("Index", "Home");
+            // TODO: Implement notification bar
+            // return RedirectToAction("Index", "Home");
+
+            return Json(new { success = true });
+
         }
         catch (InvalidOperationException e)
         {
-            TempData["StatusCode"] = StatusCodes.Status400BadRequest;
-            TempData["ErrorMessage"] = e.Message;
-            return RedirectToAction("Error", "Shared");
+            // TempData["StatusCode"] = StatusCodes.Status400BadRequest;
+            // TempData["ErrorMessage"] = e.Message;
+            // return RedirectToAction("Error", "Shared");
+
+            return Json(new { success = false, errorMessage = e.Message });
         }
         catch (Exception e)
         {
-            TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
-            TempData["ErrorMessage"] = e.Message;
-            return RedirectToAction("Error", "Shared");
+            // TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+            // TempData["ErrorMessage"] = e.Message;
+            // return RedirectToAction("Error", "Shared");
+
+            return Json(new { success = false, errorMessage = e.Message });
         }
     }
 }

@@ -5,7 +5,7 @@
 }
 
 <div style="max-width: 400px; margin: auto">
-    <form asp-controller="Account" asp-action="Index" method="post">
+    <form asp-controller="Account" asp-action="Update" method="post">
 
         <img class="user-avatar-photo img-fluid" src="~/images/avatar-default.png"/>
         <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">@Model.Username</h3>
@@ -28,10 +28,90 @@
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
-        <input style="margin: 25px auto 0 auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Update Profile"/>
+        <button type="submit" class="btn btn-primary" style="margin: 25px auto 0 auto; display: block; width: 100%">
+            <i class="fa-regular fa-pen-to-square"></i> Update Profile
+        </button>
     </form>
 
-    <form asp-controller="Account" asp-action="Delete" method="get">
-        <input style="margin: 15px auto 0 auto; display: block; width: 100%" class="btn btn-danger" type="submit" value="Delete Account"/>
-    </form>
+
+    <!-- Delete Account Button -->
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal" style="margin: 15px auto 0 auto; display: block; width: 100%">
+        <i class="fa-regular fa-trash-can"></i> Delete Account
+    </button>
+
+    @* <form asp-controller="Account" asp-action="Delete" method="get"> *@
+    @*     <input style="margin: 15px auto 0 auto; display: block; width: 100%" class="btn btn-danger" type="submit" value="Delete Account"/> *@
+    @* </form> *@
 </div>
+
+
+<!-- Delete Account Confirmation Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your account?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Pop-up -->
+<div id="notificationBar" class="alert" role="alert" style="display: none; position: fixed; bottom: 20px; right: 20px; width: auto; max-width: 450px; z-index: 9999; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding-right: 15px; background: #a94442; color: white; border-radius: 4px;">
+    <span id="notificationMessage" style="display: inline-block; max-width: 80%;"></span>
+    <button id="closeNotification" style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; margin-left: 10px; border: none; background: none; color: white; float: right;"><i class="fa-solid fa-xmark"></i></button>
+</div>
+
+<script>
+document.getElementById('confirmDelete').addEventListener('click', function() {
+    fetch('/Account/Delete', { method: 'GET' })
+        .then(response => response.json())
+        .then(({ success, errorMessage }) => { // Destructure success and errorMessage from data
+
+            // Show notification
+            let notificationBar = document.getElementById('notificationBar');
+            let notificationMessage = document.getElementById('notificationMessage');
+            notificationBar.style.display = 'block';
+            notificationBar.style.bottom = '20px';
+            notificationBar.style.right = '20px';
+
+            if (success) {
+                notificationBar.classList.add('alert-success');
+                notificationBar.style.backgroundColor = '#3c763d';
+                notificationMessage.innerHTML = 'Account deleted successfully.<br>Redirecting to home page in 5 seconds...';
+
+                let countdown = 5;
+                let intervalId = setInterval(() => {
+                    countdown--;
+
+                if (countdown <= 0) {
+                    clearInterval(intervalId);
+                    window.location.href = '/Home/Index';
+                } else {
+                    notificationMessage.innerHTML = 'Account deleted successfully.<br>Redirecting to home page in ' + countdown + ' seconds...';
+                }
+                }, 1000);
+            } else {
+                notificationBar.classList.add('alert-danger');
+                notificationMessage.textContent = errorMessage;
+            }
+
+            // Hide the modal
+            let myModal = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
+            myModal.hide();
+        });
+});
+
+document.getElementById('closeNotification').addEventListener('click', function() {
+    let notificationBar = document.getElementById('notificationBar');
+    notificationBar.style.display = 'none';
+});
+</script>
