@@ -61,6 +61,7 @@ footer {
     padding-top: 60px;
     margin-left: 100px;
     border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
 }
 
 .sidebar a {
@@ -79,8 +80,8 @@ footer {
 .sidebar .closebtn {
     position: absolute;
     top: 0;
-    right: 25px;
-    font-size: 36px;
+    right: 7px;
+    font-size: 30px;
     margin-left: 50px;
 }
 
