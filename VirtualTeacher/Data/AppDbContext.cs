@@ -45,6 +45,10 @@ public class AppDbContext : DbContext
             {
                 new() { Id = 1, TeacherId = 3, CourseId = 1, Title = "Lecture 1: The basics", Description = "Test description", VideoLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk", AssignmentLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk"},
                 new() { Id = 2, TeacherId = 3, CourseId = 1, Title = "Lecture 2: Next Level", Description = "description #2", VideoLink = "https://www.youtube.com/watch?v=X99fpJ2HB0A", AssignmentLink = "https://www.youtube.com/watch?v=Tqt7Zj-qAtk"},
+                new() { Id = 3, TeacherId = 3, CourseId = 2, Title = "Local dialects of Mandarin 1", Description = "If you want to be able to buy potatos at the local viliga market in Chine in 1400, this the course for you", VideoLink = "https://www.youtube.com/watch?v=SUxGsjDEfvo", AssignmentLink = ""},
+                new() { Id = 4, TeacherId = 3, CourseId = 2, Title = "Local dialects of Mandarin 2", Description = "If you want to be able to buy potatos at the local viliga market in Chine in 1400, this the course for you", VideoLink = "https://www.youtube.com/watch?v=SUxGsjDEfvo", AssignmentLink = ""},
+                new() { Id = 5, TeacherId = 3, CourseId = 2, Title = "Local dialects of Mandarin 3", Description = "If you want to be able to buy potatos at the local viliga market in Chine in 1400, this the course for you", VideoLink = "https://www.youtube.com/watch?v=SUxGsjDEfvo", AssignmentLink = ""},
+                new() { Id = 6, TeacherId = 3, CourseId = 2, Title = "Local dialects of Mandarin 4", Description = "If you want to be able to buy potatos at the local viliga market in Chine in 1400, this the course for you", VideoLink = "https://www.youtube.com/watch?v=SUxGsjDEfvo", AssignmentLink = ""},
             });
 
         modelBuilder.Entity<Comment>().HasData(

@@ -1,7 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Courses";
-    bool isLogged = Context.Session.Keys.Contains("CurrentUser");
-
 }
 
 @model PaginatedList<Course>
@@ -12,7 +10,7 @@
             foreach (var course in Model)
             {
                 <li>
-                <a asp-controller="Course" asp-action="Details">@course.Title</a>
+                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">@course.Title</a>
                 Teacher: @course.ActiveTeachers[0].Username 
                 Rating: @(course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0.0)
                 Number of enrolled students: @course.EnrolledStudents.Count()

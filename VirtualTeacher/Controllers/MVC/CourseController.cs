@@ -30,5 +30,13 @@ namespace VirtualTeacher.Controllers.MVC
 
             return View(courses);
         }
+
+        public IActionResult Details([FromRoute] int id)
+        {
+            var course = courseService.GetCourseById(id);
+
+            return View(course);
+        }
+
     }
 }
