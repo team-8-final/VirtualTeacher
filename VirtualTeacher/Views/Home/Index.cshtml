@@ -2,7 +2,241 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero">
+    <section class="hero-left">
+        <h1>Empower Your Language Journey</h1>
+        <h4>Your Gateway to Fluent Learning!</h4>
+        <p>
+            Insert your corporate text here
+            @* Master languages at your pace, from beginners to advanced. 
+            Redefine language education from home. Join us on your journey to fluency! *@
+        </p>
+
+        <button href="#" class="btn btn-primary btn-lg" style="text-decoration: none">Join now</button>
+    </section>
+
+    <section class="right">
+        <img src="~/images/home-temp.png" alt="Hero illustration" />
+    </section>
 </div>
+
+
+<h3>Benefits</h3>
+<div class="bullet-points" id="grad1">
+    <p>
+        <i class="fas fa-band-aid"></i>
+        <br/>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed gravida urna vel ipsum ultrices, ac faucibus sapien volutpat.
+    </p>
+    <p>
+        <i class="fas fa-band-aid"></i>
+        <br />
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Sed gravida urna vel ipsum ultrices, ac faucibus sapien volutpat.
+    </p>
+    <p>
+        <i class="fas fa-band-aid"></i>
+        <br />
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Sed gravida urna vel ipsum ultrices, ac faucibus sapien volutpat.
+    </p>
+</div>
+
+
+<h2>Top rated/Most popular/Newest</h2>
+<div class="d-flex card-carousel rounded-1">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Course #1</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Course #2</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Course #3</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+</div>
+
+<h3>Some stats</h3>
+<div class="bullet-points" id="grad1">
+    <p>
+        <i class="fas fa-band-aid"></i>
+        <br />
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Sed gravida urna vel ipsum ultrices, ac faucibus sapien volutpat.
+    </p>
+    <p>
+        <i class="fas fa-band-aid"></i>
+        <br />
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Sed gravida urna vel ipsum ultrices, ac faucibus sapien volutpat.
+    </p>
+    <p>
+        <i class="fas fa-band-aid"></i>
+        <br />
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Sed gravida urna vel ipsum ultrices, ac faucibus sapien volutpat.
+    </p>
+</div>
+
+<h2>Teachers</h2>
+<div class="d-flex card-carousel rounded-1">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Course #1</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Course #2</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Course #3</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@* todo Move to site.css when done*@
+<style>
+.card-carousel{
+    border: 1px solid gray;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+}
+
+#grad1 {
+    height: 200px;
+    background-image: linear-gradient(to right, #4158D0, #C850C0,#FFCC70);
+}
+
+.bullet-points{
+    display: flex;
+    align-items: center;
+    margin-bottom: 3rem;
+    justify-content: space-between;
+}
+
+.bullet-points section{
+    flex: 1;
+}
+
+.bullet-points p {
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    color: #ffffff;
+    margin-left: 5%;
+    margin-right: 5%;
+    text-align: justify;
+}
+
+.bullet-points i {
+    font-weight: 600;
+    line-height: 1.5;
+    color: #ffff;
+    justify-content: center;
+    margin-left: 40%;
+}
+
+
+.hero {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5rem;
+}
+
+.hero section {
+    flex: 1;
+}
+.hero-left h1 {
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+    color: #070439;
+}
+
+.hero-left p {
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    color: #444444;
+}
+
+.hero-left {
+    padding-right: 40px;
+}
+.hero-left a {
+    padding: 10px 15px;
+    background: #372cfa;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: 0.3s all ease;
+    border-radius: 20px;
+}
+.hero-left a:hover{
+    background-color: #070439;
+}
+.right {
+    padding-top: 50px;
+}
+
+.right img {
+    width: 100%;
+    max-width: 465px;
+}
+@@media screen and (max-width: 1000px) {
+    nav img {
+    width: 100px; 
+    }
+
+  nav li {
+    list-style: none;
+    margin: 0 8px 
+  }
+
+  .hero {
+    flex-direction: column;  
+    text-align: center; 
+  }
+
+  .hero .right {
+    order: -1;  
+    padding-bottom: 5rem; 
+  }
+}
+</style>

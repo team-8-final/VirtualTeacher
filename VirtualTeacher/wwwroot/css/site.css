@@ -38,7 +38,6 @@ main {
     grid-area: main;
     margin-left: 100px;
     margin-right: 100px;
-    background-color: gray;
 }
 
 footer {
@@ -50,7 +49,7 @@ footer {
 }
 
 .sidebar {
-    height: calc(100% - 199px);
+    height: calc(100% - 449px);
     width: 0;
     position: fixed;
     z-index: 1;
@@ -61,6 +60,7 @@ footer {
     transition: 0.5s;
     padding-top: 60px;
     margin-left: 100px;
+    border-radius: 10px;
 }
 
 .sidebar a {
