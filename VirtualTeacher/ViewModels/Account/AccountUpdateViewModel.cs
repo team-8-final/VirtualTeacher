@@ -19,4 +19,6 @@ public class AccountUpdateViewModel
     [Required(AllowEmptyStrings = false, ErrorMessage = "Email cannot be blank.")]
     [EmailAddress(ErrorMessage = "Enter valid email address.")]
     public string Email { get; set; } = null!;
+
+    public string AvatarUrl { get; set; } = null!;
 }

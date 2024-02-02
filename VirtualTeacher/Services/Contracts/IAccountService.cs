@@ -18,5 +18,8 @@ namespace VirtualTeacher.Services.Contracts
         bool UserIsLoggedIn();
         User AccountUpdate(UserUpdateDto dto);
         string Sha512(string input);
+        string SaveAccountAvatar(IFormFile file);
+        string GetUserAvatar(string username);
+        bool DeleteUserAvatar(string username);
     }
 }

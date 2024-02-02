@@ -35,7 +35,8 @@ public class AccountController : Controller
                 LastName = loggedUser.LastName,
                 Email = loggedUser.Email,
                 EnrolledCourses = loggedUser.EnrolledCourses,
-                CreatedCourses = loggedUser.CreatedCourses
+                CreatedCourses = loggedUser.CreatedCourses,
+                AvatarUrl = accountService.GetUserAvatar(loggedUser.Username),
             };
 
             return View("Index", model);
@@ -103,6 +104,7 @@ public class AccountController : Controller
                 FirstName = loggedUser.FirstName,
                 LastName = loggedUser.LastName,
                 Email = loggedUser.Email,
+                AvatarUrl = accountService.GetUserAvatar(loggedUser.Username),
             };
 
             return View("Update", model);

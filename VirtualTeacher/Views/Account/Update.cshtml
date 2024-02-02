@@ -7,7 +7,7 @@
 <div style="max-width: 400px; margin: auto">
     <form asp-controller="Account" asp-action="Update" method="post">
 
-        <img class="user-avatar-photo img-fluid" src="~/images/avatar-default.png"/>
+        <img class="user-avatar-photo img-fluid" src="~/@Model.AvatarUrl"/>
         <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">@Model.Username</h3>
 
         <div class="form-floating mb-3">

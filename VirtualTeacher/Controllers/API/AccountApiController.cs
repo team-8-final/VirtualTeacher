@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Models.DTOs.Account;
@@ -106,7 +107,7 @@ public class AccountApiController : ControllerBase
         try
         {
             var loggedUserId = accountService.GetLoggedUserId();
-            var result  = userService.Delete(loggedUserId);
+            var result = userService.Delete(loggedUserId);
 
             return Ok(result);
         }
@@ -226,5 +227,49 @@ public class AccountApiController : ControllerBase
         {
             return Conflict(e.Message);
         }
+    }
+
+    /// <summary>
+    /// Uploads a user avatar. Only .jpg files are allowed.
+    /// </summary>
+    /// <param name="file">The .jpg file to upload as the user's avatar.</param>
+    /// <returns>Returns a success or fail message.</returns>
+    [HttpPut("avatar")]
+    public IActionResult UploadAvatar(IFormFile file)
+    {
+        try
+        {
+            var filePath = accountService.SaveAccountAvatar(file);
+
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return BadRequest("An error occurred while uploading the file.");
+            }
+
+            return Ok("Avatar successfully uploaded.");
+        }
+        catch (ArgumentException e)
+        {
+            return Ok(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Deletes the user avatar.
+    /// </summary>
+    /// <returns>Returns a success or fail message.</returns>
+    [HttpDelete("avatar")]
+    public IActionResult DeleteAvatar()
+    {
+        var loggedUser = accountService.GetLoggedUser();
+
+        bool deleted = accountService.DeleteUserAvatar(loggedUser.Username);
+
+        if (deleted)
+        {
+            return Ok("Avatar deleted successfully.");
+        }
+
+        return NotFound(new { message = "Avatar not found." });
     }
 }
