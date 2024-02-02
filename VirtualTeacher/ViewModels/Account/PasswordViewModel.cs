@@ -25,4 +25,6 @@ public class PasswordViewModel
     [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[\W]).+$",
         ErrorMessage = "Password must contain at least one uppercase letter, one digit, and one special character.")]
     public string ConfirmNewPassword { get; set; } = null!;
+
+    public string AvatarUrl { get; set; } = "";
 }

@@ -41,6 +41,10 @@ public class AccountController : Controller
 
             return View("Index", model);
         }
+        catch (UnauthorizedOperationException e)
+        {
+            return RedirectToAction("Login", "Account");
+        }
         catch (Exception e)
         {
             TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
@@ -135,11 +139,12 @@ public class AccountController : Controller
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
+                AvatarUrl = accountService.GetUserAvatar(loggedUser.Username),
             };
 
             accountService.AccountUpdate(dto);
 
-            return RedirectToAction("Update");
+            return RedirectToAction("Update", model);
         }
         catch (UnauthorizedOperationException)
         {
@@ -248,6 +253,7 @@ public class AccountController : Controller
             var model = new PasswordViewModel
             {
                 Username = loggedUser.Username,
+                AvatarUrl = accountService.GetUserAvatar(loggedUser.Username),
             };
 
             ViewData["Username"] = loggedUser.Username;
@@ -272,6 +278,7 @@ public class AccountController : Controller
         {
             var loggedUser = accountService.GetLoggedUser();
             model.Username = loggedUser.Username;
+            model.AvatarUrl = accountService.GetUserAvatar(loggedUser.Username);
 
             if (!ModelState.IsValid)
             {
@@ -418,13 +425,15 @@ public class AccountController : Controller
         try
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            //
+
+            // TODO: Implement notification bar
             // TempData["StatusCode"] = StatusCodes.Status202Accepted;
             // TempData["SuccessMessage"] = "User logged out successfully.";
             return RedirectToAction("Index", "Home");
         }
         catch (Exception e)
         {
+            // TODO: Implement notification bar
             // TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
             // TempData["ErrorMessage"] = e.Message;
             return RedirectToAction("Error", "Shared");

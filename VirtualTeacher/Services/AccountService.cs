@@ -183,6 +183,8 @@ public class AccountService : IAccountService
             throw new DuplicateEntityException($"Email {dto.Email} is already in use!");
         }
 
+        dto.Password = dto.Password != null ? Sha512(dto.Password) : user.Password;
+
         var updatedUser = userRepository.UpdateUser(user.Id, dto);
 
         return updatedUser ?? throw new Exception("Your profile could not be updated.");

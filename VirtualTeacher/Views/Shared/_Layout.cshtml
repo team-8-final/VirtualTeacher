@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
-    <head>
+<head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - VirtualTeacher</title>
@@ -12,74 +12,90 @@
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css">
 </head>
 
-    <body>
+<body>
 
-        <nav id="nav" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
+<nav id="nav" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container-fluid">
 
-            <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
-                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">VirtualTeacher</a>
-                <button class="btn btn-primary" onclick="openNav()">☰</button>
-            </div>
+        <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">VirtualTeacher</a>
+            <button class="btn btn-primary" onclick="openNav()">☰</button>
+        </div>
 
-            @*             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VirtualTeacher</a>
+        @*             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VirtualTeacher</a>
                 <button class="btn btn-primary" onclick="openNav()">☰</button> *@
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/Course/Index">Courses</a>
+                </li>
+                @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin"))
+                {
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" href="/Users/Index">Users</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/Course/Index">Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/api/swagger" style="color: red !important">API</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/account">Account Info</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/account/update">Update</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/account/login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/account/logout">Logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/account/register">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/account/password">Password</a>
-                    </li>
-                </ul>
-            </div>
+                }
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="fa-solid fa-user"></i>&nbsp; Account</a>
+                    <ul class="dropdown-menu">
+                        @{
+                            if (User.Identity is { IsAuthenticated: true })
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Index"><i class="fa-solid fa-address-card"></i>&nbsp; Profile Info</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Update"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update Profile</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Password"><i class="fa-solid fa-key"></i>&nbsp; Change Password</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp; Logout</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Login"><i class="fa-solid fa-right-to-bracket"></i>&nbsp; Login</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Register"><i class="fa-solid fa-user-plus"></i>&nbsp; Register</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-        @if (User.Identity is { IsAuthenticated: true })
-    {
-        @await Component.InvokeAsync("Sidebar")
-    }
+@if (User.Identity is { IsAuthenticated: true })
+{
+    @await Component.InvokeAsync("Sidebar")
+}
 
-        <main id="main" role="main" class="pb-3 rounded-1">
-            @RenderBody()
-        </main>
+<main id="main" role="main" class="pb-3 rounded-1">
+    @RenderBody()
+</main>
 
 
-        <footer id="footer" class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2024 - VirtualTeacher - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>
+<footer id="footer" class="border-top footer text-muted">
+    <div class="container">
+        <span>
+            &copy; 2024 - VirtualTeacher -
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> - <a class="nav-link text-dark" href="/api/swagger" style="color: red !important; display: inline !important;">API</a>
+        </span>
+    </div>
+</footer>
 
-        <script>
+<script>
             function openNav() {
                 document.getElementById("mySidebar").style.width = "300px";
                 document.getElementById("mySidebar").style.marginLeft = "100px";
@@ -94,10 +110,10 @@
             }
         </script>
 
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        @await RenderSectionAsync("Scripts", required: false)
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 
-    </body>
+</body>
 </html>

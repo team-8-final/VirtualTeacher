@@ -21,7 +21,6 @@ public class UserUpdateDto
     [MinLength(8), MaxLength(64)]
     public string? Password { get; set; }
 
-    [Required]
     [MaxLength(32768)]
     public string? AvatarUrl { get; set; }
 }
