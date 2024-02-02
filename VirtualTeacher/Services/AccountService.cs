@@ -18,13 +18,15 @@ public class AccountService : IAccountService
     private readonly IUserRepository userRepository;
     private readonly IHttpContextAccessor httpContextAccessor;
     private readonly IConfiguration config;
+    private readonly IWebHostEnvironment environment;
 
     public AccountService(IUserRepository userRepository, IConfiguration config,
-    IHttpContextAccessor httpContextAccessor)
+    IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment)
     {
         this.userRepository = userRepository;
         this.config = config;
         this.httpContextAccessor = httpContextAccessor;
+        this.environment = environment;
     }
 
     public string GenerateToken(CredentialsDto credentialsDto)
@@ -193,5 +195,59 @@ public class AccountService : IAccountService
         var hash = sha.ComputeHash(bytes);
 
         return Convert.ToBase64String(hash);
+    }
+
+    public string SaveAccountAvatar(IFormFile file)
+    {
+        if (Path.GetExtension(file.FileName).ToLowerInvariant() != ".jpg")
+        {
+            throw new ArgumentException("Only *.jpg files are allowed.");
+        }
+
+        var user = GetLoggedUser();
+
+        var uploadsFolderPath = Path.Combine(environment.WebRootPath, "images/avatars");
+
+        if (!Directory.Exists(uploadsFolderPath))
+        {
+            Directory.CreateDirectory(uploadsFolderPath);
+        }
+
+        var filePath = Path.Combine(uploadsFolderPath, user.Username + ".jpg");
+        using (var fileStream = new FileStream(filePath, FileMode.Create))
+        {
+            file.CopyTo(fileStream);
+        }
+
+        return Path.Combine("avatars", user.Username + ".jpg");
+    }
+
+    public string GetUserAvatar(string username)
+    {
+        const string avatarFolderPath = "images/avatars";
+
+        var avatarFilePath = Path.Combine(environment.WebRootPath, avatarFolderPath, $"{username}.jpg");
+
+        if (File.Exists(avatarFilePath))
+        {
+            return $"{avatarFolderPath}/{username}.jpg";
+        }
+
+        return "images/avatar-default.jpg";
+    }
+
+    public bool DeleteUserAvatar(string username)
+    {
+        const string avatarFolderPath = "images/avatars";
+
+        var filePath = Path.Combine(environment.WebRootPath, avatarFolderPath, $"{username}.jpg");
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+            return true;
+        }
+
+        return false;
     }
 }

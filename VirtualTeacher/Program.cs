@@ -135,7 +135,6 @@ public class Program
         //Helpers
         builder.Services.AddScoped<ModelMapper>();
 
-
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

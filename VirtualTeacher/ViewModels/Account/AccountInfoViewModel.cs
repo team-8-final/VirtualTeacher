@@ -12,7 +12,10 @@ public class AccountInfoViewModel
 
     public string Email { get; set; } = null!;
 
+    public string AvatarUrl { get; set; } = null!;
+
     public IList<Course> EnrolledCourses { get; set; } = null!;
 
     public IList<Course> CreatedCourses { get; set; } = null!;
+
 }
