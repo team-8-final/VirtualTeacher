@@ -24,6 +24,7 @@ namespace VirtualTeacher.Controllers.MVC
             ViewData["Topic"] = string.IsNullOrEmpty(queryParameters.Topic.ToString()) ? "" : queryParameters.Topic; //todo to test this 
             ViewData["TeacherUsername"] = string.IsNullOrEmpty(queryParameters.TeacherUsername) ? "" : queryParameters.TeacherUsername;
 
+
             // ViewData["Rating"] = string.IsNullOrEmpty(queryParameters.TeacherUsername) ? "" : queryParameters.Rating; //based on ratings?
 
             var courses = courseService.FilterCoursesBy(queryParameters);

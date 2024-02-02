@@ -1,102 +1,103 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
-<head>
+    <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - VirtualTeacher</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <script src="https://kit.fontawesome.com/c21727a50d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css">
 </head>
 
-<body>
+    <body>
 
-<nav id="nav" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container-fluid">
+        <nav id="nav" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
 
-        <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
-            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">VirtualTeacher</a>
-            <button class="btn btn-primary" onclick="openNav()">☰</button>
+            <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">VirtualTeacher</a>
+                <button class="btn btn-primary" onclick="openNav()">☰</button>
+            </div>
+
+            @*             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VirtualTeacher</a>
+                <button class="btn btn-primary" onclick="openNav()">☰</button> *@
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/Course/Index">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/api/swagger" style="color: red !important">API</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/account">Account Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/account/update">Update</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/account/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/account/logout">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/account/register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/account/password">Password</a>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
 
-        @*             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VirtualTeacher</a>
-            <button class="btn btn-primary" onclick="openNav()">☰</button> *@
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/Course/Index">Courses</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/api/swagger" style="color: red !important">API</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/account">Account Info</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/account/update">Update</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/account/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/account/logout">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/account/register">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/account/password">Password</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-@if (User.Identity is { IsAuthenticated: true })
-{
-    @await Component.InvokeAsync("Sidebar")
-}
-
-<main id="main" role="main" class="pb-3 rounded-1">
-    @RenderBody()
-</main>
-
-
-<footer id="footer" class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2024 - VirtualTeacher - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>
-
-<script>
-    function openNav() {
-        document.getElementById("mySidebar").style.width = "300px";
-        document.getElementById("mySidebar").style.marginLeft = "100px";
-        document.getElementById("main").style.marginLeft = "305px";
+        @if (User.Identity is { IsAuthenticated: true })
+    {
+        @await Component.InvokeAsync("Sidebar")
     }
 
-    function closeNav() {
-        document.getElementById("mySidebar").style.width = "0";
-        document.getElementById("mySidebar").style.marginLeft = "100px";
+        <main id="main" role="main" class="pb-3 rounded-1">
+            @RenderBody()
+        </main>
 
-        document.getElementById("main").style.marginLeft = "100px";
-    }
-</script>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+        <footer id="footer" class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2024 - VirtualTeacher - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
 
-</body>
+        <script>
+            function openNav() {
+                document.getElementById("mySidebar").style.width = "300px";
+                document.getElementById("mySidebar").style.marginLeft = "100px";
+                document.getElementById("main").style.marginLeft = "305px";
+            }
+
+            function closeNav() {
+                document.getElementById("mySidebar").style.width = "0";
+                document.getElementById("mySidebar").style.marginLeft = "100px";
+
+                document.getElementById("main").style.marginLeft = "100px";
+            }
+        </script>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+
+    </body>
 </html>
