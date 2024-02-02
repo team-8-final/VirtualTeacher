@@ -2,7 +2,7 @@ using VirtualTeacher.Models;
 
 namespace VirtualTeacher.ViewModels.Account;
 
-public class AccountInfoModel
+public class AccountInfoViewModel
 {
     public string Username { get; set; } = "";
 

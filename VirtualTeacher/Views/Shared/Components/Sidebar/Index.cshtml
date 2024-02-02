@@ -1,0 +1,17 @@
+@model User;
+
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+
+    @foreach (var course in Model.EnrolledCourses)
+    {
+        <a href="#" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">@course.Title</a>
+
+        @foreach (var lecture in course.Lectures)
+        {
+            <small style="font-size: 1rem; display: block; margin-left: 1.5rem; margin-bottom: 0.25rem;">
+                <a href="#" style="font-size: inherit;">@lecture.Title</a>
+            </small>
+        }
+    }
+</div>

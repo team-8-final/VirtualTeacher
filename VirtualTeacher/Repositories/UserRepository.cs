@@ -2,8 +2,6 @@
 using VirtualTeacher.Models;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Models.QueryParameters;
-using VirtualTeacher.Exceptions;
-using VirtualTeacher.Models.DTOs.Account;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.DTOs.User;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +21,7 @@ namespace VirtualTeacher.Repositories
         {
             return context.Users
                 .Include(u => u.EnrolledCourses)
+                .ThenInclude(c => c.Lectures)
                 .Include(u => u.CreatedCourses)
                 .Where(u => !u.IsDeleted);
         }

@@ -50,7 +50,7 @@ footer {
 
 .sidebar {
     height: calc(100% - 449px);
-    width: 0;
+    width: 0px;
     position: fixed;
     z-index: 1;
     top: 110px;
@@ -61,7 +61,7 @@ footer {
     padding-top: 60px;
     margin-left: 100px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .sidebar a {

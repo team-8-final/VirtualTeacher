@@ -28,7 +28,7 @@ public class AccountController : Controller
         {
             var loggedUser = accountService.GetLoggedUser();
 
-            var model = new AccountInfoModel
+            var model = new AccountInfoViewModel
             {
                 Username = loggedUser.Username,
                 FirstName = loggedUser.FirstName,
@@ -49,23 +49,23 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public IActionResult Index(AccountInfoModel model)
+    public IActionResult Index(AccountInfoViewModel viewModel)
     {
         try
         {
             var loggedUser = accountService.GetLoggedUser();
-            model.Username = loggedUser.Username;
+            viewModel.Username = loggedUser.Username;
 
             if (!ModelState.IsValid)
             {
-                return View("Index", model);
+                return View("Index", viewModel);
             }
 
             var dto = new UserUpdateDto
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
+                Email = viewModel.Email,
             };
 
             accountService.AccountUpdate(dto);
@@ -80,7 +80,7 @@ public class AccountController : Controller
         {
             ModelState.AddModelError("Email", "The email is already in use.");
 
-            return View("Index", model);
+            return View("Index", viewModel);
         }
         catch (Exception e)
         {
@@ -97,7 +97,7 @@ public class AccountController : Controller
         {
             var loggedUser = accountService.GetLoggedUser();
 
-            var model = new AccountViewModel
+            var model = new AccountUpdateViewModel
             {
                 Username = loggedUser.Username,
                 FirstName = loggedUser.FirstName,
@@ -116,7 +116,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public IActionResult Update(AccountViewModel model)
+    public IActionResult Update(AccountUpdateViewModel model)
     {
         try
         {

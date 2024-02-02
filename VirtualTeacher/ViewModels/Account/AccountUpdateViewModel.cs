@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VirtualTeacher.ViewModels.Account;
 
-public class AccountViewModel
+public class AccountUpdateViewModel
 {
     public string Username { get; set; } = "";
 

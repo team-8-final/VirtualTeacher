@@ -138,6 +138,35 @@ public class AppDbContext : DbContext
                     .OnDelete(DeleteBehavior.Cascade)
             );
 
+        // adds enrolled students seed data
+        modelBuilder.Entity<Course>()
+            .HasMany(course => course.EnrolledStudents)
+            .WithMany(student => student.EnrolledCourses)
+            .UsingEntity<Dictionary<string, object>>(
+                "CourseStudents",
+                j => j
+                    .HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("StudentId")
+                    .OnDelete(DeleteBehavior.Restrict),
+                j => j
+                    .HasOne<Course>()
+                    .WithMany()
+                    .HasForeignKey("CourseId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                j =>
+                {
+                    j.HasData(
+                        new { StudentId = 1, CourseId = 1 },
+                        new { StudentId = 1, CourseId = 2 },
+                        new { StudentId = 1, CourseId = 3 },
+                        new { StudentId = 2, CourseId = 1 },
+                        new { StudentId = 2, CourseId = 3 },
+                        new { StudentId = 3, CourseId = 2 }
+                    );
+                }
+            );
+
         modelBuilder.Entity<Submission>()
             .HasOne(submission => submission.Student)
             .WithMany(student => student.Submissions)
