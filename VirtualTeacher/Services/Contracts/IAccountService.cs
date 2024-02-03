@@ -21,5 +21,7 @@ namespace VirtualTeacher.Services.Contracts
         string SaveAccountAvatar(IFormFile file);
         string GetUserAvatar(string username);
         bool DeleteUserAvatar(string username);
+        List<Course> GetRatedCourses();
+        List<Course> GetCompletedCourses();
     }
 }

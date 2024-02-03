@@ -28,6 +28,8 @@ body {
         'main main main main main main'
         'footer footer footer footer footer footer';
     grid-template-rows: 100px 1fr 80px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 nav {

@@ -23,6 +23,8 @@ namespace VirtualTeacher.Repositories
                 .Include(u => u.EnrolledCourses)
                 .ThenInclude(c => c.Lectures)
                 .Include(u => u.CreatedCourses)
+                .Include(u => u.Ratings)
+                .ThenInclude(r => r.Course)
                 .Where(u => !u.IsDeleted);
         }
 

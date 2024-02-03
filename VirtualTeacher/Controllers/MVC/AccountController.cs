@@ -37,6 +37,9 @@ public class AccountController : Controller
                 EnrolledCourses = loggedUser.EnrolledCourses,
                 CreatedCourses = loggedUser.CreatedCourses,
                 AvatarUrl = accountService.GetUserAvatar(loggedUser.Username),
+                UserRole = loggedUser.UserRole,
+                CompletedCourses = accountService.GetCompletedCourses(),
+                RatedCourses = accountService.GetRatedCourses(),
             };
 
             return View("Index", model);
@@ -280,15 +283,15 @@ public class AccountController : Controller
             model.Username = loggedUser.Username;
             model.AvatarUrl = accountService.GetUserAvatar(loggedUser.Username);
 
-            if (!ModelState.IsValid)
-            {
-                return View("Password", model);
-            }
-
             if (model.NewPassword != model.ConfirmNewPassword)
             {
                 ModelState.AddModelError("NewPassword", "The passwords do not match.");
                 ModelState.AddModelError("ConfirmNewPassword", "The passwords do not match.");
+                return View("Password", model);
+            }
+
+            if (!ModelState.IsValid)
+            {
                 return View("Password", model);
             }
 

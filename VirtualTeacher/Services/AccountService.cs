@@ -252,4 +252,24 @@ public class AccountService : IAccountService
 
         return false;
     }
+
+    // TODO: fix when assignment links are implemented
+    public List<Course> GetCompletedCourses()
+    {
+        var user = GetLoggedUser();
+
+        return user.EnrolledCourses
+            .Where(course => course.Lectures.
+                All(lecture => string.IsNullOrEmpty(lecture.AssignmentLink)))
+            .ToList();
+    }
+
+    public List<Course> GetRatedCourses()
+    {
+        var user = GetLoggedUser();
+
+        return user.Ratings
+            .Select(rating => rating.Course)
+            .ToList();
+    }
 }
