@@ -14,12 +14,14 @@ public class CourseService : ICourseService
     private readonly ICourseRepository courseRepository;
     private readonly IAccountService accountService;
     private readonly IUserService userService;
+    private readonly IWebHostEnvironment hostEnvironment;
 
-    public CourseService(ICourseRepository courseRepository, IAccountService accountService, IUserService userService)
+    public CourseService(ICourseRepository courseRepository, IAccountService accountService, IUserService userService, IWebHostEnvironment hostEnvironment)
     {
         this.courseRepository = courseRepository;
         this.accountService = accountService;
         this.userService = userService;
+        this.hostEnvironment = hostEnvironment;
     }
 
     public PaginatedList<Course> FilterCoursesBy(CourseQueryParameters parameters)
@@ -373,9 +375,81 @@ public class CourseService : ICourseService
         return courseRepository.UpdateNoteContent(loggedUser.Id, lectureId, updatedContent);
     }
 
+    public string GetSubmissionFilePath(int courseId, int lectureId, string username)
+    {
+        var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
+        var submissionDirectory = Path.Combine(privateRoot, "Submissions", "course-" + courseId, "lecture-" + lectureId);
+
+        var existingFiles = Directory.GetFiles(submissionDirectory, username + ".*");
+        if (existingFiles.Length == 0)
+        {
+            throw new FileNotFoundException("No submission file found for this user.");
+        }
+
+        return existingFiles[0];
+    }
+
+    public string CreateSubmission(int courseId, int lectureId, IFormFile file)
+    {
+        var user = accountService.GetLoggedUser();
+        var allowedExtensions = new List<string> { ".txt", ".doc", ".docx", ".rtf" };
+        var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+        if (!allowedExtensions.Contains(fileExtension))
+        {
+            throw new ArgumentException("File type is not allowed.");
+        }
+
+        var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
+        var submissionDirectory = Path.Combine(privateRoot, "Submissions", "course-" + courseId, "lecture-" + lectureId);
+
+        if (!Directory.Exists(submissionDirectory))
+        {
+            Directory.CreateDirectory(submissionDirectory);
+        }
+
+        var fileNameWithoutExtension = user.Username;
+        var existingFiles = Directory.GetFiles(submissionDirectory, fileNameWithoutExtension + ".*");
+
+        foreach (var existingFile in existingFiles)
+        {
+            File.Delete(existingFile);
+        }
+
+        var fullPath = Path.Combine(submissionDirectory, fileNameWithoutExtension + fileExtension);
+
+        using var stream = new FileStream(fullPath, FileMode.Create);
+        file.CopyTo(stream);
+
+        return "File uploaded successfully.";
+    }
+
+    public string DeleteSubmission(int courseId, int lectureId)
+    {
+        var user = accountService.GetLoggedUser();
+
+        var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
+        var submissionDirectory = Path.Combine(privateRoot, "Submissions", "course-" + courseId, "lecture-" + lectureId);
+
+        var fileNameWithoutExtension = user.Username;
+        var existingFiles = Directory.GetFiles(submissionDirectory, fileNameWithoutExtension + ".*");
+
+        if (existingFiles.Length == 0)
+        {
+            throw new EntityNotFoundException("No submissions found for this lecture.");
+        }
+
+        foreach (var existingFile in existingFiles)
+        {
+            File.Delete(existingFile);
+        }
+
+        return "Submission file deleted successfully.";
+    }
+
 
     // Validations
-    public void ValidateUserEnrolledOrAdmin(Course course, User user)
+    private void ValidateUserEnrolledOrAdmin(Course course, User user)
     {
         if (!course.EnrolledStudents.Any(u => u.Id == user.Id)
         && !course.ActiveTeachers.Any(u => u.Id == user.Id)

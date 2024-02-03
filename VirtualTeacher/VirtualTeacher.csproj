@@ -36,4 +36,8 @@
     <Compile Remove="Services\Contracts\IAuthService.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Submissions\" />
+  </ItemGroup>
+
 </Project>

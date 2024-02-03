@@ -37,4 +37,7 @@ public interface ICourseService
 
     public string UpdateNoteContent(int courseId, int lectureId, string updatedContent);
 
+    string CreateSubmission(int courseId, int lectureId, IFormFile file);
+    string DeleteSubmission(int courseId, int lectureId);
+    string GetSubmissionFilePath(int courseId, int lectureId, string username);
 }

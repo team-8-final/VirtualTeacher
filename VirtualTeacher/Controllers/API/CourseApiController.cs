@@ -20,11 +20,13 @@ public class CourseApiController : ControllerBase
 {
     private readonly ICourseService courseService;
     private readonly ModelMapper mapper;
+    private readonly IAccountService accountService;
 
-    public CourseApiController(ICourseService courseService, ModelMapper mapper)
+    public CourseApiController(ICourseService courseService, ModelMapper mapper, IAccountService accountService)
     {
         this.courseService = courseService;
         this.mapper = mapper;
+        this.accountService = accountService;
     }
 
     /// <summary>
@@ -471,6 +473,84 @@ public class CourseApiController : ControllerBase
             return Conflict("Something went wrong");
         }
 
+    }
+
+    /// <summary>
+    /// Retrieves a submission file for a given course and lecture, based on the logged-in user.
+    /// </summary>
+    /// <param name="courseId">The ID of the course.</param>
+    /// <param name="lectureId">The ID of the lecture.</param>
+    /// <returns>
+    /// The submission file as a downloadable file.
+    /// </returns>
+    [HttpGet("{courseId}/lectures/{lectureId}/submission")]
+    [Tags("Course > Lecture")]
+    public IActionResult GetSubmission(int courseId, int lectureId)
+    {
+        try
+        {
+            var user = accountService.GetLoggedUser();
+            var filePath = courseService.GetSubmissionFilePath(courseId, lectureId, user.Username);
+
+            var contentType = "application/octet-stream"; // Default MIME type
+
+            var fileName = Path.GetFileName(filePath);
+            return PhysicalFile(filePath, contentType, fileName);
+        }
+        catch (FileNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            // Log the exception
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    /// <summary>
+    /// Uploads a submission file for a specific course and lecture.
+    /// </summary>
+    /// <param name="courseId">The ID of the course.</param>
+    /// <param name="lectureId">The ID of the lecture.</param>
+    /// <param name="file">The submission file to be uploaded.</param>
+    /// <returns>A message indicating the outcome of the file upload.</returns>
+    [HttpPut("{courseId}/Lectures/{lectureId}/submission")]
+    [Tags("Course > Lecture")]
+    public IActionResult CreateSubmission(int courseId, int lectureId, IFormFile file)
+    {
+        try
+        {
+            var result = courseService.CreateSubmission(courseId, lectureId, file);
+
+            return Ok(result);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Deletes the submission file for a specific course and lecture.
+    /// </summary>
+    /// <param name="courseId">The ID of the course.</param>
+    /// <param name="lectureId">The ID of the lecture.</param>
+    /// <returns>A message indicating the outcome of the operation.</returns>
+    [HttpDelete("{courseId}/Lectures/{lectureId}/submission")]
+    [Tags("Course > Lecture")]
+    public IActionResult CreateSubmission(int courseId, int lectureId)
+    {
+        try
+        {
+            var result = courseService.DeleteSubmission(courseId, lectureId);
+
+            return Ok(result);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     /// <summary>
