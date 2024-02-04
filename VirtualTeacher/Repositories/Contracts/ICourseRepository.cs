@@ -33,8 +33,12 @@ namespace VirtualTeacher.Repositories.Contracts
         Comment? UpdateComment(Comment comment, CommentCreateDto dto);
         bool DeleteComment(Comment comment);
 
-        public string GetNoteContent(int userId, int lectureId);
+        string GetNoteContent(int userId, int lectureId);
+        string UpdateNoteContent(int userId, int lectureId, string updatedContent);
 
-        public string UpdateNoteContent(int userId, int lectureId, string updatedContent);
+        Submission? GetSubmission(int lectureId, int userId);
+        bool DeleteSubmission(int lectureId, int userId);
+        bool CreateSubmission(int lectureId, int userId, byte? grade = null);
+        bool GradeSubmission(int lectureId, int userId, byte grade);
     }
 }

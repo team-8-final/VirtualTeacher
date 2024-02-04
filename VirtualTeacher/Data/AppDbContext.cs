@@ -80,8 +80,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Submission>().HasData(
             new List<Submission>
             {
-                new() { Id = 1, LectureId = 1, StudentId = 2, SubmissionLink = "www.test.com", Grade = 100 },
-                new() { Id = 2, LectureId = 2, StudentId = 1, SubmissionLink = "www.test.com", Grade = 100 },
+                new() { Id = 1, LectureId = 1, StudentId = 2, Grade = 100 },
+                new() { Id = 2, LectureId = 2, StudentId = 1, Grade = 100 },
             });
 
         modelBuilder.Entity<Course>()

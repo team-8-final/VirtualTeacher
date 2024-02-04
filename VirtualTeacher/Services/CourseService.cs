@@ -377,6 +377,9 @@ public class CourseService : ICourseService
 
     public string GetSubmissionFilePath(int courseId, int lectureId, string username)
     {
+        _ = GetCourseById(courseId);
+        _ = GetLectureById(courseId, lectureId);
+
         var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
         var submissionDirectory = Path.Combine(privateRoot, "Submissions", "course-" + courseId, "lecture-" + lectureId);
 
@@ -389,8 +392,21 @@ public class CourseService : ICourseService
         return existingFiles[0];
     }
 
+    public Submission? GetSubmission(int courseId, int lectureId, int userId)
+    {
+        _ = GetCourseById(courseId);
+        _ = GetLectureById(courseId, lectureId);
+
+        var submission = courseRepository.GetSubmission(lectureId, userId);
+
+        return submission ?? null;
+    }
+
     public string CreateSubmission(int courseId, int lectureId, IFormFile file)
     {
+        _ = GetCourseById(courseId);
+        _ = GetLectureById(courseId, lectureId);
+
         var user = accountService.GetLoggedUser();
         var allowedExtensions = new List<string> { ".txt", ".doc", ".docx", ".rtf" };
         var fileExtension = Path.GetExtension(file.FileName).ToLower();
@@ -421,11 +437,22 @@ public class CourseService : ICourseService
         using var stream = new FileStream(fullPath, FileMode.Create);
         file.CopyTo(stream);
 
+        // create submission class
+        var submissionCreated = courseRepository.CreateSubmission(lectureId, user.Id);
+
+        if (!submissionCreated)
+        {
+            throw new Exception("The submission could not be created.");
+        }
+
         return "File uploaded successfully.";
     }
 
     public string DeleteSubmission(int courseId, int lectureId)
     {
+        _ = GetCourseById(courseId);
+        _ = GetLectureById(courseId, lectureId);
+
         var user = accountService.GetLoggedUser();
 
         var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
@@ -442,6 +469,14 @@ public class CourseService : ICourseService
         foreach (var existingFile in existingFiles)
         {
             File.Delete(existingFile);
+        }
+
+        // delete submission class
+        var submissionDeleted = courseRepository.DeleteSubmission(lectureId, user.Id);
+
+        if (!submissionDeleted)
+        {
+            throw new Exception("The submission could not be deleted.");
         }
 
         return "Submission file deleted successfully.";
