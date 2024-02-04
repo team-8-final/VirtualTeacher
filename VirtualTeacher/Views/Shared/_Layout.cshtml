@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string navbarUsername = "Account";
+    if (User.Identity is {IsAuthenticated: true})
+    {
+        navbarUsername = User.Identity.Name;
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,6 +25,7 @@
 <nav id="nav" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container-fluid">
 
+        <div class="btn-group"></div>
         <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
             <a asp-controller="Home" asp-action="Index" class="btn btn-primary">VirtualTeacher</a>
             <button class="btn btn-primary" onclick="openNav()">☰</button>
@@ -27,6 +36,7 @@
             <span class="navbar-toggler-icon"></span>
 
         </button>
+
         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
             <ul class="navbar-nav flex-grow-1">
 
@@ -41,7 +51,7 @@
                     </li>
                 }
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="fa-solid fa-user"></i>&nbsp; Account</a>
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="fa-solid fa-user"></i>&nbsp; @navbarUsername</a>
                     <ul class="dropdown-menu">
                         @{
                             if (User.Identity is { IsAuthenticated: true })

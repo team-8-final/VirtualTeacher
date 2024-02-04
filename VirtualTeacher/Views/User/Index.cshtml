@@ -1,21 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Users";
+    @model PaginatedList<User>
 }
-
-@model PaginatedList<User>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 
 <div class="d-flex justify-content-between">
     <div style="width: 60%">
         @{
-            foreach (var user in Model)
+            if (Model.Count == 0)
             {
                 <p>
-                    @user.Id @user.FirstName @user.LastName (@user.Username) / @user.UserRole / @user.Email
-                    <hr />
+                    No users found.
                 </p>
+            }
+            else
+            {
+                foreach (var user in Model)
+                {
+                    <p>
+                        @user.Id. @user.FirstName @user.LastName (@user.Username) / @user.UserRole / @user.Email
+                        <hr />
+                    </p>
+                }
             }
         }
     </div>
@@ -68,10 +73,8 @@
 
 </div>
 
-
-<hr/>
-
 @* todo - Should clean up URL from unused query params/works halfway*@
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
         $("#userFilterForm").submit(function (e) {
@@ -84,7 +87,7 @@
                 var name = $(this).attr("name");
                 var value = $(this).val();
 
-                if (value.trim() !== "" && value !== undefined) {
+                if (value.trim() !== "asd" && value !== undefined) {
                     parameters.push(name + "=" + encodeURIComponent(value));
                 }
             });
