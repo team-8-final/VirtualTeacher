@@ -2,6 +2,8 @@
     ViewData["Title"] = "Home Page";
 }
 
+@model HomeIndexViewModel;
+
 <div class="hero">
     <section class="hero-left">
         <h1>Empower Your Language Journey</h1>
@@ -44,32 +46,61 @@
 </div>
 
 
-<h2>Top rated/Most popular/Newest</h2>
-<div class="d-flex card-carousel rounded-1">
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Course #1</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
+<button class="btn btn-primary btn-success" id="popularButton" style="margin-bottom: 5px;">Most Popular</button>
+<button class="btn btn-primary" id="ratingButton" style="margin-bottom: 5px;">Top Rated</button>
+<button class="btn btn-primary" id="newestButton" style="margin-bottom: 5px;">Newest</button>
 
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Course #2</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Course #3</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
+@*MOST POPULAR*@
+<div id="popularBlock">
+    <div class="d-flex card-carousel rounded-1">
+        @foreach (var course in Model.CoursesByPopularity)
+        {
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@course.Title</h5>
+                    <p class="card-text">Students: @course.EnrolledStudents.Count()</p>
+                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">Go to course</a>
+                </div>
+            </div>
+        }
     </div>
 </div>
+
+@*TOP RATED*@
+<div id="ratingBlock" class="hidden">
+    <div class="d-flex card-carousel rounded-1">
+        @foreach (var course in Model.CoursesByRating)
+        {
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@course.Title</h5>
+                        @{
+                            var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;
+                            <p class="card-text">Avg. Rating: @rating </p>
+                        }
+                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id"  class="btn btn-primary">Go to course</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@*NEWEST*@
+<div id="newestBlock" class="hidden">
+    <div class="d-flex card-carousel rounded-1">
+        @foreach (var course in Model.CoursesByDate)
+        {
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@course.Title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">Go to course</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
 
 <h3>Some stats</h3>
 <div class="bullet-points" id="grad1">
@@ -93,39 +124,69 @@
     </p>
 </div>
 
+@*TEACHERS*@
 <h2>Teachers</h2>
 <div class="d-flex card-carousel rounded-1">
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Course #1</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
 
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Course #2</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Course #3</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
+    @{
+        foreach (var teacher in Model.Teachers)
+        {
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@teacher.FirstName @teacher.LastName</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        }
+    }
 </div>
 
+<script>
+    function toggleBlockVisibility(showBlockId, buttonId, hideBlockIds, hideButtonIds) {
+        var showBlock = document.getElementById(showBlockId);
+        var showButton = document.getElementById(buttonId)
+        showButton.classList.add('btn-success')
+        showBlock.classList.remove('hidden');
 
+        hideBlockIds.forEach(function (blockId) {
+            var hideBlock = document.getElementById(blockId);
+            hideBlock.classList.add('hidden');
+        });
 
+        hideButtonIds.forEach(function (buttonId)
+        {
+            var hideButton = document.getElementById(buttonId)
+            hideButton.classList.remove('btn-success')
+        })
+    }
+
+    document.getElementById('popularButton').addEventListener('click', function () {
+        toggleBlockVisibility('popularBlock', 'popularButton', ['newestBlock', 'ratingBlock'], ['ratingButton', 'newestButton']);
+    });
+
+    document.getElementById('ratingButton').addEventListener('click', function () {
+        toggleBlockVisibility('ratingBlock', 'ratingButton', ['newestBlock', 'popularBlock'], ['popularButton', 'newestButton']);
+    });
+
+    document.getElementById('newestButton').addEventListener('click', function () {
+        toggleBlockVisibility('newestBlock', 'newestButton', ['popularBlock', 'ratingBlock'], ['ratingButton', 'popularButton']);
+    });
+</script>
 
 
 @* todo Move to site.css when done*@
 <style>
+#popularBlock{
+    display: block;
+}
+
+#newestBlock.hidden,
+#popularBlock.hidden,
+#ratingBlock.hidden {
+    display: none;
+}
+
 .card-carousel{
     border: 1px solid gray;
     padding-top: 8px;
@@ -170,7 +231,6 @@
     justify-content: center;
     margin-left: 40%;
 }
-
 
 .hero {
     display: flex;
