@@ -24,10 +24,10 @@ body {
     display: grid;
     grid-gap: 10px;
     grid-template-areas:
-        'nav nav nav nav nav nav'
-        'main main main main main main'
-        'footer footer footer footer footer footer';
-    grid-template-rows: 100px 1fr 80px;
+        'nav nav nav nav nav nav nav nav nav nav nav nav'
+        'main main main main main main main main main main main main'
+        'footer footer footer footer footer footer footer footer footer footer footer footer';
+    grid-template-rows: min-content auto max-content;
     max-width: 1200px;
     margin: 0 auto;
 }
