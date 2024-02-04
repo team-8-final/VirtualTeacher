@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Users";
+}
+
+@model PaginatedList<User>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<div class="d-flex justify-content-between">
+    <div style="width: 60%">
+        @{
+            foreach (var user in Model)
+            {
+                <p>
+                    @user.Id @user.FirstName @user.LastName (@user.Username) / @user.UserRole / @user.Email
+                    <hr />
+                </p>
+            }
+        }
+    </div>
+
+    <div style="width: 30%">
+        <form id="userFilterForm">
+            <div class="mb-3">
+                <input type="text" name="FirstName" class="form-control-custom" placeholder="First name" />
+                <input type="text" name="LastName" class="form-control-custom" placeholder="Last name" />
+            </div>
+
+            <div class="mb-3">
+                <input type="text" name="Username" class="form-control-custom" placeholder="Username" />
+                <input type="text" name="Email" class="form-control-custom" placeholder="Email" />
+            </div>
+
+            <div class="mb-3">
+                <input type="text" name="Role" class="form-control-custom" placeholder="Role" />
+            </div>
+
+            <input type="submit" value="Search" class="btn btn-primary">
+        </form>
+        <hr />
+
+        Sort:
+        
+        <div class="mb-3">
+            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="id" asp-route-SortOrder="@ViewData["SortOrder"]">
+                Id
+            </a>
+            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="username" asp-route-SortOrder="@ViewData["SortOrder"]">
+                Username
+            </a>
+            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="role" asp-route-SortOrder="@ViewData["SortOrder"]">
+                Role
+            </a>
+        </div>
+
+        <div class="mb-3">
+            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="firstname" asp-route-SortOrder="@ViewData["SortOrder"]">
+            First Name
+            </a>
+
+            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="lastname" asp-route-SortOrder="@ViewData["SortOrder"]">
+                Last Name
+            </a>
+        </div>
+  
+    </div>
+
+</div>
+
+
+<hr/>
+
+@* todo - Should clean up URL from unused query params/works halfway*@
+<script>
+    $(document).ready(function () {
+        $("#userFilterForm").submit(function (e) {
+            e.preventDefault();
+
+            var url = "http://localhost:5000/User?";
+            var parameters = [];
+
+            $("#userFilterForm input").each(function () {
+                var name = $(this).attr("name");
+                var value = $(this).val();
+
+                if (value.trim() !== "" && value !== undefined) {
+                    parameters.push(name + "=" + encodeURIComponent(value));
+                }
+            });
+
+            url += parameters.join("&");
+
+            window.location.href = url;
+        });
+    });
+</script>
+

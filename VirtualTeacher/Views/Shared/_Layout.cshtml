@@ -37,7 +37,7 @@
                 @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="/Users/Index">Users</a>
+                        <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Users</a>
                     </li>
                 }
                 <li class="nav-item dropdown">

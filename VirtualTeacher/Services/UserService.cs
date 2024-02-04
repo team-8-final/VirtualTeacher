@@ -44,7 +44,7 @@ namespace VirtualTeacher.Services
            return userRepository.GetUsers().ToList();
         }
 
-        public IList<User> FilterBy(UserQueryParameters parameters)
+        public PaginatedList<User> FilterBy(UserQueryParameters parameters)
         {
             if (userRepository.GetUserCount() == 0)
                 throw new EntityNotFoundException("No users found!");

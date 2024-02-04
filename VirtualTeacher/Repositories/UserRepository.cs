@@ -128,7 +128,7 @@ namespace VirtualTeacher.Repositories
             return context.Users.Count();
         }
 
-        public IList<User> FilterBy(UserQueryParameters parameters)
+        public PaginatedList<User> FilterBy(UserQueryParameters parameters)
         {
             IQueryable<User> result = GetUsers();
 
@@ -140,7 +140,8 @@ namespace VirtualTeacher.Repositories
             result = SortBy(result, parameters.SortBy);
             result = OrderBy(result, parameters.SortOrder);
 
-            return new List<User>(result.ToList());
+            int totalPages = (int)Math.Ceiling(((double)result.Count()) / parameters.PageSize);
+            return new PaginatedList<User>(result.ToList(), totalPages, parameters.PageNumber);
         }
 
         //Query methods
@@ -225,6 +226,8 @@ namespace VirtualTeacher.Repositories
                         return users.OrderByDescending(u => u.FirstName);
                     case "lastname":
                         return users.OrderByDescending(u => u.LastName);
+                    case "role":
+                        return users.OrderBy(u => u.UserRole == UserRole.Admin).ThenBy(u => u.UserRole == UserRole.Teacher);
                     default:
                         return users;
                 }

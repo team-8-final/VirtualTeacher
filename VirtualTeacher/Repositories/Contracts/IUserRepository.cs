@@ -7,7 +7,7 @@ namespace VirtualTeacher.Repositories.Contracts
 {
     public interface IUserRepository
     {
-        IList<User> FilterBy(UserQueryParameters parameters);
+        PaginatedList<User> FilterBy(UserQueryParameters parameters);
 
         IQueryable<User> GetUsers();
         User? GetById(int id);
