@@ -42,6 +42,16 @@ public class AppDbContext : DbContext
                 new() { Id = 1, Title = "English A1", Description = "Most basic English course.", StartingDate = DateTime.Now, CourseTopic = CourseTopic.English, Published = true},
                 new() { Id = 2, Title = "Chinese B2", Description = "More advanced Chinese course.", StartingDate = DateTime.MinValue, CourseTopic = CourseTopic.Chinese, Published = true},
                 new() { Id = 3, Title = "English C2", Description = "Most advanced English course.", StartingDate = DateTime.MaxValue, CourseTopic = CourseTopic.English, Published = true},
+                new() { Id = 4, Title = "English A1", Description = "Most basic English course.", StartingDate = DateTime.Now, CourseTopic = CourseTopic.English, Published = true},
+                new() { Id = 5, Title = "Chinese B2", Description = "More advanced Chinese course.", StartingDate = DateTime.MinValue, CourseTopic = CourseTopic.Chinese, Published = true},
+                new() { Id = 6, Title = "French Beginner's Course", Description = "Learn the basics of the French language.", StartingDate = DateTime.MaxValue, CourseTopic = CourseTopic.French, Published = true},
+                new() { Id = 7, Title = "Spanish Conversation Mastery", Description = "Improve your conversational skills in Spanish.", StartingDate = DateTime.Now.AddDays(30), CourseTopic = CourseTopic.Spanish, Published = true},
+                new() { Id = 8, Title = "German Grammar Workshop", Description = "Deepen your understanding of German grammar.", StartingDate = DateTime.Now.AddDays(15), CourseTopic = CourseTopic.German, Published = true},
+                new() { Id = 9, Title = "Italian for Travelers", Description = "Essential Italian phrases for travelers.", StartingDate = DateTime.Now.AddDays(10), CourseTopic = CourseTopic.Italian, Published = true},
+                new() { Id = 10, Title = "Japanese Writing Practice", Description = "Practice writing in Japanese characters.", StartingDate = DateTime.Now.AddDays(25), CourseTopic = CourseTopic.Japanese, Published = true},
+                new() { Id = 11, Title = "Russian Pronunciation Mastery", Description = "Master the pronunciation of Russian sounds.", StartingDate = DateTime.Now.AddDays(5), CourseTopic = CourseTopic.Russian, Published = true},
+                new() { Id = 12, Title = "Portuguese Express Course", Description = "Quick course for learning Portuguese expressions.", StartingDate = DateTime.Now.AddDays(20), CourseTopic = CourseTopic.Portuguese, Published = true},
+                new() { Id = 13, Title = "Arabic Script Fundamentals", Description = "Learn the basics of the Arabic script.", StartingDate = DateTime.Now.AddDays(15), CourseTopic = CourseTopic.Arabic, Published = true},
             });
 
         modelBuilder.Entity<Lecture>().HasData(
@@ -111,7 +121,17 @@ public class AppDbContext : DbContext
                         new { CoursesId = 1, ActiveTeachersId = 3 },
                         new { CoursesId = 2, ActiveTeachersId = 3 },
                         new { CoursesId = 2, ActiveTeachersId = 2 },
-                        new { CoursesId = 3, ActiveTeachersId = 1 }
+                        new { CoursesId = 3, ActiveTeachersId = 1 },
+                        new { CoursesId = 4, ActiveTeachersId = 1 },
+                        new { CoursesId = 5, ActiveTeachersId = 1 },
+                        new { CoursesId = 6, ActiveTeachersId = 1 },
+                        new { CoursesId = 7, ActiveTeachersId = 1 },
+                        new { CoursesId = 8, ActiveTeachersId = 3 },
+                        new { CoursesId = 9, ActiveTeachersId = 3 },
+                        new { CoursesId = 10, ActiveTeachersId = 3 },
+                        new { CoursesId = 11, ActiveTeachersId = 3 },
+                        new { CoursesId = 12, ActiveTeachersId = 1 },
+                        new { CoursesId = 13, ActiveTeachersId = 1 }
                     );
                 }
             );

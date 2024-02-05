@@ -192,3 +192,9 @@ footer {
     color: inherit !important;
     pointer-events: none !important;
 }
+
+
+.grey-text {
+    color: rgba(135, 135, 135, 0.8) !important;
+}
+

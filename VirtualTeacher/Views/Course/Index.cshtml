@@ -1,15 +1,41 @@
 ﻿@{
     ViewData["Title"] = "Courses";
+    string byTitle = "title";
+    string byRating = "rating";
 }
 
 @model CoursesListViewModel
 
-@* SEARCHBAR AND FILTER *@
+@* SEARCHBAR AND BUTTONS ON TOP *@
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <span>
+        <form asp-controller="Course" asp-action="Index" method="Get">
+            <div class="input-group mb-3 mt-3 ps-2 pe-2">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Go</button>
+                <input type="text" class="form-control " name="Title" placeholder="Search by course title" aria-label="search area">
+            </div>
+        </form>
+    </span>
 
-@if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin") || User.IsInRole("Teacher"))
-{
-    <a asp-controller="Course" asp-action="Create" class="btn btn-success btn-sm" style="margin: 5px;">Create a new course</a>
-}
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort By
+        </button>
+        <ul class="dropdown-menu">
+            <li><a asp-controller="Course" asp-action="Index" asp-route-SortBy="title" class="dropdown-item">Title</a></li>
+            <li><a asp-controller="Course" asp-action="Index" asp-route-SortBy="rating" class="dropdown-item">Rating</a></li>
+        </ul>
+    </div>
+
+    <span style="flex: 1;" class="ms-1 me-1">
+        @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin") || User.IsInRole("Teacher"))
+        {
+            <a asp-controller="Course" asp-action="Create" class="btn btn-success">Create a new course</a>
+        }
+    </span>
+   
+</div>
+@* COURSES LIST *@
 
 <div class="d-flex justify-content-between">
     <div style="width: 65%">
@@ -40,6 +66,8 @@
     </div>
 
     <div style="width: 34%">
+
+
 
         <div class="card border-light mb-3">
             <form asp-controller="Course" asp-action="Index" method="Get">
@@ -78,7 +106,7 @@
                             }
                         }
                         <div class="list-group-item " >
-                            <div style="display: block; margin-bottom: 10px;">
+                            <div style="display: block;" class="mb-4 mt-2">
                             <strong margin-bottom: 10px;>Min Rating:</strong>
 
                      
@@ -113,18 +141,9 @@
                     </div>
                     </div>
                 </div>
-
-                <div class="card-header">Search By Course Name:</div>
-
-                <div class="input-group mb-3 mt-3 ps-2 pe-2">
-                   
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon1">Go</button>
-                    <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                </div>
             </form>
+
         </div>
-
-
     </div>
 </div>
 
@@ -137,4 +156,23 @@
             radio.checked = false;
         });
     }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+   
+    function submitSort(SortBy) {
+        $.ajax({
+            url: '@Url.Action("Index", "Course")',
+            type: 'GET',
+            data: { SortBy: SortBy },
+            success: function () {
+                // Handle success if needed
+            },
+            error: function () {
+                // Handle error if needed
+            }
+        });
+    }
+    
 </script>

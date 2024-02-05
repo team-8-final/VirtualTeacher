@@ -23,11 +23,11 @@ public class CourseRepository : ICourseRepository
     {
         return context.Courses
             .Include(course => course.Lectures)
-            .ThenInclude(l => l.Submissions)
+                .ThenInclude(l => l.Submissions)
             .Include(course => course.Ratings)
-            .ThenInclude(rating => rating.Student)
+                .ThenInclude(rating => rating.Student)
             .Include(course => course.ActiveTeachers)
-            .Include(course => course.EnrolledStudents)
+                .Include(course => course.EnrolledStudents)
             .Where(course => course.IsDeleted == false);
     }
 
@@ -285,9 +285,9 @@ public class CourseRepository : ICourseRepository
                 case "id":
                     return courses.OrderBy(u => u.Id);
                 case "title":
-                    return courses.OrderByDescending(u => u.Title);
+                    return courses.OrderBy(u => u.Title);
                 case "rating":
-                    return courses.OrderByDescending(u => u.Ratings);
+                    return courses.OrderByDescending(u => u.Ratings.Average(r => r.Value));
                 default:
                     return courses;
             }
