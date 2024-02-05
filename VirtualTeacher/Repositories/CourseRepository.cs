@@ -46,7 +46,7 @@ public class CourseRepository : ICourseRepository
             Description = dto.Description ?? "",
             StartingDate = dto.StartingDate,
             CourseTopic = dto.CourseTopic,
-            Published = dto.Published ?? false,
+            Published = dto.Published,
             EnrolledStudents = new List<User>(),
             Lectures = new List<Lecture>(),
             Ratings = new List<Rating>(),

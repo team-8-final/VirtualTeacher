@@ -6,6 +6,11 @@
 
 @* SEARCHBAR AND FILTER *@
 
+@if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin") || User.IsInRole("Teacher"))
+{
+    <a asp-controller="Course" asp-action="Create" class="btn btn-success btn-sm" style="margin: 5px;">Create a new course</a>
+}
+
 <div class="d-flex justify-content-between">
     <div style="width: 65%">
         @{

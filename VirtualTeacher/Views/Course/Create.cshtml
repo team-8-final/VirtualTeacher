@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "New course";
+}
+
+@model CourseCreateViewModel
+
+<h4>Create a new course:</h4>
+
+<form asp-controller="Course" asp-action="Create" method="post">
+
+    <div style="width: 60%">
+        <div class="mb-3">
+            <textarea asp-for="Title" class="form-control" id="courseTitle" rows="1" placeholder="Title">@Model.Title</textarea>
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <textarea asp-for="Description" class="form-control" id="courseDescription" rows="2" placeholder="Describe your course">@Model.Description</textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="courseTopic">Select Topic:</label>
+            <select asp-for="CourseTopic" class="form-control" id="courseTopic" name="courseTopic">
+                @foreach (var topic in Enum.GetValues(typeof(CourseTopic)))
+                {
+                    <option value="@topic">@topic</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="startingDate">Start Date:</label>
+            <input asp-for="StartingDate" type="date" id="startingDate" name="startingDate">
+        </div>
+
+        <div class="mb-3">
+            <label for="publish">Publish:</label>
+            <input asp-for="Published" type="checkbox" id="publish" name="publish">
+        </div>
+
+        <div class="mb-3">
+            <a asp-controller="Course" asp-action="Index" class="btn btn-danger">Cancel</a>
+            <input type="submit" value="Post" class="btn btn-primary" />
+        </div>
+    </div>
+
+</form>
