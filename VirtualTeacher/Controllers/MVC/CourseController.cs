@@ -131,6 +131,33 @@ namespace VirtualTeacher.Controllers.MVC
             }
         }
 
+        [HttpPost]
+        public IActionResult Enroll([FromRoute] int id)
+        {
+            try
+            {
+                var course = courseService.GetCourseById(id);
+                courseService.Enroll(id);
+
+                return RedirectToAction("Details", "Course", new { id = course.Id });
+            }
+            catch (DuplicateEntityException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status409Conflict;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (Exception e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+
+        }
+
         public IActionResult Details([FromRoute] int id)
         {
             var course = courseService.GetCourseById(id);
