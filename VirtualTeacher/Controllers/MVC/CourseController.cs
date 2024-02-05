@@ -5,6 +5,7 @@ using VirtualTeacher.Helpers.CustomAttributes;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace VirtualTeacher.Controllers.MVC
 {
@@ -63,6 +64,98 @@ namespace VirtualTeacher.Controllers.MVC
 
                 return RedirectToAction("Error", "Shared");
             }
+            catch (Exception e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+        }
+
+        [IsTeacherOrAdmin]
+        [HttpGet]
+        public IActionResult Update([FromRoute] int id)
+        {
+            try
+            {
+                var course = courseService.GetCourseById(id);
+
+                var courseVM = new CourseUpdateViewModel
+                {
+                    Title = course.Title,
+                    Description = course.Description,
+                    StartingDate = course.StartingDate,
+                    CourseTopic = course.CourseTopic,
+                    Published = course.Published
+                };
+
+                return View(courseVM);
+            }
+            catch (EntityNotFoundException e)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                ViewData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+        }
+
+        [IsTeacherOrAdmin]
+        [HttpPost]
+        public IActionResult Update([FromRoute] int id, CourseUpdateViewModel courseVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(courseVM);
+            }
+            try
+            {
+                var updatedCourse = courseService.UpdateCourse(id, courseVM);
+
+                return RedirectToAction("Details", "Course", new { id = updatedCourse.Id });
+            }
+            catch (UnauthorizedOperationException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status401Unauthorized;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (Exception e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Enroll([FromRoute] int id)
+        {
+            try
+            {
+                var course = courseService.GetCourseById(id);
+                courseService.Enroll(id);
+
+                return RedirectToAction("Details", "Course", new { id = course.Id });
+            }
+            catch (DuplicateEntityException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status409Conflict;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (Exception e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+
         }
 
         public IActionResult Details([FromRoute] int id)

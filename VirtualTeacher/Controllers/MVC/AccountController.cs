@@ -57,48 +57,6 @@ public class AccountController : Controller
         }
     }
 
-    [HttpPost]
-    public IActionResult Index(AccountInfoViewModel viewModel)
-    {
-        try
-        {
-            var loggedUser = accountService.GetLoggedUser();
-            viewModel.Username = loggedUser.Username;
-
-            if (!ModelState.IsValid)
-            {
-                return View("Index", viewModel);
-            }
-
-            var dto = new UserUpdateDto
-            {
-                FirstName = viewModel.FirstName,
-                LastName = viewModel.LastName,
-                Email = viewModel.Email,
-            };
-
-            accountService.AccountUpdate(dto);
-
-            return RedirectToAction("Index");
-        }
-        catch (UnauthorizedOperationException)
-        {
-            return RedirectToAction("login");
-        }
-        catch (DuplicateEntityException)
-        {
-            ModelState.AddModelError("Email", "The email is already in use.");
-
-            return View("Index", viewModel);
-        }
-        catch (Exception e)
-        {
-            TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
-            TempData["ErrorMessage"] = e.Message;
-            return RedirectToAction("Error", "Shared");
-        }
-    }
-
     [HttpGet]
     public IActionResult Update()
     {

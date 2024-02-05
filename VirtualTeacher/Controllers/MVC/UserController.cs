@@ -16,6 +16,7 @@ namespace VirtualTeacher.Controllers.MVC
 
         [IsAdmin]
         [HttpGet]
+        [Route("/Users")]
         public IActionResult Index(UserQueryParameters parameters)
         {
             ViewData["SortOrder"] = string.IsNullOrEmpty(parameters.SortOrder) ? "desc" : "";
