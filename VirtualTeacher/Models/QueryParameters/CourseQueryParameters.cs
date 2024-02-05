@@ -12,6 +12,8 @@ public class CourseQueryParameters
     [Range(0, 5, ErrorMessage = "Rating must be between 0 and 5")]
     public byte? Rating { get; set; }
 
+    public byte? MinRating { get; set; }
+
     public string? SortBy { get; set; }
     public string? SortOrder { get; set; }
     public int PageNumber { get; set; } = 1;

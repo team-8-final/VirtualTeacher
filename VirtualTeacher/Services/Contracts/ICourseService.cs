@@ -6,6 +6,7 @@ namespace VirtualTeacher.Services.Contracts;
 
 public interface ICourseService
 {
+    public List<Course> GetAllCourses();
     PaginatedList<Course> FilterCoursesBy(CourseQueryParameters parameters);
     Course GetCourseById(int id);
     Course CreateCourse(CourseCreateDto dto);

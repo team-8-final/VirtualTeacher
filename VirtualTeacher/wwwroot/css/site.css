@@ -20,6 +20,10 @@ html, body {
     margin: 0;
 }
 
+.modal-footer .left-side-container {
+    margin-right: auto; /* This pushes the left-side container to the left */
+}
+
 body {
     display: grid;
     grid-gap: 10px;
@@ -174,4 +178,17 @@ footer {
 /*make none icon red on hover */
 .rating__input--none:hover + .rating__label .rating__icon--none {
     color: red;
+}
+
+.orange-star {
+    color: orange !important;
+}
+
+.white-star {
+    color: white !important;
+}
+
+.no-interaction .rating__icon--star {
+    color: inherit !important;
+    pointer-events: none !important;
 }

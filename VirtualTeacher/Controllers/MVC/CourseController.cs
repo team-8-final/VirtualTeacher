@@ -2,6 +2,7 @@
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services.Contracts;
+using VirtualTeacher.ViewModels;
 
 namespace VirtualTeacher.Controllers.MVC
 {
@@ -18,18 +19,16 @@ namespace VirtualTeacher.Controllers.MVC
         }
 
         [HttpGet]
+        [Route("/Courses")]
         public IActionResult Index(CourseQueryParameters queryParameters)
         {
-            ViewData["SortOrder"] = string.IsNullOrEmpty(queryParameters.SortOrder) ? "desc" : "";
-            ViewData["Topic"] = string.IsNullOrEmpty(queryParameters.Topic.ToString()) ? "" : queryParameters.Topic; //todo to test this 
-            ViewData["TeacherUsername"] = string.IsNullOrEmpty(queryParameters.TeacherUsername) ? "" : queryParameters.TeacherUsername;
-            ViewData["MaxRating"] = queryParameters.Rating == 0 ? "" : queryParameters.Rating;
-
-            // ViewData["Rating"] = string.IsNullOrEmpty(queryParameters.TeacherUsername) ? "" : queryParameters.Rating; //based on ratings?
-
             var courses = courseService.FilterCoursesBy(queryParameters);
+            var allCourses = courseService.GetAllCourses();
+            CoursesListViewModel coursesVM = new CoursesListViewModel();
+            coursesVM.Courses = courses;
+            coursesVM.AllCourses = allCourses;
 
-            return View(courses);
+            return View(coursesVM);
         }
 
         public IActionResult Details([FromRoute] int id)

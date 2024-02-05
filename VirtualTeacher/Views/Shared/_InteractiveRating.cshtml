@@ -1,0 +1,22 @@
+﻿@model int  // Model representing the selected rating
+
+<form id="ratingForm">
+    <div class="rating-group" id="font-size-popup">
+        @for (int i = 1; i <= 5; i++)
+        {
+            <label aria-label="@($"{i} star")" class="rating__label" for="@($"rating2-{i}0")">
+                <i class="rating__icon rating__icon--star fa fa-star"></i>
+            </label>
+            <input class="rating__input" name="MinRating" id="@($"rating2-{i}0")" value="@i" type="radio" @(i == Model ? "checked" : "")>
+        }
+    </div>
+</form>
+
+<script>
+    // Add event listener to update hidden input on radio button change
+    document.querySelectorAll('.rating__input').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            document.getElementById('selectedRating').value = this.value;
+        });
+    });
+</script>

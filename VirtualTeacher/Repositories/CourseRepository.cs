@@ -6,6 +6,7 @@ using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Exceptions;
+using System.Threading;
 
 namespace VirtualTeacher.Repositories;
 
@@ -210,7 +211,7 @@ public class CourseRepository : ICourseRepository
         result = FilterByTopic(result, parameters.Topic);
         result = FilterByTeacherUsername(result, parameters.TeacherUsername);
         result = FilterByRating(result, parameters.Rating);
-
+        result = FilterByMinRating(result, parameters.MinRating);
         result = SortBy(result, parameters.SortBy);
         result = OrderBy(result, parameters.SortOrder);
 
@@ -254,12 +255,19 @@ public class CourseRepository : ICourseRepository
 
     private static IQueryable<Course> FilterByRating(IQueryable<Course> courses, byte? rating)
     {
-        if (rating == null)
-        {
+        if (rating.HasValue)
+            return courses.Where(t => t.Ratings.Average(r => r.Value) == rating);
+        else
             return courses;
-        }
+    }
 
-        return courses.Where(course => course.Ratings.Any(r => r.Value == rating));
+
+    private static IQueryable<Course> FilterByMinRating(IQueryable<Course> courses, byte? minRating)
+    {
+        if (minRating.HasValue)
+            return courses.Where(t => t.Ratings.Average(r => r.Value) >= minRating);
+        else
+            return courses;
     }
 
     private static IQueryable<Course> OrderBy(IQueryable<Course> courses, string? sortOrder)

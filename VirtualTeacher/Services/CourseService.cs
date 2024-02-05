@@ -24,6 +24,11 @@ public class CourseService : ICourseService
         this.hostEnvironment = hostEnvironment;
     }
 
+    public List<Course> GetAllCourses()
+    {
+        CourseQueryParameters emptyParams = new CourseQueryParameters();
+        return courseRepository.FilterBy(emptyParams);
+    }
     public PaginatedList<Course> FilterCoursesBy(CourseQueryParameters parameters)
     {
         return courseRepository.FilterBy(parameters);

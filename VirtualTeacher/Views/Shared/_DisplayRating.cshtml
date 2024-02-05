@@ -1,0 +1,31 @@
+﻿
+
+@model int
+
+<div class="">
+
+    <span>Real Rating: @Model</span>
+
+    <span >
+        <div class="rating-group">
+            @{
+                double endValue = @Model;
+                for (double i = 1; i <= 5; i ++)
+                {
+                    if (i <= endValue)
+                    {
+                        <label class="rating__label " style="cursor: default !important;"><i class="rating__icon rating__icon--star fa fa-star yellow-star"></i>
+
+                        </label>
+                    }
+                    else
+                    {
+                        <label class="rating__label" style="cursor: default !important;"><i class="rating__icon rating__icon--star fa fa-star white-star"></i></label>
+                    }
+                }
+            }
+
+        </div>
+    </span>
+</div>
+
