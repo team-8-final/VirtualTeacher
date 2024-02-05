@@ -5,5 +5,7 @@ public enum CourseTopic
     English,
     German,
     Japanese,
-    Chinese,
+    French,
+    Spanish,
+    Russian,
 }

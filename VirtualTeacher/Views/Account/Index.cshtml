@@ -53,6 +53,14 @@
         flex: 1;
     }
 
+    .language-flag {
+        width: 28px;
+        height: 20px;
+        border-radius: 10%;
+        object-fit: cover;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+    }
+
 
 </style>
 
@@ -100,11 +108,10 @@
                 <li class="list-group-item no-border">
                     Teaching Courses: <strong>@Model.CreatedCourses.Count</strong>
                 </li>
-
-
             </ul>
 
             <ul class="list-group list-group-flush no-border">
+                @* TODO: implement when comments are ready *@
                 @* <li class="list-group-item no-border"> *@
                 @*     Course Comments: <strong>@Model.CourseComments.Count</strong> *@
                 @* </li> *@
@@ -121,38 +128,34 @@
     </div>
 
     <div class="user-content-container">
-        <h3 class="username">Enrolled Courses</h3>
 
-        <div class="accordion" id="profileAccordion">
+        <h3 class="username">Enrolled Courses</h3>
+        <div class="accordion" id="enrolledCourses">
             @foreach (var course in Model.EnrolledCourses)
             {
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading-@course.Id">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
-                            @course.Title &nbsp;
-
-                            <span class="badge bg-secondary badge-smaller">
-                                @course.StartingDate?.ToString("dd MMM yyyy")
-                            </span>
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-enrolled-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
+                            <img class="language-flag" src="~/images/flags/@(course.CourseTopic).jpg" alt=""/> &nbsp; @course.Title
                         </button>
                     </h2>
-                    <div id="collapse-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#coursesAccordion">
+                    <div id="collapse-enrolled-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#enrolledCourses">
                         <div class="accordion-body">
 
                             <ol class="list-group list-group-flush">
                                 @foreach (var lecture in course.Lectures)
                                 {
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-bold">
-                                            @lecture.Title &nbsp;
-                                            @if(lecture.Submissions.Any(s => s.StudentId == Model.Id))
-                                            {
-                                                <i class="fa-solid fa-circle-check" style="color: green;"></i>
-                                            }
+                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <div class="ms-2 me-auto">
+                                            <div class="fw-bold">
+                                                @lecture.Title &nbsp;
+                                                @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                                {
+                                                    <i class="fa-solid fa-circle-check" style="color: green;"></i>
+                                                }
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
+                                    </li>
                                 }
                             </ol>
 
@@ -162,6 +165,79 @@
             }
         </div>
 
+        <h3 class="username mt-4">Completed Courses</h3>
+        <div class="accordion" id="completedCourses">
+            @foreach (var course in Model.CompletedCourses)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-@course.Id">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-completed-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
+                            <img class="language-flag" src="~/images/flags/@(course.CourseTopic).jpg" alt=""/> &nbsp; @course.Title
+                        </button>
+                    </h2>
+                    <div id="collapse-completed-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#completedCourses">
+                        <div class="accordion-body">
 
+                            <ol class="list-group list-group-flush">
+                                @foreach (var lecture in course.Lectures)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <div class="ms-2 me-auto">
+                                            <div class="fw-bold">
+                                                @lecture.Title &nbsp;
+                                                @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                                {
+                                                    <i class="fa-solid fa-circle-check" style="color: green;"></i>
+                                                }
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ol>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Admin") || User.IsInRole("Teacher")))
+        {
+            <h3 class="username mt-4">Teaching Courses</h3>
+            <div class="accordion" id="teachingCourses">
+                @foreach (var course in Model.CompletedCourses)
+                {
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-@course.Id">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-teaching-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
+                                <img class="language-flag" src="~/images/flags/@(course.CourseTopic).jpg" alt=""/> &nbsp; @course.Title
+                            </button>
+                        </h2>
+                        <div id="collapse-teaching-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#teachingCourses">
+                            <div class="accordion-body">
+
+                                <ol class="list-group list-group-flush">
+                                    @foreach (var lecture in course.Lectures)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                                            <div class="ms-2 me-auto">
+                                                <div class="fw-bold">
+                                                    @lecture.Title &nbsp;
+                                                    @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                                    {
+                                                        <i class="fa-solid fa-circle-check" style="color: green;"></i>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ol>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>
