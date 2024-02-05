@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VirtualTeacher.Helpers.CustomAttributes;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services.Contracts;
 
@@ -13,6 +14,7 @@ namespace VirtualTeacher.Controllers.MVC
             this.userService = userService;
         }
 
+        [IsAdmin]
         [HttpGet]
         public IActionResult Index(UserQueryParameters parameters)
         {

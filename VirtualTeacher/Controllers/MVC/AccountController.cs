@@ -30,6 +30,7 @@ public class AccountController : Controller
 
             var model = new AccountInfoViewModel
             {
+                Id = loggedUser.Id,
                 Username = loggedUser.Username,
                 FirstName = loggedUser.FirstName,
                 LastName = loggedUser.LastName,

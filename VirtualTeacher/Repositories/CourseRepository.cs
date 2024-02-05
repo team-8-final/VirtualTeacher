@@ -23,8 +23,9 @@ public class CourseRepository : ICourseRepository
     {
         return context.Courses
             .Include(course => course.Lectures)
+            .ThenInclude(l => l.Submissions)
             .Include(course => course.Ratings)
-                .ThenInclude(rating => rating.Student)
+            .ThenInclude(rating => rating.Student)
             .Include(course => course.ActiveTeachers)
             .Include(course => course.EnrolledStudents)
             .Where(course => course.IsDeleted == false);
@@ -148,6 +149,7 @@ public class CourseRepository : ICourseRepository
             .Include(lecture => lecture.WatchedBy)
             .Include(lecture => lecture.Notes)
             .Include(lecture => lecture.Comments)
+            .Include(lecture => lecture.Submissions)
             .Where(lecture => lecture.Course.Id == course.Id)
             .ToList();
 
@@ -427,6 +429,66 @@ public class CourseRepository : ICourseRepository
     {
         context.Notes.Add(noteToAdd);
         return context.SaveChanges() > 0;
+    }
+
+    public Submission? GetSubmission(int lectureId, int userId)
+    {
+        var foundSubmission = context.Submissions
+            .FirstOrDefault(submission => submission.LectureId == lectureId && submission.StudentId == userId);
+
+        return foundSubmission;
+    }
+
+    public bool CreateSubmission(int lectureId, int userId, byte? grade = null)
+    {
+        var submission = GetSubmission(lectureId, userId);
+
+        if (submission != null)
+        {
+            DeleteSubmission(lectureId, userId);
+        }
+
+        var newSubmission = new Submission
+        {
+            LectureId = lectureId,
+            StudentId = userId,
+            Grade = grade,
+        };
+
+        context.Submissions.Add(newSubmission);
+        context.SaveChanges();
+
+        return true;
+    }
+
+    public bool GradeSubmission(int lectureId, int userId, byte grade)
+    {
+        var submission = GetSubmission(lectureId, userId);
+
+        if (submission == null)
+        {
+            return false;
+        }
+
+        submission.Grade = grade;
+        context.SaveChanges();
+
+        return true;
+    }
+
+    public bool DeleteSubmission(int lectureId, int userId)
+    {
+        var submissionToDelete = context.Submissions
+            .FirstOrDefault(submission => submission.LectureId == lectureId && submission.StudentId == userId);
+
+        if (submissionToDelete == null)
+        {
+            return false;
+        }
+
+        context.Submissions.Remove(submissionToDelete);
+        context.SaveChanges();
+        return true;
     }
 
 }

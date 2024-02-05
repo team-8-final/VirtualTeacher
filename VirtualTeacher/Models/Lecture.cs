@@ -23,8 +23,8 @@ public class Lecture
     public int TeacherId { get; set; }
     public User Teacher { get; set; } = null!;
 
-    public IList<User> WatchedBy { get; set; } = null!;
-    public IList<Note> Notes { get; set; } = null!;
-    public IList<Comment> Comments { get; set; } = null!;
-    public IList<Submission> Submissions { get; set; } = null!;
+    public IList<User> WatchedBy { get; set; } = new List<User>();
+    public IList<Note> Notes { get; set; } = new List<Note>();
+    public IList<Comment> Comments { get; set; } = new List<Comment>();
+    public IList<Submission> Submissions { get; set; } = new List<Submission>();
 }

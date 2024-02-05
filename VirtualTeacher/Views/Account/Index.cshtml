@@ -144,7 +144,13 @@
                                 {
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
-                                        <div class="fw-bold">@lecture.Title &nbsp;<i class="fa-solid fa-circle-check" style="color: green;"></i></div>
+                                        <div class="fw-bold">
+                                            @lecture.Title &nbsp;
+                                            @if(lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                            {
+                                                <i class="fa-solid fa-circle-check" style="color: green;"></i>
+                                            }
+                                        </div>
                                     </div>
                                 </li>
                                 }

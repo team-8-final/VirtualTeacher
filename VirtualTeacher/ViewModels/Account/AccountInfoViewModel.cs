@@ -5,6 +5,8 @@ namespace VirtualTeacher.ViewModels.Account;
 
 public class AccountInfoViewModel
 {
+    public int Id { get; set; }
+
     public string Username { get; set; } = "";
 
     public string FirstName { get; set; } = null!;

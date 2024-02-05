@@ -497,14 +497,17 @@ public class CourseApiController : ControllerBase
             var fileName = Path.GetFileName(filePath);
             return PhysicalFile(filePath, contentType, fileName);
         }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
         catch (FileNotFoundException e)
         {
             return NotFound(e.Message);
         }
-        catch (Exception e)
+        catch (DirectoryNotFoundException e)
         {
-            // Log the exception
-            return StatusCode(500, "Internal server error");
+            return StatusCode(404, "Submission is not uploaded.");
         }
     }
 
@@ -539,7 +542,7 @@ public class CourseApiController : ControllerBase
     /// <returns>A message indicating the outcome of the operation.</returns>
     [HttpDelete("{courseId}/Lectures/{lectureId}/submission")]
     [Tags("Course > Lecture")]
-    public IActionResult CreateSubmission(int courseId, int lectureId)
+    public IActionResult DeleteSubmission(int courseId, int lectureId)
     {
         try
         {
@@ -548,6 +551,14 @@ public class CourseApiController : ControllerBase
             return Ok(result);
         }
         catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (DirectoryNotFoundException e)
+        {
+            return StatusCode(404, "Submission is not uploaded.");
+        }
+        catch (Exception e)
         {
             return NotFound(e.Message);
         }
