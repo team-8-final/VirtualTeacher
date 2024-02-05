@@ -16,5 +16,5 @@ public class CourseUpdateDto
 
     public CourseTopic CourseTopic { get; set; }
 
-    public bool? Published { get; set; }
+    public bool Published { get; set; }
 }

@@ -72,7 +72,7 @@ public class CourseRepository : ICourseRepository
         updatedCourse.Description = dto.Description ?? updatedCourse.Description;
         updatedCourse.StartingDate = dto.StartingDate ?? updatedCourse.StartingDate;
         updatedCourse.CourseTopic = dto.CourseTopic;
-        updatedCourse.Published = dto.Published ?? updatedCourse.Published;
+        updatedCourse.Published = dto.Published;
 
         context.Update(updatedCourse);
         context.SaveChanges();

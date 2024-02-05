@@ -5,6 +5,7 @@ using VirtualTeacher.Helpers.CustomAttributes;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace VirtualTeacher.Controllers.MVC
 {
@@ -62,6 +63,62 @@ namespace VirtualTeacher.Controllers.MVC
                 TempData["ErrorMessage"] = e.Message;
 
                 return RedirectToAction("Error", "Shared");
+            }
+        }
+
+        [IsTeacherOrAdmin]
+        [HttpGet]
+        public IActionResult Update([FromRoute] int id)
+        {
+            try
+            {
+                var course = courseService.GetCourseById(id);
+                var courseVM = new CourseUpdateViewModel
+                {
+                    Title = course.Title,
+                    Description = course.Description,
+                    StartingDate = course.StartingDate,
+                    CourseTopic = course.CourseTopic,
+                    Published = course.Published
+                };
+
+                return View(courseVM);
+            }
+            catch (EntityNotFoundException e)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                ViewData["ErrorMessage"] = e.Message;
+
+                return View("Error");
+            }
+        }
+
+        [IsTeacherOrAdmin]
+        [HttpPost]
+        public IActionResult Update([FromRoute] int id, CourseUpdateViewModel courseVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(courseVM);
+            }
+            try
+            {
+                var updatedCourse = courseService.UpdateCourse(id, courseVM);
+
+                return RedirectToAction("Details", "Course", new { id = updatedCourse.Id });
+            }
+            catch (InvalidUserInputException e)
+            {
+                ModelState.AddModelError("Content", e.Message);
+
+                return View("Index", "Home");
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                ViewData["ErrorMessage"] = e.Message;
+
+                return View("Error");
             }
         }
 
