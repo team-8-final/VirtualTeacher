@@ -64,6 +64,13 @@ namespace VirtualTeacher.Controllers.MVC
 
                 return RedirectToAction("Error", "Shared");
             }
+            catch (Exception e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
         }
 
         [IsTeacherOrAdmin]
@@ -73,6 +80,7 @@ namespace VirtualTeacher.Controllers.MVC
             try
             {
                 var course = courseService.GetCourseById(id);
+
                 var courseVM = new CourseUpdateViewModel
                 {
                     Title = course.Title,
@@ -89,7 +97,7 @@ namespace VirtualTeacher.Controllers.MVC
                 Response.StatusCode = StatusCodes.Status404NotFound;
                 ViewData["ErrorMessage"] = e.Message;
 
-                return View("Error");
+                return RedirectToAction("Error", "Shared");
             }
         }
 
@@ -107,18 +115,19 @@ namespace VirtualTeacher.Controllers.MVC
 
                 return RedirectToAction("Details", "Course", new { id = updatedCourse.Id });
             }
-            catch (InvalidUserInputException e)
+            catch (UnauthorizedOperationException e)
             {
-                ModelState.AddModelError("Content", e.Message);
+                TempData["StatusCode"] = StatusCodes.Status401Unauthorized;
+                TempData["ErrorMessage"] = e.Message;
 
-                return View("Index", "Home");
+                return RedirectToAction("Error", "Shared");
             }
-            catch (UnauthorizedAccessException e)
+            catch (Exception e)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                ViewData["ErrorMessage"] = e.Message;
+                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+                TempData["ErrorMessage"] = e.Message;
 
-                return View("Error");
+                return RedirectToAction("Error", "Shared");
             }
         }
 

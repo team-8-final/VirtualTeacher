@@ -6,8 +6,6 @@
 
 @model Course
 
-<a asp-controller="Course" asp-action="Update" asp-route-id="@Model.Id">Update course</a>
-
 <div>
     <div>
         @Model.Title >>>>>>>>>>>>> Details...
@@ -46,3 +44,5 @@
     </div>
 
 </div>
+
+<a class="btn btn-success btn-sm" asp-controller="Course" asp-action="Update" asp-route-id="@Model.Id">Update course</a>
