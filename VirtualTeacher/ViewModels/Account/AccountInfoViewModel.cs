@@ -19,13 +19,13 @@ public class AccountInfoViewModel
 
     public UserRole UserRole { get; set; }
 
-    public IList<Course> EnrolledCourses { get; set; } = null!;
+    public IList<Course> EnrolledCourses { get; set; } = new List<Course>();
 
-    public IList<Course> CreatedCourses { get; set; } = null!;
+    public IList<Course> CreatedCourses { get; set; } = new List<Course>();
 
-    public IList<Course> CompletedCourses { get; set; } = null!;
+    public IList<Course> CompletedCourses { get; set; } = new List<Course>();
 
-    public IList<Course> RatedCourses { get; set; } = null!;
+    public IList<Course> RatedCourses { get; set; } = new List<Course>();
 
     // TODO: implement when course comments are complete
     // public IList<Course> CourseComments { get; set; } = null!;

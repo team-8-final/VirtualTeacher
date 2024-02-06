@@ -106,7 +106,7 @@
                     Completed Courses: <strong>@Model.CompletedCourses.Count</strong>
                 </li>
                 <li class="list-group-item no-border">
-                    Teaching Courses: <strong>@Model.CreatedCourses.Count</strong>
+                    Created Courses: <strong>@Model.CreatedCourses.Count</strong>
                 </li>
             </ul>
 
@@ -203,17 +203,17 @@
 
         @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Admin") || User.IsInRole("Teacher")))
         {
-            <h3 class="username mt-4">Teaching Courses</h3>
-            <div class="accordion" id="teachingCourses">
-                @foreach (var course in Model.CompletedCourses)
+            <h3 class="username mt-4">Created Courses</h3>
+            <div class="accordion" id="createdCourses">
+                @foreach (var course in Model.CreatedCourses)
                 {
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading-@course.Id">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-teaching-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-created-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
                                 <img class="language-flag" src="~/images/flags/@(course.CourseTopic).jpg" alt=""/> &nbsp; @course.Title
                             </button>
                         </h2>
-                        <div id="collapse-teaching-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#teachingCourses">
+                        <div id="collapse-created-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#createdCourses">
                             <div class="accordion-body">
 
                                 <ol class="list-group list-group-flush">
