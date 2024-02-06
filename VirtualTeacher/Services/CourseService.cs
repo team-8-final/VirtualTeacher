@@ -250,7 +250,7 @@ public class CourseService : ICourseService
             throw new EntityNotFoundException($"Course with id {courseId} not found");
         }
         //check if the user has created the course
-        if (loggedUser.UserRole != UserRole.Admin && loggedUser.CreatedCourses.Any(c => c.Id == courseId))
+        if (loggedUser.UserRole != UserRole.Admin && !course.ActiveTeachers.Any(c => c.Username == loggedUser.Username))
             throw new UnauthorizedOperationException($"A lecture can be created only by the Course creator or an Admin.");
 
         Lecture createdLecture = courseRepository.CreateLecture(dto, loggedUser, courseId);
