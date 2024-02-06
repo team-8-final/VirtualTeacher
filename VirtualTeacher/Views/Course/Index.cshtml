@@ -71,56 +71,49 @@
                 <H1>There are no courses at the moment :3</H1>
             }
         }
+        @* PAGE BUTTONS *@
 
-        @*  PAGE BUTTONS *@
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-custom-colors">
 
-        <div class="d-flex justify-content-center">
-            <nav aria-label="Page navigation">
-                <ul class="pagination pagination-custom-colors">
+                <li class="page-item @prevState">
+                    <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@prevPage" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
 
-                    <li class="page-item @prevState">
-                        <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@prevPage" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-
-                    @{
-                        for (int i = 1; i <= Model.Courses.TotalPages + 1; i++)
+                @{
+                    for (int i = 1; i <= Model.Courses.TotalPages+1; i++)
+                    {
+                        if (i == Model.Courses.PageNumber)
                         {
-                            if (i == Model.Courses.PageNumber)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link active" aria-current="page">@i</a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@i">@i</a>
-                                </li>
-                            }
+                            <li class="page-item">
+                                <a class="page-link active" aria-current="page">@i</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "Course", new { PageNumber = i, SortBy = Model.Parameters.SortBy })">@i</a>
+                            </li>
                         }
                     }
+                }
 
-                    <li class="page-item @nextState">
-                        <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@nextPage" aria-label="Previous">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
+                <li class="page-item @nextState">
+                    <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@nextPage" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
 
-                </ul>
-            </nav>
-
-        </div>
-
+            </ul>
+        </nav>
 
     </div>
 
 
-
-
-
-
+    </div>
 
 
 
@@ -143,7 +136,7 @@
                                 foreach (var topic in topics)
                                 {
                                     <div class="list-group-item ps-4">
-                                        <input type="radio" id="@("checkbox_" + topic)" name="Topic" value="@topic">
+                                        <input type="radio" id="@("checkbox_" + topic)" name="Topic" value=@topic @(Model.Parameters.Topic == topic ? "checked" : "")>
                                         @topic
                                     </div>
                                 }
@@ -159,7 +152,7 @@
                             foreach (var username in teacherUsernames)
                             {
                                 <div class="list-group-item ps-4">
-                                    <input type="radio" id="@("checkbox_" + username)" name="TeacherUsername" value="@username">
+                                    <input type="radio" id="@("checkbox_" + username)" name="TeacherUsername" value="@username" @(Model.Parameters.TeacherUsername == username ? "checked" : "")>
                                     @username
                                 </div>
                             }
@@ -172,19 +165,19 @@
                             <div class="rating-group " id="font-size-popup">
 
                                 <label aria-label="1 star" class="rating__label" for="rating2-10"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                    <input class="rating__input" name="MinRating" id="rating2-10" value="1" type="radio">
-
+                                    <input class="rating__input" name="MinRating" id="rating2-10" value="1" type="radio" @(Model.Parameters.MinRating == 1 ? "checked" : "")>
+                                    
                                 <label aria-label="2 stars" class="rating__label" for="rating2-20"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                    <input class="rating__input" name="MinRating" id="rating2-20" value="2" type="radio">
+                                    <input class="rating__input" name="MinRating" id="rating2-20" value="2" type="radio" @(Model.Parameters.MinRating == 2 ? "checked" : "")>
 
                                 <label aria-label="3 stars" class="rating__label" for="rating2-30"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                    <input class="rating__input" name="MinRating" id="rating2-30" value="3" type="radio">
+                                    <input class="rating__input" name="MinRating" id="rating2-30" value="3" type="radio" @(Model.Parameters.MinRating == 3 ? "checked" : "")>
 
                                 <label aria-label="4 stars" class="rating__label" for="rating2-40"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                    <input class="rating__input" name="MinRating" id="rating2-40" value="4" type="radio">
+                                    <input class="rating__input" name="MinRating" id="rating2-40" value="4" type="radio" @(Model.Parameters.MinRating == 4 ? "checked" : "")>
 
                                 <label aria-label="5 stars" class="rating__label" for="rating2-50"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                <input class="rating__input" name="MinRating" id="rating2-50" value="5" type="radio">
+                                    <input class="rating__input" name="MinRating" id="rating2-50" value="5" type="radio" @(Model.Parameters.MinRating == 5 ? "checked" : "")>
                             </div>
                             </div>
                             

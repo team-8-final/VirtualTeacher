@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Reflection.Emit;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.DTOs.User;
+using VirtualTeacher.Models.QueryParameters;
+using VirtualTeacher.ViewModels;
 
 namespace VirtualTeacher.Helpers;
 
@@ -77,6 +80,16 @@ public class ModelMapper
 
             ActiveTeachers = new List<string>(
                 course.ActiveTeachers.Select(teacher => teacher.Username))
+        };
+    }
+
+    public CoursesListViewModel MapCourseList(PaginatedList<Course> courses, List<Course> allCourses, CourseQueryParameters parameters)
+    {
+        return new CoursesListViewModel
+        {
+            Courses = courses,
+            AllCourses = allCourses,
+            Parameters = parameters
         };
     }
 

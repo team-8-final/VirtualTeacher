@@ -27,9 +27,7 @@ namespace VirtualTeacher.Controllers.MVC
         {
             var courses = courseService.FilterCoursesBy(queryParameters);
             var allCourses = courseService.GetAllCourses();
-            CoursesListViewModel coursesVM = new CoursesListViewModel();
-            coursesVM.Courses = courses;
-            coursesVM.AllCourses = allCourses;
+            CoursesListViewModel coursesVM = mapper.MapCourseList(courses, allCourses, queryParameters);
 
             return View(coursesVM);
         }
