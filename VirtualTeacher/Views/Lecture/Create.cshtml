@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "New lecture";
+}
+
+@model LectureCreateViewModel
+
+<h4>Create a new lecture:</h4>
+
+<form asp-controller="Lecture" asp-action="Create" method="post">
+
+    <div style="width: 60%">
+
+        <div class="mb-3">
+            <textarea asp-for="Title" class="form-control" id="lectureTitle" rows="1" placeholder="Title">@Model.Title</textarea>
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <textarea asp-for="Description" class="form-control" id="lectureDescription" rows="2" placeholder="Describe your lecture">@Model.Description</textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <textarea asp-for="VideoLink" class="form-control" id="lectureVideo" rows="1" placeholder="Place your video link">@Model.VideoLink</textarea>
+        </div>
+
+        @*to do - file upload*@
+        <div class="mb-3">
+            <textarea asp-for="AssignmentLink" class="form-control" id="assignmentLink" rows="1" placeholder="Place your assignment link">@Model.AssignmentLink</textarea>
+        </div>
+
+        <div class="mb-3">
+            <a asp-controller="Course" asp-action="Details" asp-route-id="14" class="btn btn-danger">Cancel</a>
+            <input type="submit" value="Post" class="btn btn-primary" />
+        </div>
+
+    </div>
+
+</form>
