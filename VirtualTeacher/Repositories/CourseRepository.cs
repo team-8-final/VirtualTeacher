@@ -217,7 +217,8 @@ public class CourseRepository : ICourseRepository
         result = SortBy(result, parameters.SortBy);
         result = OrderBy(result, parameters.SortOrder);
 
-        int totalPages = (int)Math.Ceiling(((double)result.Count()) / parameters.PageSize);
+        int totalPages = (result.Count() + 1) / parameters.PageSize;
+        result = result.Skip(parameters.PageSize * (parameters.PageNumber - 1)).Take(parameters.PageSize);
 
         return new PaginatedList<Course>(result.ToList(), totalPages, parameters.PageNumber);
     }

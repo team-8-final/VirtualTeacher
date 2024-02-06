@@ -35,7 +35,15 @@
     </span>
    
 </div>
+
 @* COURSES LIST *@
+
+@{
+    string prevState = (Model.Courses.HasPreviousPage) ? "" : "disabled";
+    string nextState = (Model.Courses.HasNextPage) ? "" : "disabled";
+    int prevPage = Model.Courses.PageNumber - 1;
+    int nextPage = Model.Courses.PageNumber + 1;
+}
 
 <div class="d-flex justify-content-between">
     <div style="width: 65%">
@@ -53,21 +61,72 @@
                                 int roundedRating = Convert.ToInt32(Math.Ceiling(rating));
                             }
                             Rating: @rating
-                        @await Html.PartialAsync("_DisplayRating", roundedRating)
-                        Students: @course.EnrolledStudents.Count()
+                            @await Html.PartialAsync("_DisplayRating", roundedRating)
+                            Students: @course.EnrolledStudents.Count()
+                        </div>
                     </div>
-                </div>
                 }
             } else
             {
                 <H1>There are no courses at the moment :3</H1>
             }
         }
+
+        @*  PAGE BUTTONS *@
+
+        <div class="d-flex justify-content-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-custom-colors">
+
+                    <li class="page-item @prevState">
+                        <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@prevPage" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    @{
+                        for (int i = 1; i <= Model.Courses.TotalPages + 1; i++)
+                        {
+                            if (i == Model.Courses.PageNumber)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link active" aria-current="page">@i</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@i">@i</a>
+                                </li>
+                            }
+                        }
+                    }
+
+                    <li class="page-item @nextState">
+                        <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@nextPage" aria-label="Previous">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+        </div>
+
+
     </div>
 
+
+
+
+
+
+
+
+
+    @* FILTERS *@
+
     <div style="width: 34%">
-
-
 
         <div class="card border-light mb-3">
             <form asp-controller="Course" asp-action="Index" method="Get">
@@ -105,7 +164,7 @@
                                 </div>
                             }
                         }
-                        <div class="list-group-item " >
+                    <div class="list-group-item " >
                             <div style="display: block;" class="mb-4 mt-2">
                             <strong margin-bottom: 10px;>Min Rating:</strong>
 
@@ -137,7 +196,6 @@
 
                                 <button type="submit" class="btn btn-outline-secondary">Go</button>
                             </div>
-                           
                     </div>
                     </div>
                 </div>
@@ -159,20 +217,3 @@
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-   
-    function submitSort(SortBy) {
-        $.ajax({
-            url: '@Url.Action("Index", "Course")',
-            type: 'GET',
-            data: { SortBy: SortBy },
-            success: function () {
-                // Handle success if needed
-            },
-            error: function () {
-                // Handle error if needed
-            }
-        });
-    }
-    
-</script>
