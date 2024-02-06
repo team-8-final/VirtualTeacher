@@ -125,6 +125,30 @@ public class AccountController : Controller
         }
     }
 
+    [HttpPost]
+    public IActionResult ChangeAvatar(IFormFile? avatarFile)
+    {
+        if (avatarFile == null)
+        {
+            return Json(new { success = false, errorMessage = "No file received." });
+        }
+
+        try
+        {
+            var filePath = accountService.SaveAccountAvatar(avatarFile);
+            return Json(new { success = true, fileName = Path.GetFileName(filePath) });
+        }
+        catch (ArgumentException e)
+        {
+            return Json(new { success = false, errorMessage = e.Message });
+        }
+        catch (Exception)
+        {
+            return Json(new { success = false, errorMessage = "An error occurred while uploading the file." });
+        }
+    }
+
+
     [HttpGet]
     public IActionResult Register()
     {

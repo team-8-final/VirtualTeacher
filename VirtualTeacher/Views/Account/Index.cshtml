@@ -12,6 +12,7 @@
         object-fit: cover;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+
     .circle-avatar-container {
         width: 100px;
         height: 100px;
@@ -142,7 +143,7 @@
                     <div id="collapse-enrolled-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#enrolledCourses">
                         <div class="accordion-body">
 
-                            <ol class="list-group list-group-flush">
+                            <ol class="list-group list-group-flush list-group-numbered">
                                 @foreach (var lecture in course.Lectures)
                                 {
                                     <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -178,7 +179,7 @@
                     <div id="collapse-completed-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#completedCourses">
                         <div class="accordion-body">
 
-                            <ol class="list-group list-group-flush">
+                            <ol class="list-group list-group-flush list-group-numbered">
                                 @foreach (var lecture in course.Lectures)
                                 {
                                     <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -216,7 +217,7 @@
                         <div id="collapse-created-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#createdCourses">
                             <div class="accordion-body">
 
-                                <ol class="list-group list-group-flush">
+                                <ol class="list-group list-group-flush list-group-numbered">
                                     @foreach (var lecture in course.Lectures)
                                     {
                                         <li class="list-group-item d-flex justify-content-between align-items-start">

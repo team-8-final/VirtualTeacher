@@ -4,11 +4,62 @@
     ViewData["Title"] = "Profile Info";
 }
 
-<div style="max-width: 400px; margin: auto">
+<style>
+    .circle-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .circle-avatar-container {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 15px auto;
+    }
+
+    .btn-change-avatar {
+        position: absolute;
+        bottom: 0px;
+        right: -5px;
+        border: none;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 50%;
+        padding: 0px;
+        cursor: pointer;
+        outline: none;
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+    }
+
+    .btn-change-avatar:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-change-avatar i {
+        color: white;
+        font-size: 16px;
+    }
+
+</style>
+
+<div style="max-width: 350px; margin: auto">
     <form asp-controller="Account" asp-action="Update" method="post">
 
-        <img class="user-avatar-photo img-fluid" src="~/@Model.AvatarUrl"/>
-        <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">@Model.Username</h3>
+        <div class="circle-avatar-container">
+            <img class="circle-avatar" src="~/@Model.AvatarUrl"/>
+            <!-- Change Avatar Icon Button -->
+            <input type="file" id="avatarInput" style="display: none;" accept=".jpg"/>
+            <button type="button" class="btn-change-avatar" id="changeAvatarButton" aria-label="Change Avatar">
+                <i class="fa-regular fa-image"></i>
+            </button>
+        </div>
+
+
+        <h3 style="margin: 0 auto 20px auto; text-align: center">@Model.Username</h3>
 
         <div class="form-floating mb-3">
             <input asp-for="FirstName" type="text" class="form-control" id="floatingFirstName" placeholder="First Name" required>
@@ -65,27 +116,97 @@
 </div>
 
 <!-- Notification Pop-up -->
-<div id="notificationBar" class="alert" role="alert" style="display: none; position: fixed; bottom: 20px; right: 20px; width: auto; max-width: 450px; z-index: 9999; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding-right: 15px; background: #a94442; color: white; border-radius: 4px;">
+<div id="notificationPopup" class="alert" role="alert" style="display: none; position: fixed; bottom: 20px; right: 20px; width: auto; max-width: 450px; z-index: 9999; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding-right: 15px; background: #a94442; color: white; border-radius: 4px;">
     <span id="notificationMessage" style="display: inline-block; max-width: 80%;"></span>
-    <button id="closeNotification" style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; margin-left: 10px; border: none; background: none; color: white; float: right;"><i class="fa-solid fa-xmark"></i></button>
+    <button id="closeNotification" style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; margin-left: 10px; border: none; background: none; color: white; float: right;">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
 </div>
 
+@* upload avatar *@
+<script>
+document.getElementById('changeAvatarButton').addEventListener('click', function() {
+    document.getElementById('avatarInput').click();
+});
+
+document.getElementById('avatarInput').addEventListener('change', function(event) {
+    if (event.target.files.length > 0) {
+        let formData = new FormData();
+        formData.append('avatarFile', event.target.files[0]);
+
+        fetch('/Account/ChangeAvatar', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            let notificationPopup = document.getElementById('notificationPopup');
+            let notificationMessage = document.getElementById('notificationMessage');
+
+            if (data.success) {
+                let avatarImage = document.querySelector('.circle-avatar');
+                let imageUrl = '/images/avatars/' + data.fileName;
+
+                fetch(imageUrl, {cache: "reload"}) // Force fetch to reload from server
+                .then(response => response.blob()) // Convert the response to a blob
+                .then(blob => {
+                    // Create a blob URL and use it as the source to bypass cache
+                    let blobUrl = URL.createObjectURL(blob);
+                    avatarImage.src = blobUrl;
+                })
+                .catch(error => {
+                    console.error('Error fetching the new avatar image:', error);
+                });
+
+                // Show success notification
+                notificationPopup.classList.remove('alert-danger');
+                notificationPopup.classList.add('alert-success');
+                notificationPopup.style.backgroundColor = '#3c763d';
+                notificationMessage.innerHTML = 'Avatar updated successfully.';
+                notificationPopup.style.display = 'block';
+            } else {
+                // Show error notification
+                notificationPopup.classList.remove('alert-success');
+                notificationPopup.classList.add('alert-danger');
+                notificationPopup.style.backgroundColor = '#a94442';
+                notificationMessage.textContent = data.errorMessage;
+                notificationPopup.style.display = 'block';
+            }
+
+            setTimeout(function() {
+                notificationPopup.style.display = 'none';
+            }, 4000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
+
+document.getElementById('closeNotification').addEventListener('click', function() {
+    let notificationPopup = document.getElementById('notificationPopup');
+    notificationPopup.style.display = 'none';
+});
+
+</script>
+
+
+@* delete account *@
 <script>
 document.getElementById('confirmDelete').addEventListener('click', function() {
     fetch('/Account/Delete', { method: 'GET' })
         .then(response => response.json())
-        .then(({ success, errorMessage }) => { // Destructure success and errorMessage from data
+        .then(({ success, errorMessage }) => {
 
-            // Show notification
-            let notificationBar = document.getElementById('notificationBar');
+            let notificationPopup = document.getElementById('notificationPopup');
             let notificationMessage = document.getElementById('notificationMessage');
-            notificationBar.style.display = 'block';
-            notificationBar.style.bottom = '20px';
-            notificationBar.style.right = '20px';
+            notificationPopup.style.display = 'block';
+            notificationPopup.style.bottom = '20px';
+            notificationPopup.style.right = '20px';
 
             if (success) {
-                notificationBar.classList.add('alert-success');
-                notificationBar.style.backgroundColor = '#3c763d';
+                notificationPopup.classList.add('alert-success');
+                notificationPopup.style.backgroundColor = '#3c763d';
                 notificationMessage.innerHTML = 'Account deleted successfully.<br>Redirecting to home page in 5 seconds...';
 
                 let countdown = 5;
@@ -100,18 +221,17 @@ document.getElementById('confirmDelete').addEventListener('click', function() {
                 }
                 }, 1000);
             } else {
-                notificationBar.classList.add('alert-danger');
+                notificationPopup.classList.add('alert-danger');
                 notificationMessage.textContent = errorMessage;
             }
 
-            // Hide the modal
             let myModal = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
             myModal.hide();
         });
 });
 
 document.getElementById('closeNotification').addEventListener('click', function() {
-    let notificationBar = document.getElementById('notificationBar');
-    notificationBar.style.display = 'none';
+    let notificationPopup = document.getElementById('notificationPopup');
+    notificationPopup.style.display = 'none';
 });
 </script>
