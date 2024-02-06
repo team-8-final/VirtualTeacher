@@ -14,7 +14,7 @@
     </div>
 
     <div class="border">
-        <iframe width=1550 height="400" src="https://www.youtube.com/embed/4t7BgyA7IOI" title="dance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <iframe style="width: 100%; aspect-ratio: 16/9" src="https://www.youtube.com/embed/4t7BgyA7IOI" title="dance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         
     </div>
     <div>
@@ -61,6 +61,7 @@
     if (isActiveTeacherOrAdmin)
     {
         <a class="btn btn-success btn-sm" asp-controller="Course" asp-action="Update" asp-route-id="@Model.Id">Update course</a>
+        <a class="btn btn-success btn-sm" asp-controller="Lecture" asp-action="Create" asp-route-courseId="@Model.Id">Create lecture</a>
     }
 
     @*Enroll form/button*@
