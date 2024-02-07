@@ -260,7 +260,8 @@ public class AccountService : IAccountService
 
         return user.EnrolledCourses
             .Where(course => course.Lectures.
-                All(lecture => string.IsNullOrEmpty(lecture.AssignmentLink)))
+                All(lecture => lecture.Submissions
+                    .Any(s => s.StudentId == user.Id)))
             .ToList();
     }
 
