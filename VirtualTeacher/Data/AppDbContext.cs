@@ -7,7 +7,7 @@ namespace VirtualTeacher.Data;
 public class AppDbContext : DbContext
 {
     public DbSet<User> Users { get; set; } = null!;
-    public DbSet<Course> Courses { get; set; } = null!;/**/
+    public DbSet<Course> Courses { get; set; } = null!;
     public DbSet<Rating> Ratings { get; set; } = null!;
 
     public DbSet<Lecture> Lectures { get; set; } = null!;

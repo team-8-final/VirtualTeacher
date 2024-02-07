@@ -170,8 +170,7 @@ public class CourseRepository : ICourseRepository
         return lecture;
     }
 
-    //delete
-    //update
+    //todo delete
 
     public Lecture UpdateLecture(Lecture lecture, LectureUpdateDto dto)
     {
@@ -217,7 +216,12 @@ public class CourseRepository : ICourseRepository
         result = SortBy(result, parameters.SortBy);
         result = OrderBy(result, parameters.SortOrder);
 
-        int totalPages = (result.Count() + 1) / parameters.PageSize;
+        int totalPages = result.Count() / parameters.PageSize;
+        if (result.Count() % parameters.PageSize != 0)
+        {
+            totalPages++; // Increment totalPages if there are remaining items
+        }
+
         result = result.Skip(parameters.PageSize * (parameters.PageNumber - 1)).Take(parameters.PageSize);
 
         return new PaginatedList<Course>(result.ToList(), totalPages, parameters.PageNumber);
