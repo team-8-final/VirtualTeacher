@@ -201,8 +201,6 @@ public class CourseService : ICourseService
 
         List<Lecture> lectures = new List<Lecture>();
         lectures = courseRepository.GetLectures(course);
-
-
         if (lectures.Count == 0)
         {
             throw new EntityNotFoundException($"No lectures found for course with id '{courseId}'.");

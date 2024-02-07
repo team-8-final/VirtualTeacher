@@ -292,8 +292,7 @@ public class AccountController : Controller
 
             accountService.AccountUpdate(dto);
 
-            ViewData["SuccessMessage"] = "Password updated successfully.";
-            return View("Success");
+            return RedirectToAction("Index");
         }
         catch (UnauthorizedOperationException)
         {

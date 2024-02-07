@@ -198,6 +198,13 @@ footer {
     color: rgba(135, 135, 135, 0.8) !important;
 }
 
+.circle-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 .course-header {
     padding-top: 2px;
     padding-left: 7px;
@@ -213,4 +220,3 @@ footer {
     object-fit: cover;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
 }
-
