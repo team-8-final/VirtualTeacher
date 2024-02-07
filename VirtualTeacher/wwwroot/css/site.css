@@ -198,3 +198,19 @@ footer {
     color: rgba(135, 135, 135, 0.8) !important;
 }
 
+.course-header {
+    padding-top: 2px;
+    padding-left: 7px;
+    border-radius: 7px;
+    color: #ffff;
+    background: linear-gradient(to right, #4158D0, #C850C0,#FFCC70);
+}
+
+.language-flag {
+    width: 28px;
+    height: 20px;
+    border-radius: 10%;
+    object-fit: cover;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
