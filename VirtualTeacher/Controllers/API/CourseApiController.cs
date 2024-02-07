@@ -509,6 +509,10 @@ public class CourseApiController : ControllerBase
         {
             return StatusCode(404, "Submission is not uploaded.");
         }
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     /// <summary>
@@ -531,6 +535,10 @@ public class CourseApiController : ControllerBase
         catch (ArgumentException e)
         {
             return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
         }
     }
 

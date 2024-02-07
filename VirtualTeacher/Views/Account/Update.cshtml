@@ -5,14 +5,6 @@
 }
 
 <style>
-    .circle-avatar {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
     .circle-avatar-container {
         position: relative;
         width: 100px;
@@ -27,7 +19,7 @@
         border: none;
         background: rgba(0, 0, 0, 0.3);
         border-radius: 50%;
-        padding: 0px;
+        padding: 0;
         cursor: pointer;
         outline: none;
         width: 30px;
@@ -89,10 +81,6 @@
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal" style="margin: 15px auto 0 auto; display: block; width: 100%">
         <i class="fa-regular fa-trash-can"></i> Delete Account
     </button>
-
-    @* <form asp-controller="Account" asp-action="Delete" method="get"> *@
-    @*     <input style="margin: 15px auto 0 auto; display: block; width: 100%" class="btn btn-danger" type="submit" value="Delete Account"/> *@
-    @* </form> *@
 </div>
 
 
