@@ -201,6 +201,7 @@ public class AccountController : Controller
                 LastName = model.LastName,
                 Email = model.Email,
                 Password = model.Password,
+                UserRole = model.UserRole,
             };
 
             var user = userService.Create(dto);
@@ -285,7 +286,7 @@ public class AccountController : Controller
                 ModelState.AddModelError("CurrentPassword", "Incorrect password.");
                 return View("Password", model);
             }
-            var dto = new UserUpdateDto()
+            var dto = new UserUpdateDto
             {
                 Password = model.NewPassword
             };

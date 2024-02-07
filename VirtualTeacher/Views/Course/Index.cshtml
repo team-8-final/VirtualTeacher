@@ -33,7 +33,7 @@
             <a asp-controller="Course" asp-action="Create" class="btn btn-success">Create a new course</a>
         }
     </span>
-   
+
 </div>
 
 @* COURSES LIST *@
@@ -55,7 +55,7 @@
                     <div class="card mb-3">
                         <div class="card-body">
                             <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">@course.Title</a>
-                            Teacher: @course.ActiveTeachers[0].Username 
+                            Teacher: @course.ActiveTeachers[0].Username
                             @{
                                 double rating = (course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0.0);
                                 int roundedRating = Convert.ToInt32(Math.Ceiling(rating));
@@ -133,7 +133,7 @@
                             <input type="hidden" name="TeacherUsername" value="@Model.Parameters.TeacherUsername" />
                             <input type="hidden" name="SortBy" value="@Model.Parameters.SortBy" />
 
-                            <button type="submit" class="page-link @nextState" " aria-label="Next">
+                            <button type="submit" class="page-link @nextState aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </button>
                         </form>
@@ -193,12 +193,12 @@
                             <div style="display: block;" class="mb-4 mt-2">
                                 <strong margin-bottom: 10px;>Min Rating:</strong>
 
-                     
+
                                 <div class="rating-group " id="font-size-popup">
 
                                     <label aria-label="1 star" class="rating__label" for="rating2-10"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
                                         <input class="rating__input" name="MinRating" id="rating2-10" value="1" type="radio" @(Model.Parameters.MinRating == 1 ? "checked" : "")>
-                                    
+
                                     <label aria-label="2 stars" class="rating__label" for="rating2-20"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
                                         <input class="rating__input" name="MinRating" id="rating2-20" value="2" type="radio" @(Model.Parameters.MinRating == 2 ? "checked" : "")>
 
@@ -212,7 +212,7 @@
                                         <input class="rating__input" name="MinRating" id="rating2-50" value="5" type="radio" @(Model.Parameters.MinRating == 5 ? "checked" : "")>
                                 </div>
                             </div>
-                            
+
                             <div class="modal-footer">
                                 <input type="hidden" name="" value="" class="form-input" />
                                 <div class="left-side-container">

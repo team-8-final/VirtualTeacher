@@ -133,8 +133,7 @@
         <h3 class="username">Enrolled Courses</h3>
         @if (Model.EnrolledCourses.Count == 0)
         {
-            <span class="text-muted">The user hasn't enrolled in any courses. </span>
-            <span class="fs-4"><i class="fa-solid fa-face-sad-tear"></i></span>
+            <div class="text-muted text-center">The user hasn't enrolled in any courses. </div>
         }
         <div class="accordion" id="enrolledCourses">
             @foreach (var course in Model.EnrolledCourses)
@@ -174,8 +173,7 @@
         <h3 class="username mt-4">Completed Courses</h3>
         @if (Model.CompletedCourses.Count == 0)
         {
-            <span class="text-muted">The user hasn't completed any courses. </span>
-            <span class="fs-4"><i class="fa-solid fa-face-sad-tear"></i></span>
+            <div class="text-muted text-center">The user hasn't completed any courses. </div>
         }
         <div class="accordion" id="completedCourses">
             @foreach (var course in Model.CompletedCourses)
@@ -217,8 +215,7 @@
             <h3 class="username mt-4">Created Courses</h3>
             @if (Model.CreatedCourses.Count == 0)
             {
-                <span class="text-muted">The user hasn't created any courses. </span>
-                <span class="fs-4"><i class="fa-solid fa-face-sad-tear"></i></span>
+                <div class="text-muted text-center">The user hasn't created any courses. </div>
             }
 
             <div class="accordion" id="createdCourses">

@@ -9,6 +9,18 @@
 
         <h3 style="max-width: 400px; margin: 0 auto 20px auto; text-align: center">Register New Account</h3>
 
+        <div class="mb-3">
+            <div class="row" style="padding-left: 100px; padding-right: 100px;">
+                <div class="btn-group" role="group" aria-label="User Role Selection">
+                    <input asp-for="UserRole" type="radio" class="btn-check" id="studentRole" value="Student" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="studentRole">Student</label>
+
+                    <input asp-for="UserRole" type="radio" class="btn-check" id="teacherRole" value="Teacher" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="teacherRole">Teacher</label>
+                </div>
+            </div>
+        </div>
+
         <div class="form-floating mb-3">
             <input asp-for="Username" type="text" class="form-control" id="floatingUsername" placeholder="First Name" required>
             <label asp-for="Username" for="floatingUsername">Username</label>
@@ -44,6 +56,7 @@
             <label asp-for="Email">Email</label>
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
+
 
         <input style="margin: 25px auto 0 auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Create Account"/>
     </form>

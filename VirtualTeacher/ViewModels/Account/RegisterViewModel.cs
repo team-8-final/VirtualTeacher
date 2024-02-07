@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using VirtualTeacher.Models.Enums;
 
 namespace VirtualTeacher.ViewModels.Account;
 
@@ -39,5 +40,5 @@ public class RegisterViewModel
         ErrorMessage = "Password must contain at least one uppercase letter, one digit, and one special character.")]
     public string PasswordConfirmation { get; set; } = null!;
 
-
+    public UserRole UserRole { get; set; }
 }
