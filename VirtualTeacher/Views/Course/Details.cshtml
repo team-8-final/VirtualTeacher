@@ -5,23 +5,91 @@
     bool isEnrolled = Model.EnrolledStudents.Any(s => s.Username == currentUser) || Model.ActiveTeachers.Any(t => t.Username == currentUser);
     bool isActiveTeacherOrAdmin = User.Identity.IsAuthenticated && (Model.ActiveTeachers.Any(t => t.Username == User.Identity.Name) || User.IsInRole("Admin"));
 
-    string teacherButtonsVisibility = "hidden";
-    if (isActiveTeacherOrAdmin)
-    {
-        teacherButtonsVisibility = "visible";
-    }
-
-    string enrollVisbility = "hidden";
-    if (!isEnrolled)
-    {
-        enrollVisbility = "visible";
-    }
-
-    DateTime? startingDate = Model.StartingDate;
-
+    string teacherButtonsVisibility = isActiveTeacherOrAdmin ? "visible" : "hidden";
+    string enrollVisibility = isEnrolled ? "hidden" : "visible";
 }
 
 @model Course
+
+@*STUDENT MODAL*@
+<div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="studentModalLabel">Enrolled Students</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
+                    @{
+                        foreach (var student in Model.EnrolledStudents)
+                        {
+                            <li class="list-group-item">
+                                @student.FirstName @student.LastName
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*RATING MODAL*@
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ratingModalLabel">Course Ratings</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
+                    @{
+                        if (Model.Ratings.Count() == 0)
+                        {
+                            <li class="list-group-item">
+                                No ratings yet.
+                            </li>
+                        }
+                        foreach (var rating in Model.Ratings)
+                        {
+                            <li class="list-group-item">
+                                @rating.Student.Username - @rating.Value/5
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-clear" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-warning" data-bs-target="#reviewModal" data-bs-toggle="modal">Add review</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*REVIEW MODAL *@
+<div class="modal fade" id="reviewModal" aria-hidden="true" aria-labelledby="reviewModalLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="reviewModalLabel">Leave your Rating</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Not implemented yet.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-clear" data-bs-target="#ratingModal" data-bs-toggle="modal">Back</button>
+                <button class="btn btn-warning" data-bs-target="#ratingModal" data-bs-toggle="modal">Rate</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @*COURSE HEADER*@
 <div class="d-flex course-header justify-content-between">
@@ -45,7 +113,7 @@
     <div class="d-flex align-items-center">
 
         <form asp-controller="Course" asp-action="Enroll" asp-route-id="@Model.Id" method="post">
-            <button type="submit" class="btn btn-success" style="visibility: @enrollVisbility; margin-right: 20px">Enroll</button>
+            <button type="submit" class="btn btn-success" style="visibility: @enrollVisibility; margin-right: 20px">Enroll</button>
         </form>
 
     </div>
@@ -77,6 +145,10 @@
                                 <a href="#" class="btn btn-secondary btn-sm"> @teacher.FirstName @teacher.LastName</a>
                             }
                         }
+
+                        @*MODAL BUTTONS*@
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#studentModal">Students</button>
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#ratingModal">Ratings (@Model.Ratings.Count)</button>
                     </div>
                     
                     <div>
@@ -100,8 +172,6 @@
                     <strong>Lectures</strong>
                     <a class="btn btn-success btn-sm" style="visibility: @teacherButtonsVisibility" asp-controller="Lecture" asp-action="Create" asp-route-courseId="@Model.Id">New</a>
                 </div>
-
-                
             </div>
 
             <ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
@@ -124,12 +194,9 @@
     </div>
 </div>
 
-Students:
-@{
-    foreach (var student in Model.EnrolledStudents)
-    {
-        <span>@student.FirstName @student.LastName, </span>
-    }
-}
+
+
+
+
 
     
