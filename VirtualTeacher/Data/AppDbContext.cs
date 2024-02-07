@@ -52,12 +52,7 @@ public class AppDbContext : DbContext
                 new() { Id = 3, CourseId = 1, StudentId = 2, Value = 1, },
             });
 
-        modelBuilder.Entity<Submission>().HasData(
-            new List<Submission>
-            {
-                new() { Id = 1, LectureId = 1, StudentId = 2, Grade = 100 },
-                new() { Id = 2, LectureId = 2, StudentId = 1, Grade = 100 },
-            });
+        modelBuilder.Entity<Submission>().HasData(SubmissionsData.Seed());
 
         modelBuilder.Entity<Course>()
             .HasMany(course => course.ActiveTeachers)

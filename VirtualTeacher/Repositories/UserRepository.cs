@@ -22,8 +22,10 @@ namespace VirtualTeacher.Repositories
             return context.Users
                 .Include(u => u.EnrolledCourses)
                 .ThenInclude(c => c.Lectures)
+                .ThenInclude(l => l.Submissions)
                 .Include(u => u.CreatedCourses)
                 .ThenInclude(c => c.Lectures)
+                .ThenInclude(l => l.Submissions)
                 .Include(u => u.Ratings)
                 .ThenInclude(r => r.Course)
                 .ThenInclude(c => c.Lectures)
