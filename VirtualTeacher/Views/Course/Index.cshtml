@@ -52,15 +52,22 @@
             {
                 foreach (var course in Model.Courses)
                 {
-                    <div class="card mb-3">
+                    <div class="card mb-3 position-relative">
                         <div class="card-body">
                             <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">@course.Title</a>
+                            <span class="position-absolute top-10px end-15px">flag</span>
+
                             Teacher: @course.ActiveTeachers[0].Username
                             @{
                                 double rating = (course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0.0);
                                 int roundedRating = Convert.ToInt32(Math.Ceiling(rating));
                             }
-                            Rating: @rating
+                            Rating: 
+                            @if(@rating == 0){
+                                <span>no ratings yet</span>
+                            } else {
+                            @rating
+                            }
                             @await Html.PartialAsync("_DisplayRating", roundedRating)
                             Students: @course.EnrolledStudents.Count()
                         </div>
