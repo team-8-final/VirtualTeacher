@@ -20,6 +20,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="mb-3">
+                    <input type="text" class="form-control form-control-sm" id="searchBar" placeholder="Search">
+                </div>
                 <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
                     @{
                         foreach (var student in Model.EnrolledStudents)
@@ -55,18 +58,22 @@
                                 No ratings yet.
                             </li>
                         }
-                        foreach (var rating in Model.Ratings)
+                        else
                         {
-                            <li class="list-group-item">
-                                @rating.Student.Username - @rating.Value/5
-                            </li>
+                            foreach (var rating in Model.Ratings)
+                            {
+                                <li class="list-group-item">
+                                    @rating.Student.FirstName @rating.Student.LastName - @rating.Value/5
+                                </li>
+                            }
                         }
+                        
                     }
                 </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-clear" data-bs-dismiss="modal">Close</button>
-                <button class="btn btn-warning" data-bs-target="#reviewModal" data-bs-toggle="modal">Add review</button>
+                <button class="btn btn-warning" data-bs-target="#reviewModal" data-bs-toggle="modal">Add rating</button>
             </div>
         </div>
     </div>
@@ -126,7 +133,7 @@
     <div class="d-flex flex-column" style="width: 75%">
         @*VIDEO*@
         <div>
-            <iframe style="width: 100%; aspect-ratio: 16/9" src="https://www.youtube.com/embed/4t7BgyA7IOI" title="dance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe style="width: 100%; aspect-ratio: 16/9" src="https://www.youtube.com/embed/jy74VcXjlEk" title="dance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
 
         @*INFO BLOCK*@
@@ -177,22 +184,39 @@
             <ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
                 @{
                     int counter = 1;
-
+                  
                     foreach (var lecture in Model.Lectures)
                     {
-                        <li class="list-group-item">
-                            <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@Model.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">@counter. @lecture.Title</a>
-                        </li>
+                        <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@Model.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                        <li class="list-group-item custom-hover">
+                                @counter. @lecture.Title
+                            </li>
+                        </a>
 
                         counter++;
                     }
                 }
-            </ul>
-
-            
+            </ul>      
         </div>
     </div>
 </div>
+
+@*STUDENTS MODAL SEARCH*@
+<script>
+    document.getElementById('searchBar').addEventListener('input', function () {
+        var searchTerm = this.value.toLowerCase();
+        var listItems = document.querySelectorAll('#studentModal .list-group-item');
+
+        listItems.forEach(function (item) {
+            var studentName = item.textContent.toLowerCase();
+            if (studentName.includes(searchTerm)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 
 

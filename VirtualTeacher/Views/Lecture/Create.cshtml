@@ -1,17 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "New lecture";
+    ViewData["Title"] = "New Lecture";
 }
 
 @model LectureCreateViewModel
 
-<h4>Create a new lecture:</h4>
+<h4>Create a new lecture</h4>
 
 <form asp-controller="Lecture" asp-action="Create" method="post">
 
     <div style="width: 60%">
 
         <div class="mb-3">
-            <textarea asp-for="Title" class="form-control" id="lectureTitle" rows="1" placeholder="Title">@Model.Title</textarea>
+            <input asp-for="Title" class="form-control" id="lectureTitle" placeholder="Title your lecture">
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
@@ -21,16 +21,16 @@
         </div>
 
         <div class="mb-3">
-            <textarea asp-for="VideoLink" class="form-control" id="lectureVideo" rows="1" placeholder="Place your video link">@Model.VideoLink</textarea>
+            <input asp-for="VideoLink" class="form-control" id="lectureVideo" rows="1" placeholder="Place your video link">
         </div>
 
         @*to do - file upload*@
         <div class="mb-3">
-            <textarea asp-for="AssignmentLink" class="form-control" id="assignmentLink" rows="1" placeholder="Place your assignment link">@Model.AssignmentLink</textarea>
+            <input asp-for="AssignmentLink" class="form-control" id="assignmentLink"placeholder="Place your assignment link">
         </div>
 
         <div class="mb-3">
-            <a asp-controller="Course" asp-action="Details" asp-route-id="14" class="btn btn-danger">Cancel</a>
+            <a asp-controller="Course" asp-action="Details" asp-route-id="@ViewData["CourseId"]" class="btn btn-danger">Cancel</a>
             <input type="submit" value="Post" class="btn btn-primary" />
         </div>
 

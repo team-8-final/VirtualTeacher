@@ -205,6 +205,15 @@ footer {
     object-fit: cover;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.circle-avatar-home {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 .course-header {
     padding-top: 2px;
     padding-left: 7px;
@@ -219,4 +228,8 @@ footer {
     border-radius: 10%;
     object-fit: cover;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.custom-hover:hover {
+    background-color: #f8f9fa;
 }

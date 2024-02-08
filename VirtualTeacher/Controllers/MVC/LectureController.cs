@@ -21,6 +21,7 @@ namespace VirtualTeacher.Controllers.MVC
         public IActionResult Create(int courseId)
         {
             var lectureVM = new LectureCreateViewModel();
+            ViewData["CourseId"] = courseId;
 
             return View();
         }
@@ -37,7 +38,7 @@ namespace VirtualTeacher.Controllers.MVC
             {
                 var newLecture = courseService.CreateLecture(lectureVM, courseId);
 
-                return RedirectToAction("Details", "Course", new { id = courseId });
+                return RedirectToAction("Details", "Lecture", new { courseId, id = newLecture.Id });
             }
             catch (UnauthorizedOperationException e)
             {
@@ -54,5 +55,37 @@ namespace VirtualTeacher.Controllers.MVC
                 return RedirectToAction("Error", "Shared");
             }
         }
+
+        [HttpGet("{id}")]
+        public IActionResult Details(int courseId, int id)
+        {
+            try
+            {
+				var lecture = courseService.GetLectureById(courseId, id);
+
+				return View(lecture);
+			}
+			catch (EntityNotFoundException e)
+			{
+				TempData["StatusCode"] = StatusCodes.Status404NotFound;
+				TempData["ErrorMessage"] = e.Message;
+
+				return RedirectToAction("Error", "Shared");
+			}
+			catch (UnauthorizedOperationException e)
+			{
+				TempData["StatusCode"] = StatusCodes.Status401Unauthorized;
+				TempData["ErrorMessage"] = e.Message;
+
+				return RedirectToAction("Error", "Shared");
+			}
+			catch (Exception e)
+			{
+				TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+				TempData["ErrorMessage"] = e.Message;
+
+				return RedirectToAction("Error", "Shared");
+			}
+		}
     }
 }

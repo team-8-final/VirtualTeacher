@@ -5,12 +5,12 @@
 
     @foreach (var course in Model.EnrolledCourses)
     {
-        <a href="#" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">@course.Title</a>
+        <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">@course.Title</a>
 
         @foreach (var lecture in course.Lectures)
         {
             <small style="font-size: 1rem; display: block; margin-left: 1.5rem; margin-bottom: 0.25rem;">
-                <a href="#" style="font-size: inherit;">@lecture.Title</a>
+                <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@lecture.CourseId" asp-route-id="@lecture.Id" style="font-size: inherit;">@lecture.Title</a>
             </small>
         }
     }

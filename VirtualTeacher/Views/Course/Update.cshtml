@@ -5,13 +5,13 @@
 
 @model CourseUpdateViewModel
 
-<h4>Update course '@Model.Title':</h4>
+<h4>Update course '@Model.Title'</h4>
 
 <form asp-controller="Course" asp-action="Update" method="post">
 
     <div style="width: 60%">
         <div class="mb-3">
-            <textarea asp-for="Title" class="form-control" id="courseTitle" rows="1" placeholder="Title">@Model.Title</textarea>
+            <input asp-for="Title" class="form-control" id="courseTitle" placeholder="@Model.Title">
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 

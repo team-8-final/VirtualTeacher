@@ -1,0 +1,36 @@
+﻿@{
+	ViewData["Title"] = "Lecture";
+}
+
+@model Lecture
+
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId">@Model.Course.Title</a></li>
+		<li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+	</ol>
+</nav>
+
+<iframe style="width: 100%; aspect-ratio: 16/9" src="@Model.VideoLink" title="lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<p>@Model.Description</p>
+<span>Teacher: @Model.Teacher.FirstName @Model.Teacher.LastName</span>
+
+
+<p>Comments:
+	@{
+		if (Model.Comments.Count == 0)
+		{
+			<span>No comments</span>
+		}
+		else
+		{
+			foreach (var comment in Model.Comments)
+			{
+				<span>@comment.Author.Username - @comment.Content</span>
+			}
+		}
+
+	}
+
+</p>

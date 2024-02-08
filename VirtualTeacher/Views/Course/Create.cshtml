@@ -1,16 +1,16 @@
 ﻿@{
-    ViewData["Title"] = "New course";
+    ViewData["Title"] = "New Course";
 }
 
 @model CourseCreateViewModel
 
-<h4>Create a new course:</h4>
+<h4>Create a new course</h4>
 
 <form asp-controller="Course" asp-action="Create" method="post">
 
     <div style="width: 60%">
         <div class="mb-3">
-            <textarea asp-for="Title" class="form-control" id="courseTitle" rows="1" placeholder="Title">@Model.Title</textarea>
+            <input asp-for="Title" class="form-control" id="courseTitle" placeholder="Title your course">
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 

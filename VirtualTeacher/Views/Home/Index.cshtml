@@ -59,6 +59,8 @@
                 <div class="card-body">
                     <h5 class="card-title">@course.Title</h5>
                     <p class="card-text">Students: @course.EnrolledStudents.Count()</p>
+                </div>
+                <div class="card-footer">
                     <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">Go to course</a>
                 </div>
             </div>
@@ -78,7 +80,9 @@
                             var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;
                             <p class="card-text">Avg. Rating: @rating </p>
                         }
-                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id"  class="btn btn-primary">Go to course</a>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">Go to course</a>
                 </div>
             </div>
         }
@@ -94,6 +98,8 @@
                 <div class="card-body">
                     <h5 class="card-title">@course.Title</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+                <div class="card-footer">
                     <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">Go to course</a>
                 </div>
             </div>
