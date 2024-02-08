@@ -83,12 +83,13 @@ public class ModelMapper
         };
     }
 
-    public CoursesListViewModel MapCourseList(PaginatedList<Course> courses, List<Course> allCourses, CourseQueryParameters parameters)
+    public CoursesListViewModel MapCourseList(PaginatedList<Course> courses, List<string> teachers, List<string> topics, CourseQueryParameters parameters)
     {
         return new CoursesListViewModel
         {
             Courses = courses,
-            AllCourses = allCourses,
+            AllTeachers = teachers,
+            AllTopics = topics,
             Parameters = parameters
         };
     }

@@ -162,13 +162,12 @@
 
                         <div class="list-group-item"><strong>Topics:</strong> </div>
                         @{
-                            if (@Model.AllCourses != null)
+                            if (@Model.AllTopics != null)
                             {
-                                var topics = @Model.AllCourses.Select(course => course.CourseTopic).Distinct().ToList();
-                                foreach (var topic in topics)
+                                foreach (var topic in @Model.AllTopics)
                                 {
                                     <div class="list-group-item ps-4">
-                                        <input type="radio" class="deselectable" id="@("checkbox_" + topic)" name="Topic" value=@topic @(Model.Parameters.Topic == topic ? "checked" : "")>
+                                        <input type="radio" class="deselectable" id="@("checkbox_" + topic)" name="Topic" value=@topic @(Model.Parameters.Topic.ToString() == topic ? "checked" : "")>
                                         @topic
                                     </div>
                                 }
@@ -176,17 +175,15 @@
                         }
                         <div class="list-group-item"><strong>Teachers: </strong></div>
                         @{
-                            var teacherUsernames = @Model.AllCourses
-                                .SelectMany(course => course.ActiveTeachers.Select(teacher => teacher.Username)
-                                .Distinct()
-                                .ToList())
-                                .Distinct();
-                            foreach (var username in teacherUsernames)
+                            if (@Model.AllTeachers != null)
                             {
-                                <div class="list-group-item ps-4">
-                                    <input type="radio" class="deselectable" id="@("checkbox_" + username)" name="TeacherUsername" value="@username" @(Model.Parameters.TeacherUsername == username ? "checked" : "")>
-                                    @username
-                                </div>
+                                foreach (var username in @Model.AllTeachers)
+                                {
+                                    <div class="list-group-item ps-4">
+                                        <input type="radio" class="deselectable" id="@("checkbox_" + username)" name="TeacherUsername" value="@username" @(Model.Parameters.TeacherUsername == username ? "checked" : "")>
+                                        @username
+                                    </div>
+                                }
                             }
                         }
                         <div class="list-group-item " >

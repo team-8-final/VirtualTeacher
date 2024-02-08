@@ -26,8 +26,19 @@ namespace VirtualTeacher.Controllers.MVC
         public IActionResult Index(CourseQueryParameters queryParameters)
         {
             var courses = courseService.FilterCoursesBy(queryParameters);
+
+            List<string> allTeachers = courseService.GetAllCourses()
+            .SelectMany(course => course.ActiveTeachers.Select(teacher => teacher.Username)
+                .Distinct())
+                .Distinct()
+                .ToList();
+
+            List<string>  allTopics = courseService.GetAllCourses().Select(course => course.CourseTopic.ToString())
+                .Distinct()
+                .ToList();
+
             var allCourses = courseService.GetAllCourses();
-            CoursesListViewModel coursesVM = mapper.MapCourseList(courses, allCourses, queryParameters);
+            CoursesListViewModel coursesVM = mapper.MapCourseList(courses, allTeachers, allTopics, queryParameters);
 
             return View(coursesVM);
         }

@@ -27,7 +27,6 @@ public class CourseService : ICourseService
     public List<Course> GetAllCourses()
     {
         CourseQueryParameters emptyParams = new CourseQueryParameters();
-        //emptyParams.PageNumber = int.MaxValue;
         emptyParams.PageSize = int.MaxValue;
         return courseRepository.FilterBy(emptyParams);
     }
