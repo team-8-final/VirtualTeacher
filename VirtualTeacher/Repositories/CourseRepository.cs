@@ -496,4 +496,34 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
+    public bool CreateAssignment(int courseId, int lectureId, string fullPath)
+    {
+        var lecture = GetLecture(courseId, lectureId);
+
+        if (lecture == null)
+        {
+            return false;
+        }
+
+        lecture.AssignmentLink = fullPath;
+        context.SaveChanges();
+
+        return true;
+    }
+
+    public bool DeleteAssignment(int courseId, int lectureId)
+    {
+        var lecture = GetLecture(courseId, lectureId);
+
+        if (lecture == null)
+        {
+            return false;
+        }
+
+        lecture.AssignmentLink = null;
+        context.SaveChanges();
+
+        return true;
+    }
+
 }

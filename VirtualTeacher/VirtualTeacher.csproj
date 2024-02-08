@@ -36,4 +36,9 @@
     <Compile Remove="Services\Contracts\IAuthService.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="PrivateData\Assignments\" />
+    <Folder Include="PrivateData\Assignments\course-1\" />
+  </ItemGroup>
+
 </Project>

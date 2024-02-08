@@ -29,6 +29,7 @@ public class User
     [MinLength(2), MaxLength(20)]
     public string LastName { get; set; } = null!;
 
+    //todo remove property
     public string? AvatarUrl { get; set; } = "default.jpg";
 
     [Required]

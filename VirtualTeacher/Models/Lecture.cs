@@ -16,7 +16,7 @@ public class Lecture
 
     [MaxLength(8192)] public string VideoLink { get; set; } = null!;
 
-    [MaxLength(8192)] public string AssignmentLink { get; set; } = null!;
+    [MaxLength(8192)] public string? AssignmentLink { get; set; } = null!;
 
     public int CourseId { get; set; }
     public Course Course { get; set; } = null!;

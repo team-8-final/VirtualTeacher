@@ -476,6 +476,101 @@ public class CourseApiController : ControllerBase
     }
 
     /// <summary>
+    /// Retrieves the assignment file for a specific course and lecture.
+    /// </summary>
+    /// <param name="courseId">The ID of the course.</param>
+    /// <param name="lectureId">The ID of the lecture.</param>
+    /// <returns>
+    /// The assignment file as a downloadable file if it exists.
+    /// </returns>
+    [HttpGet("{courseId}/Lectures/{lectureId}/assignment")]
+    [Tags("Course > Lecture > Assignment")]
+    public IActionResult GetAssignment(int courseId, int lectureId)
+    {
+        try
+        {
+            var contentType = "application/octet-stream"; // Default MIME type
+
+            var filePath = courseService.GetAssignmentFilePath(courseId, lectureId);
+            var fileName = Path.GetFileName(filePath);
+
+            return PhysicalFile(filePath, contentType, fileName);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (FileNotFoundException e)
+        {
+            return NotFound("Assignment doesn't exist.");
+        }
+    }
+
+    /// <summary>
+    /// Uploads and creates an assignment for a given course and lecture.
+    /// </summary>
+    /// <param name="courseId">The ID of the course.</param>
+    /// <param name="lectureId">The ID of the lecture.</param>
+    /// <param name="file">The assignment file to upload.</param>
+    /// <returns>
+    /// An Ok result with a success message if the file is successfully uploaded.
+    /// </returns>
+    [HttpPut("{courseId}/Lectures/{lectureId}/assignment")]
+    [Tags("Course > Lecture > Assignment")]
+    [Authorize(Roles = "Teacher, Admin")]
+    public IActionResult CreateAssignment(int courseId, int lectureId, IFormFile file)
+    {
+        try
+        {
+            var result = courseService.CreateAssignment(courseId, lectureId, file);
+
+            return Ok(result);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Deletes an existing assignment for a specified course and lecture.
+    /// </summary>
+    /// <param name="courseId">The ID of the course.</param>
+    /// <param name="lectureId">The ID of the lecture.</param>
+    /// <returns>
+    /// An Ok result with a success message if the assignment is successfully deleted.
+    /// </returns>
+    [HttpDelete("{courseId}/Lectures/{lectureId}/assignment")]
+    [Tags("Course > Lecture > Assignment")]
+    [Authorize(Roles = "Teacher, Admin")]
+    public IActionResult DeleteAssignment(int courseId, int lectureId)
+    {
+        try
+        {
+            var result = courseService.DeleteAssignment(courseId, lectureId);
+
+            return Ok(result);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+
+    /// <summary>
     /// Retrieves a submission file for a given course and lecture, based on the logged-in user.
     /// </summary>
     /// <param name="courseId">The ID of the course.</param>
@@ -484,7 +579,7 @@ public class CourseApiController : ControllerBase
     /// The submission file as a downloadable file.
     /// </returns>
     [HttpGet("{courseId}/lectures/{lectureId}/submission")]
-    [Tags("Course > Lecture")]
+    [Tags("Course > Lecture > Submission")]
     public IActionResult GetSubmission(int courseId, int lectureId)
     {
         try
@@ -501,17 +596,9 @@ public class CourseApiController : ControllerBase
         {
             return NotFound(e.Message);
         }
-        catch (FileNotFoundException e)
-        {
-            return NotFound(e.Message);
-        }
-        catch (DirectoryNotFoundException e)
-        {
-            return StatusCode(404, "Submission is not uploaded.");
-        }
         catch (Exception e)
         {
-            return NotFound(e.Message);
+            return NotFound("Submission is not uploaded.");
         }
     }
 
@@ -523,7 +610,8 @@ public class CourseApiController : ControllerBase
     /// <param name="file">The submission file to be uploaded.</param>
     /// <returns>A message indicating the outcome of the file upload.</returns>
     [HttpPut("{courseId}/Lectures/{lectureId}/submission")]
-    [Tags("Course > Lecture")]
+    [Tags("Course > Lecture > Submission")]
+    [Authorize(Roles = "Teacher, Admin")]
     public IActionResult CreateSubmission(int courseId, int lectureId, IFormFile file)
     {
         try
@@ -548,8 +636,9 @@ public class CourseApiController : ControllerBase
     /// <param name="courseId">The ID of the course.</param>
     /// <param name="lectureId">The ID of the lecture.</param>
     /// <returns>A message indicating the outcome of the operation.</returns>
+    [Authorize(Roles = "Teacher, Admin")]
     [HttpDelete("{courseId}/Lectures/{lectureId}/submission")]
-    [Tags("Course > Lecture")]
+    [Tags("Course > Lecture > Submission")]
     public IActionResult DeleteSubmission(int courseId, int lectureId)
     {
         try

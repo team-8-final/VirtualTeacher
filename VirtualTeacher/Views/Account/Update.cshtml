@@ -135,10 +135,11 @@ document.getElementById('avatarInput').addEventListener('change', function(event
                 let avatarImage = document.querySelector('.circle-avatar');
                 let imageUrl = '/images/avatars/' + data.fileName;
 
-                fetch(imageUrl, {cache: "reload"}) // Force fetch to reload from server
-                .then(response => response.blob()) // Convert the response to a blob
+                // Instead of appending a query string, fetch the image and create a blob URL
+                fetch(imageUrl, {cache: "no-cache"}) // Use no-cache to force fetch to ignore cache
+                .then(response => response.blob())
                 .then(blob => {
-                    // Create a blob URL and use it as the source to bypass cache
+                    // Create a blob URL and use it as the src to bypass cache
                     let blobUrl = URL.createObjectURL(blob);
                     avatarImage.src = blobUrl;
                 })
@@ -146,14 +147,12 @@ document.getElementById('avatarInput').addEventListener('change', function(event
                     console.error('Error fetching the new avatar image:', error);
                 });
 
-                // Show success notification
                 notificationPopup.classList.remove('alert-danger');
                 notificationPopup.classList.add('alert-success');
                 notificationPopup.style.backgroundColor = '#3c763d';
                 notificationMessage.innerHTML = 'Avatar updated successfully.';
                 notificationPopup.style.display = 'block';
             } else {
-                // Show error notification
                 notificationPopup.classList.remove('alert-success');
                 notificationPopup.classList.add('alert-danger');
                 notificationPopup.style.backgroundColor = '#a94442';

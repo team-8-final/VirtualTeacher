@@ -379,6 +379,101 @@ public class CourseService : ICourseService
         return courseRepository.UpdateNoteContent(loggedUser.Id, lectureId, updatedContent);
     }
 
+    public string GetAssignmentFilePath(int courseId, int lectureId)
+    {
+        _ = GetCourseById(courseId);
+        var lecture = GetLectureById(courseId, lectureId);
+
+        if (string.IsNullOrEmpty(lecture.AssignmentLink))
+        {
+            throw new EntityNotFoundException("Assignment doesn't exists.");
+        }
+
+        if (!File.Exists(lecture.AssignmentLink))
+        {
+            throw new FileNotFoundException($"Assignment file not found.");
+        }
+
+        return lecture.AssignmentLink;
+    }
+
+    public string CreateAssignment(int courseId, int lectureId, IFormFile file)
+    {
+        _ = GetCourseById(courseId);
+        var lecture = GetLectureById(courseId, lectureId);
+
+        var allowedExtensions = new List<string> { ".txt", ".doc", ".docx", ".rtf" };
+        var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+        if (!allowedExtensions.Contains(fileExtension))
+        {
+            throw new ArgumentException("File type is not allowed.");
+        }
+
+        var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
+        var assignmentDirectory = Path.Combine(privateRoot, "Assignments", "course-" + courseId);
+
+        if (!Directory.Exists(assignmentDirectory))
+        {
+            Directory.CreateDirectory(assignmentDirectory);
+        }
+
+        var fileNameWithoutExtension = "lecture-" + lectureId;
+        var existingFiles = Directory.GetFiles(assignmentDirectory, fileNameWithoutExtension + ".*");
+
+        foreach (var existingFile in existingFiles)
+        {
+            File.Delete(existingFile);
+        }
+
+        var fullPath = Path.Combine(assignmentDirectory, fileNameWithoutExtension + fileExtension);
+
+        using var stream = new FileStream(fullPath, FileMode.Create);
+        file.CopyTo(stream);
+
+        var assignmentCreated = courseRepository.CreateAssignment(courseId, lectureId, fullPath);
+
+        if (!assignmentCreated)
+        {
+            throw new Exception("Assignment could not be created.");
+        }
+
+        lecture.AssignmentLink = fullPath;
+        return "File uploaded successfully.";
+    }
+
+    public string DeleteAssignment(int courseId, int lectureId)
+    {
+        _ = GetCourseById(courseId);
+        var lecture = GetLectureById(courseId, lectureId);
+
+        var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
+        var assignmentDirectory = Path.Combine(privateRoot, "Assignments", "course-" + courseId);
+
+        var fileNameWithoutExtension = "lecture-" + lectureId;
+        var existingFiles = Directory.GetFiles(assignmentDirectory, fileNameWithoutExtension + ".*");
+
+        if (existingFiles.Length == 0)
+        {
+            throw new EntityNotFoundException("No assignment found for this lecture.");
+        }
+
+        foreach (var existingFile in existingFiles)
+        {
+            File.Delete(existingFile);
+        }
+
+        var assignmentDeleted = courseRepository.DeleteAssignment(courseId, lectureId);
+
+        if (!assignmentDeleted)
+        {
+            throw new Exception("Assignment could not be deleted.");
+        }
+
+        return "Assignment file deleted successfully.";
+    }
+
+
     public string GetSubmissionFilePath(int courseId, int lectureId, string username)
     {
         _ = GetCourseById(courseId);
