@@ -55,7 +55,12 @@
                     <div class="card mb-3 position-relative">
                         <div class="card-body">
                             <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">@course.Title</a>
-                            <span class="position-absolute top-10px end-15px">flag</span>
+                            <span class="position-absolute top-10px end-15px">
+                                <h4>
+                                    <img class="language-flag" src="~/images/flags/@(course.CourseTopic).jpg" alt="" />
+                                </h4>
+                            </span>
+
 
                             Teacher: @course.ActiveTeachers[0].Username
                             @{
