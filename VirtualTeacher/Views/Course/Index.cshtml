@@ -53,28 +53,73 @@
                 foreach (var course in Model.Courses)
                 {
                     <div class="card mb-3 position-relative">
-                        <div class="card-body">
-                            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">@course.Title</a>
-                            <span class="position-absolute top-10px end-15px">
-                                <h4>
-                                    <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
-                                </h4>
-                            </span>
+                        <div class="card-body custom-card-height-1">
+                            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id"><H5>@course.Title</H5></a>
+                            <text>Description:</text>
+
+                            <div class="position-absolute top-10px end-15px">
+                                <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
+                            </div>
+
+                            <div>
+                                <div class="position-absolute bottom-15px start-15px">
+                                    @{
+                                        if (@course.ActiveTeachers.Count() > 1)
+                                        {
+                                            <text>Teachers:</text>
+                                        }
+                                        else
+                                        {
+                                            <text>Teacher:</text>
+                                        }
+                                    }
+                                    <div class="btn btn-outline-primary btn-sm">
+                                        <text> @course.ActiveTeachers[0].Username </text>
+                                    </div>
+                                        @{
+                                            if (@course.ActiveTeachers.Count() > 1)
+                                            {
+                                            <div class="btn btn-outline-primary btn-sm">
+                                                <text>@course.ActiveTeachers[1].Username</text>
+                                            </div>
+                                            }
+                                        }
+                                    
+                                </div>
 
 
-                            Teacher: @course.ActiveTeachers[0].Username
-                            @{
-                                double rating = (course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0.0);
-                                int roundedRating = Convert.ToInt32(Math.Ceiling(rating));
-                            }
-                            Rating: 
-                            @if(@rating == 0){
-                                <span>no ratings yet</span>
-                            } else {
-                            @rating
-                            }
-                            @await Html.PartialAsync("_DisplayRating", roundedRating)
-                            Students: @course.EnrolledStudents.Count()
+                                <div class="position-absolute bottom-10px end-15px">
+                                    @{
+                                        double rating = (course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0.0);
+                                        int roundedRating = Convert.ToInt32(Math.Ceiling(rating));
+                                    }
+
+                                    <div>
+                                        @{
+                                            if (course.EnrolledStudents.Count() > 0)
+                                            {
+                                                <div>
+                                                    @course.EnrolledStudents.Count() (enrolled)
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+
+
+                                    Rating:
+                                    @if (@rating == 0)
+                                    {
+                                        <div>no ratings yet</div>
+                                    }
+                                    else
+                                    {
+                                        @rating
+                                        @await Html.PartialAsync("_DisplayRating", roundedRating)
+                                    }
+
+                                </div>
+
+                             </div>
                         </div>
                     </div>
                 }

@@ -256,6 +256,10 @@ footer {
     top: 25px !important;
 }
 
+.top-45px {
+    top: 45px !important;
+}
+
 .bottom-5px {
     bottom: 5px !important;
 }
@@ -311,5 +315,7 @@ footer {
     right: 20px !important;
 }
 
-
+.custom-card-height-1 {
+    height: 150px; 
+}
 
