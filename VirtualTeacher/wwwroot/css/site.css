@@ -315,7 +315,22 @@ footer {
     right: 20px !important;
 }
 
+
+.end-25px {
+    right: 25px !important;
+}
+
+
+.end-90px {
+    right: 90px !important;
+}
+
+.end-120px {
+    right: 120px !important;
+}
+
 .custom-card-height-1 {
-    height: 150px; 
+    min-height: 150px;
+    overflow: auto;
 }
 

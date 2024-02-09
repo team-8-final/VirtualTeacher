@@ -43,6 +43,9 @@
     string nextState = (Model.Courses.HasNextPage) ? "" : "disabled";
     int prevPage = Model.Courses.PageNumber - 1;
     int nextPage = Model.Courses.PageNumber + 1;
+    const int DESCTRIPTIONSIZE = 110;
+    string shortDescription;
+    string fullDescription;
 }
 
 <div class="d-flex justify-content-between">
@@ -52,10 +55,40 @@
             {
                 foreach (var course in Model.Courses)
                 {
-                    <div class="card mb-3 position-relative">
+                    fullDescription = course.Description;
+                    if (fullDescription.Length > DESCTRIPTIONSIZE)
+                    {
+                        shortDescription = fullDescription.Substring(0, DESCTRIPTIONSIZE);
+                        shortDescription += "...";
+                    } 
+                    else
+                    {
+                        shortDescription = fullDescription;
+                    }
+
+                    <div class="card mb-3 position-relative" >
                         <div class="card-body custom-card-height-1">
                             <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id"><H5>@course.Title</H5></a>
-                            <text>Description:</text>
+
+
+                            <div class="position-absolute start-15px end-120px" style="z-index: 1000;">
+                                <span id="shortDescription-@course.Id">@shortDescription</span>
+                                @{
+                                    if (@shortDescription.Length > DESCTRIPTIONSIZE)
+                                    {
+                                        <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample-@course.Id" aria-expanded="false" aria-controls="collapseExample">
+                                            <i class="text-secondary fa-solid fa-caret-down " i></i>
+                                        </button>
+
+                                        <div class="collapse" id="collapseExample-@course.Id" style="z-index: 5000;">
+                                            <div class="card card-body">
+                                                @fullDescription    
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>    
+
 
                             <div class="position-absolute top-10px end-15px">
                                 <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
@@ -134,12 +167,6 @@
         <nav aria-label="Page navigation">
             <ul class="pagination">
 
-@*                 <li class="page-item @prevState">
-                    <a class="page-link" asp-controller="Course" asp-action="Index" asp-route-PageNumber="@prevPage" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-
-                </li> *@
                     <li class="page-item @prevState">
                         <form asp-controller="Course" asp-action="Index" method="get">
                             <input type="hidden" name="PageNumber" value="@prevPage" />
@@ -165,20 +192,16 @@
                         }
                         else
                         {
-                            // <li class="page-item">
-                            //     <a class="page-link" href="@Url.Action("Index", "Course", new { PageNumber = i, SortBy = Model.Parameters.SortBy })">@i</a>
-                            // </li>
+                            <li class="page-item">
+                                <form asp-controller="Course" asp-action="Index" method="get">
+                                    <input type="hidden" name="PageNumber" value="@i" />
+                                    <input type="hidden" name="Topic" value="@Model.Parameters.Topic" />
+                                    <input type="hidden" name="TeacherUsername" value="@Model.Parameters.TeacherUsername" />
+                                    <input type="hidden" name="SortBy" value="@Model.Parameters.SortBy" />
 
-                                <li class="page-item">
-                                    <form asp-controller="Course" asp-action="Index" method="get">
-                                        <input type="hidden" name="PageNumber" value="@i" />
-                                        <input type="hidden" name="Topic" value="@Model.Parameters.Topic" />
-                                        <input type="hidden" name="TeacherUsername" value="@Model.Parameters.TeacherUsername" />
-                                        <input type="hidden" name="SortBy" value="@Model.Parameters.SortBy" />
-
-                                        <button type="submit" class="page-link">@i</button>
-                                    </form>
-                                </li>
+                                    <button type="submit" class="page-link">@i</button>
+                                </form>
+                            </li>
                         }
                     }
                 }
@@ -310,6 +333,24 @@
                 }
                 wasChecked = !wasChecked; // Update previous checked state
             });
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).on('click', function (event) {
+            // Check if the clicked element is not inside the collapse content
+            if (!$(event.target).closest('.collapse').length) {
+                // Collapse all currently expanded collapse elements
+                $('.collapse').collapse('hide');
+            }
+        });
+
+        // Prevent clicks inside the collapse from closing it
+        $('.collapse').on('click', function (event) {
+            event.stopPropagation();
         });
     });
 </script>
