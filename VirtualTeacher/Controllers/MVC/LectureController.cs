@@ -72,6 +72,9 @@ namespace VirtualTeacher.Controllers.MVC
             try
             {
                 var lecture = courseService.GetLectureById(courseId, id);
+                var course = courseService.GetCourseById(courseId);
+
+                ViewBag.Course = course;
 
                 return View(lecture);
             }

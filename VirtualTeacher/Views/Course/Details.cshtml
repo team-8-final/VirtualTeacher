@@ -73,7 +73,7 @@
                                 </li>
                             }
                         }
-                        
+
                     }
                 </ul>
             </div>
@@ -135,8 +135,8 @@
 <br/>
 
 
-<div class="d-flex justify-content-between">
-    <div class="d-flex flex-column" style="width: 75%">
+<div class="row">
+    <div class="card p-2 col-md-9">
         @*VIDEO*@
         <div>
             <iframe style="width: 100%; aspect-ratio: 16/9" src="https://www.youtube.com/embed/jy74VcXjlEk" title="dance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -163,7 +163,7 @@
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#studentModal">Students</button>
                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#ratingModal">Ratings (@Model.Ratings.Count)</button>
                     </div>
-                    
+
                     <div>
                         @{
                             <a class="btn btn-success btn-sm" style="visibility: @teacherButtonsVisibility;" asp-controller="Course" asp-action="Update" asp-route-id="@Model.Id">Update course</a>
@@ -177,7 +177,7 @@
     </div>
 
     @*LECTURE MENU*@
-    <div class="d-flex" style="width: 24%; height: 520px;">
+    <div class="col-md-3" style="width: 24%; height: 520px;">
         <div class="card" style="width: 100%">
 
             <div class="card-header">
@@ -190,7 +190,7 @@
             <ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
                 @{
                     int counter = 1;
-                  
+
                     foreach (var lecture in Model.Lectures)
                     {
                         <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@Model.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
@@ -202,7 +202,7 @@
                         counter++;
                     }
                 }
-            </ul>      
+            </ul>
         </div>
     </div>
 </div>
@@ -223,10 +223,3 @@
         });
     });
 </script>
-
-
-
-
-
-
-    
