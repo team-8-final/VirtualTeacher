@@ -227,6 +227,18 @@ public class CourseApiController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Enlists a user as an active teacher in a course
+    /// </summary>
+    /// <returns>
+    /// The found Course in which the new teacher was enlisted.
+    /// </returns>
+    /// <response code="200">The user has been successfully enlisted as a teacher in the course</response>
+    /// <response code="400">Only teachers can be assigned to the list of active course teachers.</response>
+    /// <response code="401">Only active course teachers or admins can assign new teachers.</response>
+    /// <response code="404">A course/teacher with this Id was not found</response>
+    /// <response code="409">User is already an active teacher in the course</response>
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("{courseId}/Teachers/{teacherId}")]
     [Tags("Course")]

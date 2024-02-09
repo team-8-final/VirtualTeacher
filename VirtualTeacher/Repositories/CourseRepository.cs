@@ -114,7 +114,8 @@ public class CourseRepository : ICourseRepository
         {
             Course = course,
             Student = user,
-            Value = dto.Value
+            Value = dto.Value,
+            Review = dto.Review
         };
 
         context.Ratings.Add(rating);
@@ -126,6 +127,7 @@ public class CourseRepository : ICourseRepository
     public Rating? UpdateRating(Rating rating, RatingCreateDto dto)
     {
         rating.Value = dto.Value;
+        rating.Review = dto.Review;
         context.SaveChanges();
 
         return rating;

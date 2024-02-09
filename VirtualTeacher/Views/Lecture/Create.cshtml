@@ -22,6 +22,7 @@
 
         <div class="mb-3">
             <input asp-for="VideoLink" class="form-control" id="lectureVideo" rows="1" placeholder="Place your video link">
+            <span asp-validation-for="VideoLink" class="text-danger"></span>
         </div>
 
         @*to do - file upload*@
@@ -30,7 +31,9 @@
         </div>
 
         <div class="mb-3">
-            <a asp-controller="Course" asp-action="Details" asp-route-id="@ViewData["CourseId"]" class="btn btn-danger">Cancel</a>
+            @*to do - breaks when model state isnt valid*@
+            @*<a asp-controller="Course" asp-action="Details" asp-route-id="@TempData["CourseId"]" class="btn btn-danger">Cancel</a>  *@
+            <input class="btn btn-danger" name="action" onclick="history.back()" type="submit" value="Cancel"/>
             <input type="submit" value="Post" class="btn btn-primary" />
         </div>
 

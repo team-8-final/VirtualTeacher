@@ -99,6 +99,7 @@ public class ModelMapper
         return new RatingResponseDto
         {
             Rating = rating.Value,
+            Review = rating.Review,
             Student = rating.Student.Username
         };
     }

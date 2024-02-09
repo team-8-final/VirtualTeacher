@@ -64,6 +64,12 @@
                             {
                                 <li class="list-group-item">
                                     @rating.Student.FirstName @rating.Student.LastName - @rating.Value/5
+                                    @{
+                                        if (rating.Review is not null)
+                                        {
+                                            <span> - @rating.Review</span>
+                                        }
+                                    }
                                 </li>
                             }
                         }

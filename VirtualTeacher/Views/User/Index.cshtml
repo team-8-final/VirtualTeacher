@@ -74,13 +74,13 @@
 </div>
 
 @* todo - Should clean up URL from unused query params/works halfway*@
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+@* <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
         $("#userFilterForm").submit(function (e) {
             e.preventDefault();
 
-            var url = "http://localhost:5000/User?";
+            var url = "http://localhost:5000/Users?";
             var parameters = [];
 
             $("#userFilterForm input").each(function () {
@@ -97,5 +97,5 @@
             window.location.href = url;
         });
     });
-</script>
+</script> *@
 

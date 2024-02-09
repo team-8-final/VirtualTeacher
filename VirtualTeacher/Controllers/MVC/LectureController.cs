@@ -7,6 +7,7 @@ using VirtualTeacher.ViewModels.Lectures;
 namespace VirtualTeacher.Controllers.MVC
 {
     [Route("Course/{courseId}/Lecture/")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class LectureController : Controller
     {
         private readonly ICourseService courseService;
@@ -21,7 +22,7 @@ namespace VirtualTeacher.Controllers.MVC
         public IActionResult Create(int courseId)
         {
             var lectureVM = new LectureCreateViewModel();
-            ViewData["CourseId"] = courseId;
+            //TempData["CourseId"] = courseId;
 
             return View();
         }
@@ -37,12 +38,20 @@ namespace VirtualTeacher.Controllers.MVC
             try
             {
                 var newLecture = courseService.CreateLecture(lectureVM, courseId);
+                //TempData["CourseId"] = courseId;
 
                 return RedirectToAction("Details", "Lecture", new { courseId, id = newLecture.Id });
             }
             catch (UnauthorizedOperationException e)
             {
                 TempData["StatusCode"] = StatusCodes.Status401Unauthorized;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (EntityNotFoundException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status404NotFound;
                 TempData["ErrorMessage"] = e.Message;
 
                 return RedirectToAction("Error", "Shared");

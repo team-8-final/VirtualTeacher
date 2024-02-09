@@ -23,6 +23,7 @@ namespace VirtualTeacher.Controllers.MVC
 
         [HttpGet]
         [Route("/Courses")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(CourseQueryParameters queryParameters)
         {
             var courses = courseService.FilterCoursesBy(queryParameters);
