@@ -23,7 +23,7 @@ namespace VirtualTeacher.Controllers.MVC
             ViewData["SortOrder"] = string.IsNullOrEmpty(parameters.SortOrder) ? "desc" : "";
             var users = userService.FilterBy(parameters);
 
-            return View(users); 
+            return View(users);
         }
     }
 }

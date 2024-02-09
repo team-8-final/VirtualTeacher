@@ -326,12 +326,6 @@ public class AccountController : Controller
             ModelState.AddModelError("Password", "Invalid credentials.");
             return View("Index");
         }
-        // catch (Exception e)
-        // {
-        //     TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
-        //     TempData["ErrorMessage"] = e.Message;
-        //     return RedirectToAction("Error", "Shared");
-        // }
     }
 
     [HttpPost]

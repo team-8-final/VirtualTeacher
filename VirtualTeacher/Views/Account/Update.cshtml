@@ -42,7 +42,8 @@
     <form asp-controller="Account" asp-action="Update" method="post">
 
         <div class="circle-avatar-container">
-            <img class="circle-avatar" src="~/@Model.AvatarUrl"/>
+            <img class="circle-avatar" src="~/@Model.AvatarUrl" alt=""/>
+
             <!-- Change Avatar Icon Button -->
             <input type="file" id="avatarInput" style="display: none;" accept=".jpg"/>
             <button type="button" class="btn-change-avatar" id="changeAvatarButton" aria-label="Change Avatar">

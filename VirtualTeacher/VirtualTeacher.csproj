@@ -38,7 +38,6 @@
 
   <ItemGroup>
     <Folder Include="PrivateData\Assignments\" />
-    <Folder Include="PrivateData\Assignments\course-1\" />
   </ItemGroup>
 
 </Project>
