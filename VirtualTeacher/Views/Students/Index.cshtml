@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["title"] = "Students";
+}
+
+
+@model StudentsViewModel
+
+<ul>
+    @{
+        if (@Model.Courses != null){
+            foreach(var course in @Model.Courses)
+            {
+                <H4>@course.Title</H4>
+                foreach(var student in course.EnrolledStudents)
+                {
+                    <li>
+                        <text>@student.FirstName</text>
+                        <text>@student.LastName</text>
+                    </li>
+                    
+                }
+            }
+        }
+    }
+    
+
+</ul>
+
+
+//course
+    //student >>>> details 
+           assignment (lecture 3.2) >> submited graded / not graded >> grade, download file
+           assignment (lecture 3.3) >> submited graded / not graded >> grade, download file
+           assignment (lecture 3.4) >> not submited yet
+           assignment (lecture 3.6) >> not submited yet
+    //student
+    //student
+    //student
+    //student
+    //student
