@@ -151,6 +151,7 @@ public class CourseRepository : ICourseRepository
             .Include(lecture => lecture.WatchedBy)
             .Include(lecture => lecture.Notes)
             .Include(lecture => lecture.Comments)
+            .ThenInclude(c => c.Author)
             .Include(lecture => lecture.Submissions)
             .Where(lecture => lecture.Course.Id == course.Id)
             .ToList();
@@ -166,6 +167,7 @@ public class CourseRepository : ICourseRepository
             .Include(lecture => lecture.WatchedBy)
             .Include(lecture => lecture.Notes)
             .Include(lecture => lecture.Comments)
+            .ThenInclude(c => c.Author)
             .Where(lecture => lecture.Course.Id == courseId)
             .FirstOrDefault(lecture => lecture.Id == lectureId);
 

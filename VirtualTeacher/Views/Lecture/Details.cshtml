@@ -37,7 +37,7 @@
                     {
                         var activeClass = lecture.Id == Model.Id ? "active" : "";
                         <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@ViewBag.Course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
-                            <li class="list-group-item @activeClass">
+                            <li class="list-group-item list-group-item-action @activeClass">
                                 @counter. @lecture.Title
                             </li>
                         </a>
@@ -96,9 +96,9 @@
 
 @* Comments *@
 <div class="mt-2">
-    <div>
-        Comments:
-    </div>
+    <h3>
+        Comments
+    </h3>
     @{
         if (Model.Comments.Count == 0)
         {
@@ -106,10 +106,19 @@
         }
         else
         {
-            foreach (var comment in Model.Comments)
-            {
-                <span>@comment.Author.Username - @comment.Content</span>
-            }
+            <ol class="list-group list-group-flush">
+                @foreach (var comment in Model.Comments)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">@comment.Author.Username</div>
+                            @comment.Content
+                        </div>
+                        <span class="badge bg-black bg-opacity-25 rounded-pill" style="margin-top: 14px;">@comment.CreatedOn.ToString("HH:mm tt  MMM-dd-yy")
+                        </span>
+                    </li>
+                }
+            </ol>
         }
     }
 </div>

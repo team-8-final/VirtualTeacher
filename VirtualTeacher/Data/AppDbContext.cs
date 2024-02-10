@@ -30,12 +30,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Lecture>().HasData(new List<Lecture>(LecturesData.Seed()));
 
-        modelBuilder.Entity<Comment>().HasData(
-            new List<Comment>
-            {
-                new() { Id = 1, LectureId = 1, AuthorId = 2, Content = "This is a comment", },
-                new() { Id = 2, LectureId = 2, AuthorId = 1, Content = "This is also a comment", },
-            });
+        modelBuilder.Entity<Comment>().HasData(CommentsData.Seed());
 
         modelBuilder.Entity<Note>().HasData(
             new List<Note>
