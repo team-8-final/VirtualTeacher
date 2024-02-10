@@ -4,7 +4,7 @@ public class Rating
 {
     public int Id { get; set; }
 
-    public byte Value { get; set; }
+    public double Value { get; set; }
     public string? Review { get; set; }
 
     public int CourseId { get; set; }

@@ -215,8 +215,7 @@ footer {
 }
 
 .course-header {
-    padding-top: 2px;
-    padding-left: 7px;
+    padding: 17px;
     border-radius: 7px;
     color: #ffff;
     background: linear-gradient(to right, #4158D0, #C850C0,#FFCC70);
