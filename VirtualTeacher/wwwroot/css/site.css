@@ -320,6 +320,9 @@ footer {
     right: 25px !important;
 }
 
+.end-50px {
+    right: 50px !important;
+}
 
 .end-90px {
     right: 90px !important;
@@ -330,7 +333,7 @@ footer {
 }
 
 .custom-card-height-1 {
-    min-height: 150px;
+    min-height: 170px;
     overflow: auto;
 }
 
