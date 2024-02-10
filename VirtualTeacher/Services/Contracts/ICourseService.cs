@@ -40,7 +40,7 @@ public interface ICourseService
 
     string CreateSubmission(int courseId, int lectureId, IFormFile file);
     string DeleteSubmission(int courseId, int lectureId);
-    string GetSubmissionFilePath(int courseId, int lectureId, string username);
+    string GetSubmissionFilePath(int courseId, int lectureId);
     Submission? GetSubmission(int courseId, int lectureId, int userId);
 
     string GetAssignmentFilePath(int courseId, int lectureId);

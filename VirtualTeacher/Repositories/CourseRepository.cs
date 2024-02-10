@@ -6,7 +6,6 @@ using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Exceptions;
-using System.Threading;
 
 namespace VirtualTeacher.Repositories;
 
@@ -168,6 +167,7 @@ public class CourseRepository : ICourseRepository
             .Include(lecture => lecture.Notes)
             .Include(lecture => lecture.Comments)
             .ThenInclude(c => c.Author)
+            .Include(lecture => lecture.Submissions)
             .Where(lecture => lecture.Course.Id == courseId)
             .FirstOrDefault(lecture => lecture.Id == lectureId);
 
@@ -206,7 +206,6 @@ public class CourseRepository : ICourseRepository
 
         return lecture;
     }
-
 
     public PaginatedList<Course> FilterBy(CourseQueryParameters parameters)
     {
@@ -496,6 +495,22 @@ public class CourseRepository : ICourseRepository
         }
 
         context.Submissions.Remove(submissionToDelete);
+        context.SaveChanges();
+        return true;
+    }
+
+    public bool DeleteAllSubmissions(int lectureId)
+    {
+        var submissionToDelete = context.Submissions
+            .Where(submission => submission.LectureId == lectureId)
+            .ToList();
+
+        if (!submissionToDelete.Any())
+        {
+            return false;
+        }
+
+        context.Submissions.RemoveRange(submissionToDelete);
         context.SaveChanges();
         return true;
     }

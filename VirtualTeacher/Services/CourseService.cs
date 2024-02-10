@@ -391,7 +391,7 @@ public class CourseService : ICourseService
 
         if (!File.Exists(lecture.AssignmentLink))
         {
-            throw new FileNotFoundException($"Assignment file not found.");
+            throw new EntityNotFoundException("Assignment file not found.");
         }
 
         return lecture.AssignmentLink;
@@ -470,19 +470,23 @@ public class CourseService : ICourseService
             throw new Exception("Assignment could not be deleted.");
         }
 
+        courseRepository.DeleteAllSubmissions(lectureId);
+
         return "Assignment file deleted successfully.";
     }
 
 
-    public string GetSubmissionFilePath(int courseId, int lectureId, string username)
+    public string GetSubmissionFilePath(int courseId, int lectureId)
     {
         _ = GetCourseById(courseId);
         _ = GetLectureById(courseId, lectureId);
 
+        var user = accountService.GetLoggedUser();
+
         var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
         var submissionDirectory = Path.Combine(privateRoot, "Submissions", "course-" + courseId, "lecture-" + lectureId);
 
-        var existingFiles = Directory.GetFiles(submissionDirectory, username + ".*");
+        var existingFiles = Directory.GetFiles(submissionDirectory, user.Username + ".*");
         if (existingFiles.Length == 0)
         {
             throw new FileNotFoundException("No submission file found for this user.");

@@ -596,8 +596,7 @@ public class CourseApiController : ControllerBase
     {
         try
         {
-            var user = accountService.GetLoggedUser();
-            var filePath = courseService.GetSubmissionFilePath(courseId, lectureId, user.Username);
+            var filePath = courseService.GetSubmissionFilePath(courseId, lectureId);
 
             var contentType = "application/octet-stream"; // Default MIME type
 

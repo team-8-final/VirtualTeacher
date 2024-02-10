@@ -42,5 +42,6 @@ namespace VirtualTeacher.Repositories.Contracts
         bool GradeSubmission(int lectureId, int userId, byte grade);
         bool CreateAssignment(int courseId, int lectureId, string fullPath);
         bool DeleteAssignment(int courseId, int lectureId);
+        bool DeleteAllSubmissions(int lectureId);
     }
 }

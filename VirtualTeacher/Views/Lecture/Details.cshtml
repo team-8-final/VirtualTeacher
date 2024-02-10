@@ -4,6 +4,14 @@
 
 @model Lecture
 
+
+<style>
+    .disabled-section {
+        pointer-events: none; /* Prevents click events */
+        opacity: 0.5; /* Grays out the content */
+    }
+</style>
+
 @* Breadcrumb navigation *@
 <nav class="ms-0 me-0" aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -49,7 +57,7 @@
     </div>
 </div>
 
-@* Assignments *@
+@* Assignment *@
 <div class="mt-5">
     <div class="row">
         <div class="col-md-6 mb-4">
@@ -78,11 +86,11 @@
         <div class="col-md-6">
             @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Teacher") || User.IsInRole("Admin")))
             {
-                <h3>Update Assignment</h3>
+                <h3>Upload Assignment</h3>
                 <form asp-controller="Lecture" asp-action="CreateAssignment" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post" enctype="multipart/form-data">
                     <div class="d-flex align-items-center">
                         <div class="mb-3 me-2 flex-grow-1">
-                            <input class="form-control" type="file" id="fileUpload" name="file">
+                            <input class="form-control" type="file" id="assignmentUpload" name="file">
                         </div>
                         <button type="submit" class="btn btn-primary mb-3">Upload</button>
                     </div>
@@ -91,6 +99,46 @@
         </div>
     </div>
 </div>
+
+<hr>
+
+@* Submission *@
+<div class="mt-5 @(string.IsNullOrEmpty(Model.AssignmentLink) ? "disabled-section" : "")">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <h3>Submission</h3>
+            <div class="d-flex justify-content-start align-items-center">
+                @if (Model.Submissions.Any(s => s.StudentId == ViewBag.User.Id) && !string.IsNullOrEmpty(Model.AssignmentLink))
+                {
+                    <a href="@Url.Action("GetSubmission", "Lecture", new { courseId = Model.CourseId, lectureId = Model.Id })" class="btn btn-primary me-2">Download Submission</a>
+                }
+                else
+                {
+                    <p class="me-2">No submission uploaded.</p>
+                }
+
+                @if (Model.Submissions.Any(s => s.StudentId == ViewBag.User.Id) && !string.IsNullOrEmpty(Model.AssignmentLink))
+                {
+                    <form asp-controller="Lecture" asp-action="DeleteSubmission" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post">
+                        <button type="submit" class="btn btn-danger">Delete Submission</button>
+                    </form>
+                }
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3>Upload Submission</h3>
+            <form asp-controller="Lecture" asp-action="CreateSubmission" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post" enctype="multipart/form-data">
+                <div class="d-flex align-items-center">
+                    <div class="mb-3 me-2 flex-grow-1">
+                        <input class="form-control" type="file" id="submissionUpload" name="file">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-3">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <hr>
 
@@ -114,7 +162,8 @@
                             <div class="fw-bold">@comment.Author.Username</div>
                             @comment.Content
                         </div>
-                        <span class="badge bg-black bg-opacity-25 rounded-pill" style="margin-top: 14px;">@comment.CreatedOn.ToString("HH:mm tt  MMM-dd-yy")
+                        <span class="badge bg-black bg-opacity-25 rounded-pill" style="margin-top: 14px;">
+                            @comment.CreatedOn.ToString("HH:mm tt  MMM-dd-yy")
                         </span>
                     </li>
                 }
