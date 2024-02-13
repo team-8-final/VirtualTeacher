@@ -212,7 +212,8 @@ public class LectureController : Controller
 
             _ = courseService.CreateSubmission(courseId, lectureId, file);
             return Redirect($"/Course/{courseId}/Lecture/{lectureId}");
-        }        catch (ArgumentException e)
+        }        
+        catch (ArgumentException e)
         {
             return BadRequest(e.Message);
         }

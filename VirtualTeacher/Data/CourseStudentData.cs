@@ -6,6 +6,7 @@ public static class CourseStudentData
     {
         return new List<object>
         {
+            
             new { StudentId = 5, CourseId = 1 },
             new { StudentId = 3, CourseId = 1 },
             new { StudentId = 8, CourseId = 1 },

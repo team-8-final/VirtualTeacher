@@ -1,8 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Course Details";
     string currentUser = User.Identity.IsAuthenticated ? User.Identity.Name : "";
+    int loggedUserId = int.Parse(User.FindFirstValue("UserId"));
 
-    bool isEnrolled = Model.EnrolledStudents.Any(s => s.Username == currentUser) || Model.ActiveTeachers.Any(t => t.Username == currentUser);
+    bool isEnrolled = Model.EnrolledStudents.Any(s => s.Id == loggedUserId);
     bool isActiveTeacherOrAdmin = User.Identity.IsAuthenticated && (Model.ActiveTeachers.Any(t => t.Username == User.Identity.Name) || User.IsInRole("Admin"));
 
     bool loggedUserHasRating = Model.Ratings.Any(r => r.Student.Username == currentUser);
@@ -150,16 +151,22 @@
 
     <div class="d-flex align-items-center">
         @{
-            if (!isEnrolled)
+            var role = User.FindFirst(ClaimTypes.Role);
+            if (!isEnrolled && role.Value != "Teacher")
+            {
+                <button type="button" class="btn btn-outline-success">Enrolled</button>
+                
+            }
+            else if (Model.ActiveTeachers.Any(teacher => teacher.Id == loggedUserId))
+            {
+                <button type="button" class="btn btn-outline-secondary">You Are Teaching This Class</button>
+            }
+
+            else
             {
                 <form asp-controller="Course" asp-action="Enroll" asp-route-id="@Model.Id" method="post">
                     <button type="submit" class="btn btn-success">Enroll</button>
                 </form>
-            }
-            else
-            {
-                @*todo change this with smth better*@
-                <button type="button" class="btn btn-outline-success">Enrolled</button>
             }
         }
     </div>

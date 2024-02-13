@@ -20,63 +20,79 @@
 <div class="d-flex justify-content-between">
 
 
-    @* LIST OF STUDENTS *@
+    @* LIST OF ASSIGNMENTS *@
 
     <div style="width: 70%">
         @{
             if (@Model.FilteredCourses != null){
                 foreach (var course in @Model.FilteredCourses)
                 {
-                    <H4 style="color: blue">@course.Title</H4>
-                    foreach(var student in course.EnrolledStudents)
+
+                    <H4 style="color: blue" class="pt-2 pb-2">@course.Title</H4>
+
+
+                    foreach(var lecture in course.Lectures)
                     {
-                    <div class="accordion" id="accordionPanelsStayOpenExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@student.Id-@course.Id" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
-                                    <text>@student.FirstName</text>
-                                    <text>&nbsp;@student.LastName</text>
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-@student.Id-@course.Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne" style="">
-                                <div class="accordion-body">
-                                Submisssions:
-                               @{
-                                    foreach(var lecture in course.Lectures)
-                                    {
-                                        if(lecture.AssignmentLink != "")
-                                        {
-                                            <li>
-                                                @lecture.Title <text>Status: </text>
-                                            </li>
-                                            if(lecture.Submissions.Any(sub => sub.StudentId == @student.Id))
-                                            {
-                                                <text>submited</text>
-                                            }
-                                            else
-                                            {
-                                                <text>not submited</text>
-                                            }
+
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                            <div class="accordion-item ">
+                                <h2 class="accordion-header " id="panelsStayOpen-headingOne">
+                                        <button class="accordion-button collapsed bg-info bg-gradient" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@lecture.Id" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                                        <text>@lecture.Title</text>
+                                        @{
+                                            int pendingSubmissions = lecture.Submissions.Where(s => s.Grade == null).Count();
+                                            int gradedSubmissions = lecture.Submissions.Where(s => s.Grade != null).Count();
                                         }
+                                        <div class="ms-2"> @pendingSubmissions <i class="fa-solid fa-note-sticky" style="color: red"></i></div>
+                                        <div class="ms-2"> @gradedSubmissions <i class="fa-solid fa-square-check" style="color: green"></i></div>
+                                    </button>
+                                </h2>
+                                @{
+                                    foreach (var submission in @lecture.Submissions)
+                                    {
+                                        <div id="panelsStayOpen-@lecture.Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne" style="">
+                                            <div class="accordion-body">
+
+                                                @{
+                                                    User student = @course.EnrolledStudents.FirstOrDefault(student => student.Id == submission.StudentId);
+                                                    if (student != null)
+                                                    {
+                                                        string fullName = $"{student.FirstName} {student.LastName}";
+
+                                                        <div>Submited by: @fullName</div>
+                                                        if (submission.Grade != null)
+                                                        {
+                                                            <div><i class="fa-solid fa-square-check" style="color: green"></i> Grade: @submission.Grade</div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div><i class="fa-solid fa-note-sticky" style="color: red"></i> Pending assessment </div>
+                                                        }
+                                                    }
+                                                }
+
+                                            </div>
+                                        </div>
 
                                     }
                                 }
-                                </div>
+
                             </div>
                         </div>
-                    </div>
                     }
                 }
             }
         }
     </div>
 
+
+
     @* FILTERS *@
 
-    <div style="width: 29%">
+@*     <div style="width: 29%">
         <div class="card border-light mb-3">
             <form asp-controller="Students" asp-action="Index" method="Get" id="filterForm">
-                <div class="card-header">Filters:</div>
+                <div class="card-header bg-info bg-gradient">Filters:</div>
                     <div class="card-body">
                         <div class="list-group list-group-flush">
 
@@ -98,7 +114,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> *@
 </div>
 
 
