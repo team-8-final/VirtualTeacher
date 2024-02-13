@@ -35,6 +35,11 @@ public class CourseService : ICourseService
         return courseRepository.FilterBy(parameters);
     }
 
+
+    public List<Course> FilterByTeacherId(int? teacherId)
+    {
+        return courseRepository.FilterByTeacherId(teacherId);
+    }
     public Course GetCourseById(int id)
     {
         var foundCourse = courseRepository.GetCourseById(id);

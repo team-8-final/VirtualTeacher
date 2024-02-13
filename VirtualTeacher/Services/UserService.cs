@@ -1,4 +1,5 @@
-﻿using VirtualTeacher.Exceptions;
+﻿using System.Xml.Linq;
+using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.Enums;
@@ -57,6 +58,19 @@ namespace VirtualTeacher.Services
             var foundUser = userRepository.GetById(id);
 
             return foundUser ?? throw new EntityNotFoundException($"User with id '{id}' was not found.");
+        }
+
+        public List<User> GetUsersByKeyWord(string keyWord)
+        {
+            var foundUser = userRepository.GetUsersByKeyWord(keyWord);
+
+            return foundUser ?? throw new EntityNotFoundException($"No users found.");
+        }
+        public User GetByUsername(string name)
+        {
+            var foundUser = userRepository.GetByUsername(name);
+
+            return foundUser ?? throw new EntityNotFoundException($"User with name '{name}' was not found.");
         }
 
         public User GetByEmail(string email)

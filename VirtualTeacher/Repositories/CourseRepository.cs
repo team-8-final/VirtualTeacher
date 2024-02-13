@@ -207,7 +207,8 @@ public class CourseRepository : ICourseRepository
         return lecture;
     }
 
-    public PaginatedList<Course> FilterBy(CourseQueryParameters parameters)
+
+    public PaginatedList<Course> FilterBy(CourseQueryParameters parameters) 
     {
         IQueryable<Course> result = GetCourses();
 
@@ -218,6 +219,7 @@ public class CourseRepository : ICourseRepository
         result = FilterByMinRating(result, parameters.MinRating);
         result = SortBy(result, parameters.SortBy);
         result = OrderBy(result, parameters.SortOrder);
+
 
         int totalPages = result.Count() / parameters.PageSize;
         if (result.Count() % parameters.PageSize != 0)
@@ -241,6 +243,20 @@ public class CourseRepository : ICourseRepository
         return courses.Where(course => course.Title.ToLower().Contains(lowerTitle));
     }
 
+    public List<Course> FilterByTeacherId(int? teacherId)
+    {
+        List<Course> courses = new List<Course>();
+        if(teacherId == null)
+        {
+            return courses;
+        }
+
+        return GetCourses()
+            .Where(course => course.ActiveTeachers
+            .Any(teacher => teacher.Id == teacherId))
+            .Where(course => course.IsDeleted != true)
+            .ToList();
+    }
     private static IQueryable<Course> FilterByTeacherUsername(IQueryable<Course> courses, string? username)
     {
         if (string.IsNullOrEmpty(username))

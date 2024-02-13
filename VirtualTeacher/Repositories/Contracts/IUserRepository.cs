@@ -10,8 +10,10 @@ namespace VirtualTeacher.Repositories.Contracts
         PaginatedList<User> FilterBy(UserQueryParameters parameters);
 
         IQueryable<User> GetUsers();
+
+        public List<User> GetUsersByKeyWord(string keyWord);
         User? GetById(int id);
-        User? GetByName(string username);
+        User? GetByUsername(string username);
         User? Create(UserCreateDto dto);
         User? UpdateUser(int id, UserUpdateDto updateData);
         bool? Delete(int id);

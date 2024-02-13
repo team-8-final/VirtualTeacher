@@ -8,6 +8,7 @@ public interface ICourseService
 {
     public List<Course> GetAllCourses();
     PaginatedList<Course> FilterCoursesBy(CourseQueryParameters parameters);
+    List<Course> FilterByTeacherId(int? teacherId);
     Course GetCourseById(int id);
     Course CreateCourse(CourseCreateDto dto);
     Course UpdateCourse(int id, CourseUpdateDto dto);

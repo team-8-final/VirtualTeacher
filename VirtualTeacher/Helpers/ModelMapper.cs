@@ -52,6 +52,25 @@ public class ModelMapper
         };
     }
 
+
+    public List<UserResponseDto> MapStudentsToDto(List<User> objectUsers)
+    {
+        List<UserResponseDto> dtoStudents = new List<UserResponseDto>();
+        foreach(var obj in objectUsers)
+        {
+            dtoStudents.Add(
+                new UserResponseDto
+                {
+                     Id = obj.Id,
+                    Username = obj.Username,
+                    Email = obj.Email,
+                    FirstName = obj.FirstName,
+                    LastName = obj.LastName
+                });
+        }
+        return dtoStudents;
+    }
+
     // course DTOs
     public CourseResponseDto MapResponse(Course course)
     {
@@ -103,6 +122,21 @@ public class ModelMapper
             Student = rating.Student.Username
         };
     }
+
+    public PaginatedList<Course> MapCoursesToPaginatedList(List<Course> courses, int pageSize, int pageNumber)
+    {
+
+        int totalPages = courses.Count() / 5;
+        if (courses.Count() % pageSize != 0)
+        {
+            totalPages++; // Increment totalPages if there are remaining items to be displayed
+        }
+
+        courses = courses.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+
+        return new PaginatedList<Course>(courses, totalPages, pageNumber);
+    }
+
 
     //Lecture DTOs
 

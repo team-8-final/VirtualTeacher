@@ -4,6 +4,7 @@ using System.Security.Claims;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Helpers.CustomAttributes;
 using VirtualTeacher.Models;
+using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels.Students;
 
@@ -25,48 +26,40 @@ namespace VirtualTeacher.Controllers.MVC
 
         [HttpGet]
         [Route("/Students")]
-        public ActionResult Index()
+        public ActionResult Index(StudentsQueryParameters queryParameters)
         {
+            queryParameters.PageSize = 30;
             var userId = int.Parse(User.FindFirstValue("UserId"));
 
-            List<Course> courses = courseService.GetAllCourses()
-                .Where(course => course.ActiveTeachers.Any(teacher => teacher.Id == userId))
-                .ToList();
-            
             StudentsViewModel studentsVM = new StudentsViewModel();
-            studentsVM.Courses = courses;
+
+            studentsVM.FilteredCourses = courseService.FilterByTeacherId(userId).ToList();
+
+                List<User> allUsersObj = studentsVM.FilteredCourses
+                .SelectMany(course => course.EnrolledStudents)
+                .Distinct()
+                .ToList();
+
+            studentsVM.AllStudents = mapper.MapStudentsToDto(allUsersObj); 
 
             return View(studentsVM);
         }
 
-        // GET: Students/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public ActionResult StudentsByName(string searchWord)  //needs a new view
         {
-            return View();
+            var students = userService.GetUsersByKeyWord(searchWord);
+
+            return View(students);
         }
 
-        // GET: Students/Create
-        public ActionResult Create()
+        public ActionResult StudentDetails(int studentId)  
         {
-            return View();
+            throw new NotImplementedException();
+
         }
 
-        // POST: Students/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: Students/Grade/5
         public ActionResult GradeAssignment(int assignmentId)
         {
             return View();

@@ -26,6 +26,7 @@ namespace VirtualTeacher.Controllers.MVC
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(CourseQueryParameters queryParameters)
         {
+            //todo add try catch
             var courses = courseService.FilterCoursesBy(queryParameters);
 
             List<string> allTeachers = courseService.GetAllCourses()

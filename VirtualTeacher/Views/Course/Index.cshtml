@@ -36,7 +36,7 @@
 
 </div>
 
-@* COURSES LIST *@
+
 
 @{
     string prevState = (Model.Courses.HasPreviousPage) ? "" : "disabled";
@@ -49,6 +49,9 @@
 }
 
 <div class="d-flex justify-content-between">
+
+    @* COURSES LIST *@
+
     <div style="width: 70%">
         @{
             if (Model.Courses != null)
@@ -317,6 +320,8 @@
 </div>
 
 
+
+@* SCRIPTS *@
 
 <script>
     function resetFilters() {

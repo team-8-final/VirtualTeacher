@@ -8,6 +8,7 @@ namespace VirtualTeacher.Repositories.Contracts
     {
         PaginatedList<Course> FilterBy(CourseQueryParameters parameters);
 
+        List<Course> FilterByTeacherId(int? teacherId);
         Course? GetCourseById(int id);
         Course? CreateCourse(CourseCreateDto dto, User teacher);
         Course? UpdateCourse(int id, CourseUpdateDto dto);

@@ -5,6 +5,7 @@ using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.DTOs.User;
 using Microsoft.EntityFrameworkCore;
+using VirtualTeacher.Exceptions;
 
 namespace VirtualTeacher.Repositories
 {
@@ -21,15 +22,15 @@ namespace VirtualTeacher.Repositories
         {
             return context.Users
                 .Include(u => u.EnrolledCourses)
-                .ThenInclude(c => c.Lectures)
-                .ThenInclude(l => l.Submissions)
+                    .ThenInclude(c => c.Lectures)
+                    .ThenInclude(l => l.Submissions)
                 .Include(u => u.CreatedCourses)
-                .ThenInclude(c => c.Lectures)
-                .ThenInclude(l => l.Submissions)
+                    .ThenInclude(c => c.Lectures)
+                    .ThenInclude(l => l.Submissions)
                 .Include(u => u.Ratings)
-                .ThenInclude(r => r.Course)
-                .ThenInclude(c => c.Lectures)
-                .ThenInclude(l => l.Submissions)
+                    .ThenInclude(r => r.Course)
+                    .ThenInclude(c => c.Lectures)
+                    .ThenInclude(l => l.Submissions)
                 .Where(u => !u.IsDeleted);
         }
 
@@ -58,13 +59,22 @@ namespace VirtualTeacher.Repositories
             return user;
         }
 
-        public User? GetByName(string username)
+        public User? GetByUsername(string username)
         {
             User? user = GetUsers().FirstOrDefault(u => u.Username == username);
 
             return user;
         }
 
+        public List<User> GetUsersByKeyWord(string keyWord)
+        {
+            if (string.IsNullOrEmpty(keyWord))
+            {
+                throw new EntityNotFoundException("No users found");
+            }
+            keyWord = keyWord.ToLower();
+            return GetUsers().Where(u => u.Username.ToLower().Contains(keyWord) || u.FirstName.ToLower().Contains(keyWord) || u.LastName.ToLower().Contains(keyWord)).ToList();
+        }
         public User? GetByEmail(string email)
         {
             var test = GetUsers().ToList();
@@ -145,11 +155,13 @@ namespace VirtualTeacher.Repositories
             result = SortBy(result, parameters.SortBy);
             result = OrderBy(result, parameters.SortOrder);
 
+
             int totalPages = (int)Math.Ceiling(((double)result.Count()) / parameters.PageSize);
             return new PaginatedList<User>(result.ToList(), totalPages, parameters.PageNumber);
         }
 
         //Query methods
+
         private static IQueryable<User> FilterByUsername(IQueryable<User> users, string username)
         {
             if (!string.IsNullOrEmpty(username))
