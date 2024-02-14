@@ -11,13 +11,13 @@ using VirtualTeacher.ViewModels.Students;
 namespace VirtualTeacher.Controllers.MVC
 {
     [IsTeacherOrAdmin]
-    public class AssignmentController : Controller
+    public class StudentsController : Controller
     {
         private readonly ICourseService courseService;
         private readonly IUserService userService;
         private readonly ModelMapper mapper;
 
-        public AssignmentController(ICourseService courseService, IUserService userService, ModelMapper mapper)
+        public StudentsController(ICourseService courseService, IUserService userService, ModelMapper mapper)
         {
             this.courseService = courseService;
             this.userService = userService;
@@ -25,13 +25,13 @@ namespace VirtualTeacher.Controllers.MVC
         }
 
         [HttpGet]
-        [Route("/Assignments")]
-        public ActionResult Index(AssignmentsQueryParameters queryParameters)
+        [Route("/Students")]
+        public ActionResult Index(StudentsQueryParameters queryParameters)
         {
-            queryParameters.PageSize = 100;
+            queryParameters.PageSize = 30;
             var userId = int.Parse(User.FindFirstValue("UserId"));
 
-            AssignmentsViewModel studentsVM = new AssignmentsViewModel();
+            StudentsViewModel studentsVM = new StudentsViewModel();
 
             studentsVM.FilteredCourses = courseService.FilterByTeacherId(userId).ToList();
 

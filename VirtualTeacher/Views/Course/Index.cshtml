@@ -2,7 +2,6 @@
     ViewData["Title"] = "Courses";
     string byTitle = "title";
     string byRating = "rating";
-    bool techerSpecific;
 }
 
 @model CoursesListViewModel
@@ -29,16 +28,9 @@
     </div>
 
     <span style="flex: 1;" class="ms-1 me-1">
-        @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Teacher"))
-        {
-            <a asp-controller="Course" asp-action="Index" asp-action="Index" asp-route-TeacherUsername="@User.FindFirst(ClaimTypes.Name).Value.ToString()" class="btn btn-success">Courses I am Teaching</a>
-        }
-    </span>
-
-    <span class="ms-1 me-1">
         @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin") || User.IsInRole("Teacher"))
         {
-            <a asp-controller="Course" asp-action="Create" class="btn btn-outline-info">Create a new course</a>
+            <a asp-controller="Course" asp-action="Create" class="btn btn-success">Create a new course</a>
         }
     </span>
 

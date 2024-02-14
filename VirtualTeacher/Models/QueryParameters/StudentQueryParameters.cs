@@ -3,7 +3,7 @@ using VirtualTeacher.Models.Enums;
 
 namespace VirtualTeacher.Models.QueryParameters
 {
-    public class AssignmentsQueryParameters : CourseQueryParameters
+    public class StudentsQueryParameters : CourseQueryParameters
     {
         public string? CourseTitle { get; set; }
 
