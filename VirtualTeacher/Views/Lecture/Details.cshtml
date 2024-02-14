@@ -187,9 +187,42 @@
                 }
             </ol>
         }
+
+        <div class="text-end mt-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCommentModal">
+                Add Comment
+            </button>
+        </div>
     }
 </div>
 
+
+@*Add Comment MODAL*@
+<div class="modal fade" id="AddCommentModal" tabindex="-1" aria-labelledby="AddCommentModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content centered-text">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Add Comment</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Lecture" asp-action="AddComment" method="post" enctype="multipart/form-data"
+                  asp-route-courseId="@Model.CourseId"
+                  asp-route-lectureId="@Model.Id">
+
+                <div class="modal-body">
+                    <textarea class="form-control" id="addCommentText" name="content" rows="3" required></textarea>
+                    <input type="hidden" id="addCommentId" name="CommentId">
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 
 @*Edit Comment MODAL*@
 <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">

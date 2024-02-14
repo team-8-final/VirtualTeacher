@@ -242,6 +242,25 @@ public class LectureController : Controller
         }
     }
 
+    [HttpPost("/{lectureId}/add-comment")]
+    public IActionResult AddComment(int courseId, int lectureId, string content)
+    {
+        try
+        {
+            var dto = new CommentCreateDto
+            {
+                Content = content
+            };
+
+            _ = courseService.CreateComment(courseId, lectureId, dto);
+            return Redirect($"/Course/{courseId}/Lecture/{lectureId}");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [HttpPost("/{lectureId}/edit-comment")]
     public IActionResult EditComment(int courseId, int lectureId, int commentId, string content)
     {
