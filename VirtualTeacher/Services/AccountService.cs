@@ -253,7 +253,6 @@ public class AccountService : IAccountService
         return false;
     }
 
-    // TODO: fix when assignment links are implemented
     public List<Course> GetCompletedCourses()
     {
         var user = GetLoggedUser();

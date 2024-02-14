@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers.CustomAttributes;
+using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels.Lectures;
 
@@ -105,7 +106,7 @@ public class LectureController : Controller
         }
     }
 
-    [HttpGet("/lecture/{courseId}/{lectureId}/get-assignment")]
+    [HttpPost("/{lectureId}/get-assignment")]
     public IActionResult GetAssignment(int courseId, int lectureId)
     {
         try
@@ -132,7 +133,7 @@ public class LectureController : Controller
         }
     }
 
-    [HttpPost("/lecture/{courseId}/{lectureId}/create-assignment")]
+    [HttpPost("/{lectureId}/create-assignment")]
     public IActionResult CreateAssignment(int courseId, int lectureId, IFormFile file)
     {
         if (file is { Length: 0 })
@@ -155,7 +156,7 @@ public class LectureController : Controller
         }
     }
 
-    [HttpPost("/lecture/{courseId}/{lectureId}/delete-assignment")]
+    [HttpPost("/{lectureId}/delete-assignment")]
     public IActionResult DeleteAssignment(int courseId, int lectureId)
     {
         try
@@ -173,7 +174,7 @@ public class LectureController : Controller
         }
     }
 
-    [HttpGet("/lecture/{courseId}/{lectureId}/get-submission")]
+    [HttpPost("/{lectureId}/get-submission")]
     public IActionResult GetSubmission(int courseId, int lectureId)
     {
         try
@@ -200,7 +201,7 @@ public class LectureController : Controller
         }
     }
 
-    [HttpPost("/lecture/{courseId}/{lectureId}/create-submission")]
+    [HttpPost("/{lectureId}/create-submission")]
     public IActionResult CreateSubmission(int courseId, int lectureId, IFormFile file)
     {
         try
@@ -223,7 +224,7 @@ public class LectureController : Controller
         }
     }
 
-    [HttpPost("/lecture/{courseId}/{lectureId}/delete-submission")]
+    [HttpPost("/{lectureId}/delete-submission")]
     public IActionResult DeleteSubmission(int courseId, int lectureId)
     {
         try
@@ -241,4 +242,36 @@ public class LectureController : Controller
         }
     }
 
+    [HttpPost("/{lectureId}/edit-comment")]
+    public IActionResult EditComment(int courseId, int lectureId, int commentId, string content)
+    {
+        try
+        {
+            var dto = new CommentCreateDto
+            {
+                Content = content
+            };
+
+            _ = courseService.UpdateComment(courseId, lectureId, commentId, dto);
+            return Redirect($"/Course/{courseId}/Lecture/{lectureId}");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpPost("/{lectureId}/delete-comment")]
+    public IActionResult DeleteComment(int courseId, int lectureId, int commentId)
+    {
+        try
+        {
+            _ = courseService.DeleteComment(courseId, lectureId, commentId);
+            return Redirect($"/Course/{courseId}/Lecture/{lectureId}");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

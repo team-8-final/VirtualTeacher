@@ -143,6 +143,10 @@ public class AppDbContext : DbContext
 
         // uniques
         modelBuilder.Entity<User>()
+            .HasIndex(user => user.Username)
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
             .HasIndex(user => user.Email)
             .IsUnique();
 
