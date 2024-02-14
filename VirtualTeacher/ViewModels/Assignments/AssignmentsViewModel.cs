@@ -4,7 +4,7 @@ using VirtualTeacher.Models.QueryParameters;
 
 namespace VirtualTeacher.ViewModels.Students
 {
-    public class StudentsViewModel
+    public class AssignmentsViewModel
     {
         public List<Course>? FilteredCourses { get; set; }
 

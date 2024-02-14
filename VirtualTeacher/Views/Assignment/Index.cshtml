@@ -1,17 +1,17 @@
 ﻿@{
-    ViewData["title"] = "Students";
+    ViewData["title"] = "Assignments";
 }
 
-@model StudentsViewModel
+@model AssignmentsViewModel
 
     @* SEARCHBAR *@
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
     <span>
-        <form asp-controller="Students" asp-action="StudentsByName" method="Get">
+        <form asp-controller="AssignmentController" asp-action="Index" method="Get">
             <div class="input-group mb-3 mt-3 ps-2 pe-2">
                 <button class="btn btn-outline-secondary" type="button" id="button-addon1">Go</button>
-                <input type="text" class="form-control" name="SearchKeyWord" placeholder="Search by student name" aria-label="search area">
+                <input type="text" class="form-control " name="Title" placeholder="Search by course title" aria-label="search area">
             </div>
         </form>
     </span>
@@ -22,7 +22,7 @@
 
     @* LIST OF ASSIGNMENTS *@
 
-    <div style="width: 70%">
+    <div style="width: 100%">
         @{
             if (@Model.FilteredCourses != null){
                 foreach (var course in @Model.FilteredCourses)
@@ -36,15 +36,31 @@
 
                         <div class="accordion" id="accordionPanelsStayOpenExample">
                             <div class="accordion-item ">
-                                <h2 class="accordion-header " id="panelsStayOpen-headingOne">
+                                <h2 class="accordion-header position-relative" id="panelsStayOpen-headingOne">
                                         <button class="accordion-button collapsed bg-info bg-gradient" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@lecture.Id" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
                                         <text>@lecture.Title</text>
                                         @{
                                             int pendingSubmissions = lecture.Submissions.Where(s => s.Grade == null).Count();
                                             int gradedSubmissions = lecture.Submissions.Where(s => s.Grade != null).Count();
+                                            if (pendingSubmissions > 0)
+                                            {
+                                                <div class="ms-2" data-toggle="tooltip" data-placement="top" title="Submissions Pending Assessment"> @pendingSubmissions <i class="fa-solid fa-note-sticky" style="color: red"></i></div>
+                                            }
+                                            if (gradedSubmissions > 0)
+                                            {
+                                                <div class="ms-2" data-toggle="tooltip" data-placement="top" title="Graded Submissions"> @gradedSubmissions <i class="fa-solid fa-square-check" style="color: green"></i></div>
+                                            }
+                                            // DELETE UPLOAD ASSIGNMENT BUTTONS
+                                            if (lecture.AssignmentLink != "")
+                                            {
+                                                <div class="end-50px position-absolute"><i class="fa-solid fa-download" data-placement="top" title="Download Assignment File"></i> <i class="fa-solid fa-trash-can" data-placement="top" title="Delete Assignment File"></i> </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="end-50px position-absolute"><i class="fa-solid fa-upload" data-placement="top" title="Upload Assignment"></i></div>
+                                            }
                                         }
-                                        <div class="ms-2"> @pendingSubmissions <i class="fa-solid fa-note-sticky" style="color: red"></i></div>
-                                        <div class="ms-2"> @gradedSubmissions <i class="fa-solid fa-square-check" style="color: green"></i></div>
+                                        
                                     </button>
                                 </h2>
                                 @{

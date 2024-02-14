@@ -233,7 +233,8 @@ footer {
     background-color: #f8f9fa;
 }
 
-
+/*positionning classes below
+parent "position-relative" child "position-absolute"*/
 
 .top-5px {
     top: 5px !important;
