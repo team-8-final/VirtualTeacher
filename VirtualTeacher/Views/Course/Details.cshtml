@@ -46,7 +46,7 @@
 
 @*RATING MODAL*@
 <div class="modal fade" id="rateModal" tabindex="-1" aria-labelledby="rateModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content centered-text">
 
             <div class="modal-header">
@@ -151,8 +151,8 @@
 
     <div class="d-flex align-items-center">
         @{
-            var role = User.FindFirst(ClaimTypes.Role);
-            if (!isEnrolled && role.Value != "Teacher")
+            @*todo change this with smth better*@
+            if (isEnrolled)
             {
                 <button type="button" class="btn btn-outline-success">Enrolled</button>
                 
@@ -248,18 +248,25 @@
 
             <ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
                 @{
-                    int counter = 1;
-
-                    foreach (var lecture in Model.Lectures)
+                    if (!isEnrolled && !isActiveTeacherOrAdmin)
                     {
-                        <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@Model.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
-                        <li class="list-group-item custom-hover">
-                                @counter. @lecture.Title
-                            </li>
-                        </a>
-
-                        counter++;
+                        <li class="list-group-item"> Enroll to see all lectures</li>
                     }
+                    else
+                    {
+                        int counter = 1;
+
+                        foreach (var lecture in Model.Lectures)
+                        {
+                            <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@Model.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                            <li class="list-group-item custom-hover">
+                                    @counter. @lecture.Title
+                            </li>
+                            </a>
+
+                            counter++;
+                        }
+                    }                 
                 }
             </ul>      
         </div>

@@ -1,12 +1,23 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    string? currentUser = User.Identity.IsAuthenticated ? User.Identity.Name : "";
+    bool isLogged = User.Identity.IsAuthenticated;
 }
 
 @model HomeIndexViewModel;
 
 <div class="hero">
     <section class="hero-left">
-        <h1>Empower Your Language Journey</h1>
+        @{
+            if (currentUser != "")
+            {
+                <h1>Hello, @currentUser!</h1>
+            }
+            else
+            {
+                <h1>Empower Your Language Journey</h1>
+            }
+        }
         <h4>Your Gateway to Fluent Learning!</h4>
         <p>
             Insert your corporate text here
@@ -14,7 +25,16 @@
             Redefine language education from home. Join us on your journey to fluency! *@
         </p>
 
-        <button href="#" class="btn btn-primary btn-lg" style="text-decoration: none">Join now</button>
+        @{
+            if (!isLogged)
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg" style="border-radius: 10px;">Join now</a>
+            }
+            else
+            {
+                <a asp-controller="Course" asp-action="Index" class="btn btn-primary btn-lg" style="border-radius: 10px;">Explore</a>
+            }
+        }
     </section>
 
     <section class="right">
@@ -56,13 +76,31 @@
         @foreach (var course in Model.CoursesByPopularity)
         {
             <div class="card" style="width: 18rem;">
+
                 <div class="card-body">
-                    <h5 class="card-title">@course.Title</h5>
-                    <p class="card-text">Students: @course.EnrolledStudents.Count()</p>
+                    <h5 class="card-title">
+                        <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
+                        @course.Title
+                    </h5>
+                    <hr />
+                    <p class="card-text">@course.Description</p>
                 </div>
+
                 <div class="card-footer">
-                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">Go to course</a>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary btn-sm">Go to course</a>
+                        </div>
+
+                        <div style="margin-top: 5px;">
+                            @{var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;}
+
+                            <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @course.EnrolledStudents.Count()
+                            <i class="fa-regular fa-star" style="margin-left:4px; margin-right: 1px;"></i> @rating
+                        </div>
+                    </div>
                 </div>
+
             </div>
         }
     </div>
@@ -74,16 +112,31 @@
         @foreach (var course in Model.CoursesByRating)
         {
             <div class="card" style="width: 18rem;">
+
                 <div class="card-body">
-                    <h5 class="card-title">@course.Title</h5>
-                        @{
-                            var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;
-                            <p class="card-text">Avg. Rating: @rating </p>
-                        }
+                    <h5 class="card-title">
+                        <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
+                        @course.Title
+                    </h5>
+                    <hr />
+                    <p class="card-text">@course.Description</p>
                 </div>
+
                 <div class="card-footer">
-                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">Go to course</a>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary btn-sm">Go to course</a>
+                        </div>
+
+                        <div style="margin-top: 5px;">
+                            @{var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;}
+
+                            <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @course.EnrolledStudents.Count()
+                            <i class="fa-regular fa-star" style="margin-left:4px; margin-right: 1px;"></i> @rating
+                        </div>
+                    </div>
                 </div>
+
             </div>
         }
     </div>
@@ -95,13 +148,31 @@
         @foreach (var course in Model.CoursesByDate)
         {
             <div class="card" style="width: 18rem;">
+
                 <div class="card-body">
-                    <h5 class="card-title">@course.Title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <h5 class="card-title">
+                        <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
+                        @course.Title
+                    </h5>
+                    <hr/>
+                    <p class="card-text">@course.Description</p>
                 </div>
+
                 <div class="card-footer">
-                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary">Go to course</a>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary btn-sm">Go to course</a>
+                        </div>
+
+                        <div style="margin-top: 5px;">
+                            @{var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;}
+
+                            <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @course.EnrolledStudents.Count()
+                            <i class="fa-regular fa-star" style="margin-left:4px; margin-right: 1px;"></i> @rating
+                        </div>
+                    </div>
                 </div>
+
             </div>
         }
     </div>
@@ -139,10 +210,36 @@
         {
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title">@teacher.FirstName @teacher.LastName</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <div class="d-flex justify-content-center" style="margin-bottom: 3px;">
+                        <div>
+                            <img src="~/images/avatar-default.jpg" style="width: 80px; height: 75px;" />
+                        </div>  
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <div>
+                            <strong>@teacher.FirstName @teacher.LastName</strong>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div style="font-size: 13px;">
+                            Teacher in @teacher.CreatedCourses.Count() courses
+                        </div>
+                    </div>
                 </div>
+
+                @{Course? course = teacher.CreatedCourses.FirstOrDefault();}
+
+                <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">
+                    <div class="card-footer text-center">
+                        @{
+                            <span>
+                               @course.Title
+                            </span>
+                        }
+                    </div>
+                </a>
+               
             </div>
         }
     }
@@ -263,7 +360,7 @@
 .hero-left {
     padding-right: 40px;
 }
-.hero-left a {
+/* .hero-left a {
     padding: 10px 15px;
     background: #372cfa;
     color: #fff;
@@ -274,10 +371,8 @@
     outline: none;
     transition: 0.3s all ease;
     border-radius: 20px;
-}
-.hero-left a:hover{
-    background-color: #070439;
-}
+} */
+
 .right {
     padding-top: 50px;
 }

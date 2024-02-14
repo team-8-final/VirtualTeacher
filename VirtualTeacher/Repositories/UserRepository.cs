@@ -140,7 +140,9 @@ namespace VirtualTeacher.Repositories
 
         public int GetUserCount()
         {
-            return context.Users.Count();
+            return context.Users
+                .Where(u => !u.IsDeleted)
+                .Count();
         }
 
         public PaginatedList<User> FilterBy(UserQueryParameters parameters)
@@ -157,6 +159,8 @@ namespace VirtualTeacher.Repositories
 
 
             int totalPages = (int)Math.Ceiling(((double)result.Count()) / parameters.PageSize);
+            result = result.Skip(parameters.PageSize * (parameters.PageNumber - 1)).Take(parameters.PageSize);
+
             return new PaginatedList<User>(result.ToList(), totalPages, parameters.PageNumber);
         }
 

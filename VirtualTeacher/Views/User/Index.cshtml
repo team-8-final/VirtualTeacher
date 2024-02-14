@@ -1,101 +1,170 @@
 ﻿@{
     ViewData["Title"] = "Users";
-    @model PaginatedList<User>
+    var userCount = Convert.ToInt32(ViewData["UserCount"]);
+    var searchUserCount = Model.Count();
 }
 
+@model PaginatedList<User>
+
+@*USER COUNTER & SORT DROPDOWN*@
+<div class="d-flex" style="margin-bottom: 5px">
+    @{
+        if (userCount != searchUserCount && searchUserCount != 0)
+        {
+            <strong style="margin-right: 15px;">Latest search fetched @searchUserCount users</strong>
+        }
+        else
+        {
+            <strong style="margin-right: 15px;">The site currently has @userCount registered users</strong>
+        }
+    }
+
+    <div class="dropdown">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort By
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="username" asp-route-SortOrder="@ViewData["SortOrder"]">Username</a></li>
+            <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="firstname" asp-route-SortOrder="@ViewData["SortOrder"]">First Name </a></li>
+            <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="lastname" asp-route-SortOrder="@ViewData["SortOrder"]">Last Name</a></li>
+            <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="role" asp-route-SortOrder="@ViewData["SortOrder"]">Role</a> </li>
+        </ul>
+    </div>
+</div>
+
 <div class="d-flex justify-content-between">
-    <div style="width: 60%">
+    <div style="width: 75%;">
         @{
             if (Model.Count == 0)
             {
                 <p>
-                    No users found.
+                    No users found. <a asp-controller="User" asp-action="Index" style="text-decoration: none;">Reset?</a>
                 </p>
             }
             else
             {
+                int counter = 1;
                 foreach (var user in Model)
                 {
-                    <p>
-                        @user.Id. @user.FirstName @user.LastName (@user.Username) / @user.UserRole / @user.Email
-                        <hr />
-                    </p>
+                    <div class="card" style="margin-bottom: 5px;">
+                        
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    @counter. @user.FirstName @user.LastName (&#64;@user.Username) - @user.Email - @user.UserRole
+                                </div>
+
+                                <div>
+                                    <div class="btn-group">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Role
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" type="button" asp-controller="User" asp-action="ChangeRole" asp-route-id="@user.Id" asp-route-roleId="0">Student</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" type="button" asp-controller="User" asp-action="ChangeRole" asp-route-id="@user.Id" asp-route-roleId="1">Teacher</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" type="button" asp-controller="User" asp-action="ChangeRole" asp-route-id="@user.Id" asp-route-roleId="2">Admin</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    counter++;
                 }
             }
         }
     </div>
 
-    <div style="width: 30%">
-        <form id="userFilterForm">
-            <div class="mb-3">
-                <input type="text" name="FirstName" class="form-control-custom" placeholder="First name" />
-                <input type="text" name="LastName" class="form-control-custom" placeholder="Last name" />
+    @*FILTERS SIDE MENU*@
+    <div style="width: 22%">
+        <div class="card border-light mb-3">
+            <div class="card-header">Filters</div>
+            <div class="card-body">
+                <form id="userFilterForm">
+                    <div class="input-group mb-3">
+                        <input type="text" name="FirstName" class="form-control form-control-sm" placeholder="First name">
+                        <input type="text" name="LastName" class="form-control form-control-sm" placeholder="Last name">
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="text" name="Username" class="form-control form-control-sm" placeholder="Username" />
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="text" name="Email" class="form-control form-control-sm" placeholder="Email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <select name="Role" class="form-control form-control-sm">
+                            <option value="" selected>Select Role</option>
+                            <option value="Student">Student</option>
+                            <option value="Teacher">Teacher</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+
+                    <input type="submit" value="Search" class="btn btn-primary btn-sm">
+                </form>           
             </div>
-
-            <div class="mb-3">
-                <input type="text" name="Username" class="form-control-custom" placeholder="Username" />
-                <input type="text" name="Email" class="form-control-custom" placeholder="Email" />
-            </div>
-
-            <div class="mb-3">
-                <input type="text" name="Role" class="form-control-custom" placeholder="Role" />
-            </div>
-
-            <input type="submit" value="Search" class="btn btn-primary">
-        </form>
-        <hr />
-
-        Sort:
-        
-        <div class="mb-3">
-            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="id" asp-route-SortOrder="@ViewData["SortOrder"]">
-                Id
-            </a>
-            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="username" asp-route-SortOrder="@ViewData["SortOrder"]">
-                Username
-            </a>
-            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="role" asp-route-SortOrder="@ViewData["SortOrder"]">
-                Role
-            </a>
         </div>
-
-        <div class="mb-3">
-            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="firstname" asp-route-SortOrder="@ViewData["SortOrder"]">
-            First Name
-            </a>
-
-            <a class="btn btn-success btn-sm" asp-controller="User" asp-action="Index" asp-route-SortBy="lastname" asp-route-SortOrder="@ViewData["SortOrder"]">
-                Last Name
-            </a>
-        </div>
-  
     </div>
+</div>
+
+@*PAGINATION*@
+@{
+    string prevState = (Model.HasPreviousPage) ? "" : "disabled";
+    string nextState = (Model.HasNextPage) ? "" : "disabled";
+    int prevPage = Model.PageNumber - 1;
+    int nextPage = Model.PageNumber + 1;
+}
+
+<div class="d-flex justify-content-center" style="margin-top: 5px;">
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-custom-colors">
+
+            <li class="page-item @prevState">
+                <a class="page-link" asp-controller="User" asp-action="Index" asp-route-PageNumber="@prevPage" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            @{
+                for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (i == Model.PageNumber)
+                    {
+                        <li class="page-item">
+                            <a class="page-link active" aria-current="page">@i</a>
+                        </li>
+
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="User" asp-action="Index" asp-route-PageNumber="@i">@i</a>
+                        </li>
+                    }
+                }
+            }
+
+            <li class="page-item @nextState">
+                <a class="page-link" asp-controller="User" asp-action="Index" asp-route-PageNumber="@nextPage" aria-label="Previous">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
 
 </div>
 
-@* todo - Should clean up URL from unused query params/works halfway*@
-@* <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#userFilterForm").submit(function (e) {
-            e.preventDefault();
-
-            var url = "http://localhost:5000/Users?";
-            var parameters = [];
-
-            $("#userFilterForm input").each(function () {
-                var name = $(this).attr("name");
-                var value = $(this).val();
-
-                if (value.trim() !== "asd" && value !== undefined) {
-                    parameters.push(name + "=" + encodeURIComponent(value));
-                }
-            });
-
-            url += parameters.join("&");
-
-            window.location.href = url;
-        });
-    });
-</script> *@
 
