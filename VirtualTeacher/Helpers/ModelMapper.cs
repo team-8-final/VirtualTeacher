@@ -48,7 +48,6 @@ public class ModelMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Password = dto.Password,
-            AvatarUrl = dto.AvatarUrl
         };
     }
 

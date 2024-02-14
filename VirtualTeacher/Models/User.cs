@@ -29,9 +29,6 @@ public class User
     [MinLength(2), MaxLength(20)]
     public string LastName { get; set; } = null!;
 
-    //todo remove property
-    public string? AvatarUrl { get; set; } = "default.jpg";
-
     [Required]
     public UserRole UserRole { get; set; }
     public bool IsDeleted { get; set; } = false;
@@ -47,7 +44,4 @@ public class User
     public IList<Course> CreatedCourses { get; set; } = null!;
     public IList<Lecture> CreatedLectures { get; set; } = null!;
     public IList<Submission> CreatedAssignments { get; set; } = null!;
-
-
-
 }

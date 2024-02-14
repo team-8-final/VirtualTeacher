@@ -7,8 +7,8 @@
 
 <style>
     .disabled-section {
-        pointer-events: none; /* Prevents click events */
-        opacity: 0.5; /* Grays out the content */
+        pointer-events: none;
+        opacity: 0.5;
     }
 </style>
 
@@ -22,7 +22,7 @@
     </ol>
 </nav>
 
-<div class="row">
+<div class="row" style="padding-left: 12px;">
     @* Embedded video *@
     <div class="card p-2 col-md-9">
         <iframe style="width: 100%; aspect-ratio: 16/9" src="@Model.VideoLink" title="lecture" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -162,7 +162,25 @@
                             <div class="fw-bold">@comment.Author.Username</div>
                             @comment.Content
                         </div>
-                        <span class="badge bg-black bg-opacity-25 rounded-pill" style="margin-top: 14px;">
+
+                        <div class="ms-1">
+                            @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin")
+                                  || comment.AuthorId == ViewBag.User.Id)
+                            {
+                                <i class="fa-regular fa-pen-to-square ms-4"> </i>
+                                <a href="#" class="text-primary small ms-0 edit-comment-btn" data-bs-toggle="modal"
+                                   data-bs-target="#editCommentModal" data-comment-id="@comment.Id" data-comment-content="@comment.Content">Edit</a>
+
+                                <i class="fa-regular fa-trash-can ms-2"></i>
+                                <a href="#" class="text-danger small ms-0 delete-comment-btn"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#deleteCommentModal"
+                                   data-comment-id="@comment.Id">Delete</a>
+                            }
+                        </div>
+
+                        <span class="ms-2 text-muted">
+                            <i class="fa-regular fa-calendar"></i>
                             @comment.CreatedOn.ToString("HH:mm tt  MMM-dd-yy")
                         </span>
                     </li>
@@ -171,3 +189,114 @@
         }
     }
 </div>
+
+
+@*Edit Comment MODAL*@
+<div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content centered-text">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit Comment</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Lecture" asp-action="EditComment" method="post" enctype="multipart/form-data"
+                  asp-route-courseId="@Model.CourseId"
+                  asp-route-lectureId="@Model.Id">
+
+                <div class="modal-body">
+                    <textarea class="form-control" id="commentText" name="content" rows="3" required></textarea>
+                    <input type="hidden" id="commentId" name="CommentId">
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@*Delete Comment MODAL*@
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Delete Comment</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form asp-controller="Lecture" asp-action="DeleteComment" method="post"
+                    asp-route-courseId="@Model.CourseId"
+                    asp-route-lectureId="@Model.Id">
+
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this comment?</p>
+                    <input type="hidden" id="deleteCommentId" name="commentId" value="">
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    let editButtons = document.querySelectorAll('.edit-comment-btn');
+    editButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            let commentId = btn.getAttribute('data-comment-id');
+            document.getElementById('commentId').value = commentId;
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    let editButtons = document.querySelectorAll('.edit-comment-btn');
+    editButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            let commentId = btn.getAttribute('data-comment-id');
+            let commentContent = btn.getAttribute('data-comment-content');
+            document.getElementById('commentId').value = commentId;
+            document.getElementById('commentText').value = commentContent;
+        });
+    });
+});
+
+document.querySelectorAll('.delete-comment-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const commentId = this.getAttribute('data-comment-id');
+        fetch(`/${courseId}/${lectureId}/delete-comment/${commentId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(data => {
+            console.log('Comment deleted:', data);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+document.querySelectorAll('.delete-comment-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const commentId = this.getAttribute('data-comment-id');
+        document.getElementById('deleteCommentId').value = commentId;
+    });
+});
+
+</script>
