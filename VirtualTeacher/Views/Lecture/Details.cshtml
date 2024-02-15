@@ -92,7 +92,7 @@
                         <div class="mb-3 me-2 flex-grow-1">
                             <input class="form-control" type="file" id="assignmentUpload" name="file">
                         </div>
-                        <button type="submit" class="btn btn-primary mb-3">Upload</button>
+<button type="submit" class="btn btn-primary mb-3" id="uploadAssignmentBtn" disabled>Upload</button>
                     </div>
                 </form>
             }
@@ -132,7 +132,7 @@
                     <div class="mb-3 me-2 flex-grow-1">
                         <input class="form-control" type="file" id="submissionUpload" name="file">
                     </div>
-                    <button type="submit" class="btn btn-primary mb-3">Upload</button>
+<button type="submit" class="btn btn-primary mb-3" id="uploadSubmissionBtn" disabled>Upload</button>
                 </div>
             </form>
         </div>
@@ -329,6 +329,28 @@ document.querySelectorAll('.delete-comment-btn').forEach(button => {
     button.addEventListener('click', function() {
         const commentId = this.getAttribute('data-comment-id');
         document.getElementById('deleteCommentId').value = commentId;
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    let assignmentUploadInput = document.getElementById('assignmentUpload');
+    let uploadAssignmentBtn = document.getElementById('uploadAssignmentBtn');
+    assignmentUploadInput.addEventListener('change', function() {
+        if(this.files.length > 0) {
+            uploadAssignmentBtn.removeAttribute('disabled');
+        } else {
+            uploadAssignmentBtn.setAttribute('disabled', 'disabled');
+        }
+    });
+
+    let submissionUploadInput = document.getElementById('submissionUpload');
+    let uploadSubmissionBtn = document.getElementById('uploadSubmissionBtn');
+    submissionUploadInput.addEventListener('change', function() {
+        if(this.files.length > 0) {
+            uploadSubmissionBtn.removeAttribute('disabled');
+        } else {
+            uploadSubmissionBtn.setAttribute('disabled', 'disabled');
+        }
     });
 });
 
