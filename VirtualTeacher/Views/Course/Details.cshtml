@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Course Details";
     string currentUser = User.Identity.IsAuthenticated ? User.Identity.Name : "";
-    int loggedUserId = int.Parse(User.FindFirstValue("UserId"));
+    int loggedUserId = User.Identity.IsAuthenticated ? int.Parse(User.FindFirstValue("UserId")) : 0;
 
     bool isEnrolled = Model.EnrolledStudents.Any(s => s.Id == loggedUserId);
     bool isActiveTeacherOrAdmin = User.Identity.IsAuthenticated && (Model.ActiveTeachers.Any(t => t.Username == User.Identity.Name) || User.IsInRole("Admin"));
@@ -9,7 +9,6 @@
     bool loggedUserHasRating = Model.Ratings.Any(r => r.Student.Username == currentUser);
     string baseReviewText = "Place your review here...";
     double baseRatingValue = 5;
-
 }
 
 @model Course

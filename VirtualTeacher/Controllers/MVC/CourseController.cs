@@ -170,7 +170,7 @@ namespace VirtualTeacher.Controllers.MVC
 
         }
 
-        [Authorize]
+       
         [HttpGet]
         public IActionResult Details([FromRoute] int id)
         {

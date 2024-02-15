@@ -23,8 +23,13 @@
             Sort By
         </button>
         <ul class="dropdown-menu">
-            <li><a asp-controller="Course" asp-action="Index" asp-route-SortBy="title" class="dropdown-item">Title</a></li>
-            <li><a asp-controller="Course" asp-action="Index" asp-route-SortBy="rating" class="dropdown-item">Rating</a></li>
+            <form asp-controller="Course" asp-action="Index" method="get">
+                <input type="hidden" name="Topic" value="@Model.Parameters.Topic" />
+                <input type="hidden" name="TeacherUsername" value="@Model.Parameters.TeacherUsername" />
+
+            <li><button type="submit" name="SortBy" value="title" class="dropdown-item">Sort by Title</button></li>
+            <li><button type="submit" name="SortBy" value="rating" class="dropdown-item">Sort by Rating</button></li>
+            </form>
         </ul>
     </div>
 
@@ -290,6 +295,7 @@
                             <div style="display: block;" class="mb-4 mt-2">
                                 <strong margin-bottom: 10px;>Min Rating:</strong>
 
+                             @* RATING STARS *@
 
                                 <div class="rating-group " id="font-size-popup">
 
