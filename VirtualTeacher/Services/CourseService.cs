@@ -268,6 +268,7 @@ public class CourseService : ICourseService
         var loggedUser = accountService.GetLoggedUser();
 
         var course = GetCourseById(courseId);
+
         if (course == null)
         {
             throw new EntityNotFoundException($"Course with id {courseId} not found");
@@ -276,6 +277,7 @@ public class CourseService : ICourseService
         if (loggedUser.UserRole != UserRole.Admin && !course.ActiveTeachers.Any(c => c.Username == loggedUser.Username))
             throw new UnauthorizedOperationException($"A lecture can be created only by the Course creator or an Admin.");
 
+        dto.VideoLink = ConvertLink(dto.VideoLink);
         Lecture createdLecture = courseRepository.CreateLecture(dto, loggedUser, courseId);
 
         return createdLecture!;
@@ -619,5 +621,16 @@ public class CourseService : ICourseService
         {
             throw new UnauthorizedOperationException("You are not enrolled in this course.");
         }
+    }
+
+    //Converts base YT link to embed link
+    public string ConvertLink(string link)
+    {
+        if (link.Contains("watch?v="))
+        {
+            link = link.Replace("watch?v=", "embed/");
+        }
+
+        return link;
     }
 }

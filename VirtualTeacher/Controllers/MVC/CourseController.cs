@@ -169,11 +169,23 @@ namespace VirtualTeacher.Controllers.MVC
 
         }
 
+        [HttpGet]
         public IActionResult Details([FromRoute] int id)
         {
-            var course = courseService.GetCourseById(id);
+            try
+            {
+                var course = courseService.GetCourseById(id);
 
-            return View(course);
+                return View(course);
+            }
+            catch (EntityNotFoundException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status404NotFound;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+
         }
 
     }

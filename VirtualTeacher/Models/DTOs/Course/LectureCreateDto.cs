@@ -14,6 +14,5 @@ namespace VirtualTeacher.Models.DTOs.Course
         [RegularExpression("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$", 
             ErrorMessage = "Please submit a valid YouTube video link.")]
         public string VideoLink { get; set; } = null!;
-        public string AssignmentLink { get; set; } = null!;
     }
 }

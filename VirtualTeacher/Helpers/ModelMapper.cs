@@ -172,7 +172,6 @@ public class ModelMapper
         {
             Description = dto.Description,
             VideoLink = dto.VideoLink,
-            AssignmentLink = dto.AssignmentLink,
             CourseId = courseId
         };
     }

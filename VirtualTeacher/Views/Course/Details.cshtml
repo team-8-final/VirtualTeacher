@@ -1,7 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Course Details";
     string currentUser = User.Identity.IsAuthenticated ? User.Identity.Name : "";
-    int loggedUserId = int.Parse(User.FindFirstValue("UserId"));
+
+    int loggedUserId = User.Identity.IsAuthenticated ? int.Parse(User.FindFirstValue("UserId")) : 0;
 
     bool isEnrolled = Model.EnrolledStudents.Any(s => s.Id == loggedUserId);
     bool isActiveTeacherOrAdmin = User.Identity.IsAuthenticated && (Model.ActiveTeachers.Any(t => t.Username == User.Identity.Name) || User.IsInRole("Admin"));
@@ -9,6 +10,8 @@
     bool loggedUserHasRating = Model.Ratings.Any(r => r.Student.Username == currentUser);
     string baseReviewText = "Place your review here...";
     double baseRatingValue = 5;
+
+    string? dateDisplay = Model.StartingDate > DateTime.Now ? Model.StartingDate?.ToString("MMM dd, yyyy"): "Ongoing";
 
 }
 
@@ -142,7 +145,7 @@
         </div>
 
         <div style="margin-bottom: 1px;">
-            <i class="fa-regular fa-calendar" style="margin-left:4px; margin-right:1px;"></i> @Model.StartingDate.ToString()
+            <i class="fa-regular fa-calendar" style="margin-left:4px; margin-right:1px;"></i> @dateDisplay
             <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @Model.EnrolledStudents.Count()
             <i class="fa-regular fa-file" style="margin-left:4px; margin-right: 1px;"></i> @Model.Lectures.Count()
         </div>
@@ -161,7 +164,12 @@
             {
                 <button type="button" class="btn btn-outline-secondary">You Are Teaching This Class</button>
             }
-
+            else if (loggedUserId == 0)
+            {
+                <form asp-controller="Account" asp-action="Login" method="get">
+                    <button type="submit" class="btn btn-success">Join</button>
+                </form>
+            }
             else
             {
                 <form asp-controller="Course" asp-action="Enroll" asp-route-id="@Model.Id" method="post">
@@ -231,7 +239,7 @@
     </div>
 
     @*LECTURE MENU*@
-    <div class="col-md-3" style="width: 24%; height: 520px;">
+    <div class="col-md-3" style="width: 25%; height: 520px;">
         <div class="card" style="width: 100%">
 
             <div class="card-header">
