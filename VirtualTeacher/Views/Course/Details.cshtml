@@ -10,6 +10,8 @@
     bool loggedUserHasRating = Model.Ratings.Any(r => r.Student.Username == currentUser);
     string baseReviewText = "Place your review here...";
     double baseRatingValue = 5;
+
+    string? dateDisplay = Model.StartingDate > DateTime.Now ? Model.StartingDate?.ToString("MMM dd, yyyy") : "Ongoing";
 }
 
 @model Course
