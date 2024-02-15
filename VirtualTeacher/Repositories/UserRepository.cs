@@ -168,6 +168,7 @@ namespace VirtualTeacher.Repositories
         {
             List<User> teachers = context.Users
                 .Where(u => u.UserRole == UserRole.Teacher)
+                .Include(u => u.CreatedCourses)
                 .Take(3)
                 .ToList();
 
