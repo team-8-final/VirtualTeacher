@@ -9,7 +9,7 @@
 <div class="hero">
     <section class="hero-left">
         @{
-            if (currentUser != "")
+            if (isLogged)
             {
                 <h1>Hello, @currentUser!</h1>
             }
@@ -109,35 +109,42 @@
 @*TOP RATED*@
 <div id="ratingBlock" class="hidden">
     <div class="d-flex card-carousel rounded-1">
-        @foreach (var course in Model.CoursesByRating)
-        {
-            <div class="card" style="width: 18rem;">
+        @{
+            if (Model.CoursesByRating is not null)
+            {
+                foreach (var course in Model.CoursesByRating)
+                {
+                    <div class="card" style="width: 18rem;">
 
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
-                        @course.Title
-                    </h5>
-                    <hr />
-                    <p class="card-text">@course.Description</p>
-                </div>
-
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary btn-sm">Go to course</a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
+                                @course.Title
+                            </h5>
+                            <hr />
+                            <p class="card-text">@course.Description</p>
                         </div>
 
-                        <div style="margin-top: 5px;">
-                            @{var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;}
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary btn-sm">Go to course</a>
+                                </div>
 
-                            <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @course.EnrolledStudents.Count()
-                            <i class="fa-regular fa-star" style="margin-left:4px; margin-right: 1px;"></i> @rating
+                                <div style="margin-top: 5px;">
+                                    @{
+                                        var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;
+                                    }
+
+                                    <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @course.EnrolledStudents.Count()
+                                    <i class="fa-regular fa-star" style="margin-left:4px; margin-right: 1px;"></i> @rating
+                                </div>
+                            </div>
                         </div>
+
                     </div>
-                </div>
-
-            </div>
+                }
+            }
         }
     </div>
 </div>
@@ -145,35 +152,42 @@
 @*NEWEST*@
 <div id="newestBlock" class="hidden">
     <div class="d-flex card-carousel rounded-1">
-        @foreach (var course in Model.CoursesByDate)
-        {
-            <div class="card" style="width: 18rem;">
+        @{
+            if (Model.CoursesByDate is not null)
+            {
+                foreach (var course in Model.CoursesByDate)
+                {
+                    <div class="card" style="width: 18rem;">
 
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
-                        @course.Title
-                    </h5>
-                    <hr/>
-                    <p class="card-text">@course.Description</p>
-                </div>
-
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary btn-sm">Go to course</a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
+                                @course.Title
+                            </h5>
+                            <hr />
+                            <p class="card-text">@course.Description</p>
                         </div>
 
-                        <div style="margin-top: 5px;">
-                            @{var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;}
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="btn btn-primary btn-sm">Go to course</a>
+                                </div>
 
-                            <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @course.EnrolledStudents.Count()
-                            <i class="fa-regular fa-star" style="margin-left:4px; margin-right: 1px;"></i> @rating
+                                <div style="margin-top: 5px;">
+                                    @{
+                                        var rating = course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0;
+                                    }
+
+                                    <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @course.EnrolledStudents.Count()
+                                    <i class="fa-regular fa-star" style="margin-left:4px; margin-right: 1px;"></i> @rating
+                                </div>
+                            </div>
                         </div>
+
                     </div>
-                </div>
-
-            </div>
+                }
+            }
         }
     </div>
 </div>
@@ -206,42 +220,48 @@
 <div class="d-flex card-carousel rounded-1">
 
     @{
-        foreach (var teacher in Model.Teachers)
+        if (Model.Teachers is not null)
         {
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <div class="d-flex justify-content-center" style="margin-bottom: 3px;">
-                        <div>
-                            <img src="~/images/avatar-default.jpg" style="width: 80px; height: 75px;" />
-                        </div>  
+            foreach (var teacher in Model.Teachers)
+            {
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center" style="margin-bottom: 3px;">
+                            <div>
+                                <img src="~/images/avatar-default.jpg" style="width: 80px; height: 75px;" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <div>
+                                <strong>@teacher.FirstName @teacher.LastName</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <div style="font-size: 13px;">
+                                Teacher in @teacher.CreatedCourses.Count() courses
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="d-flex justify-content-center">
-                        <div>
-                            <strong>@teacher.FirstName @teacher.LastName</strong>
+                    @{
+                        Course? course = teacher.CreatedCourses.FirstOrDefault();
+                    }
+
+                    <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">
+                        <div class="card-footer text-center">
+                            @{
+                                <span>
+                                    @course.Title
+                                </span>
+                            }
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <div style="font-size: 13px;">
-                            Teacher in @teacher.CreatedCourses.Count() courses
-                        </div>
-                    </div>
+                    </a>
+
                 </div>
-
-                @{Course? course = teacher.CreatedCourses.FirstOrDefault();}
-
-                <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">
-                    <div class="card-footer text-center">
-                        @{
-                            <span>
-                               @course.Title
-                            </span>
-                        }
-                    </div>
-                </a>
-               
-            </div>
+            }
         }
+        
     }
 </div>
 

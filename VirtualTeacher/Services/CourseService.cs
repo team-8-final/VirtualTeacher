@@ -6,6 +6,7 @@ using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Services.Contracts;
+using VirtualTeacher.ViewModels;
 
 namespace VirtualTeacher.Services;
 
@@ -96,6 +97,24 @@ public class CourseService : ICourseService
 
         throw new Exception($"Course with id '{id}' could not be deleted.");
     }
+
+
+    //Home VM methods
+    public List<Course> GetNewestCourses()
+    {
+        return courseRepository.GetNewestCourses();
+    }
+
+    public List<Course> GetTopRatedCourses()
+    {
+        return courseRepository.GetTopRatedCourses();
+    }
+
+    public List<Course> GetPopularCourses()
+    {
+        return courseRepository.GetPopularCourses();
+    }
+
 
     //Course enroll
     public string Enroll(int courseId)

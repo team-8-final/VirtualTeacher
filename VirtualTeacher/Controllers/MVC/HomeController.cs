@@ -5,6 +5,7 @@ using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels;
 using VirtualTeacher.Models.Enums;
+using VirtualTeacher.Helpers;
 
 namespace VirtualTeacher.Controllers.MVC;
 
@@ -13,27 +14,27 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly ICourseService courseService;
     private readonly IUserService userService;
+    private readonly ModelMapper mapper;
 
-    public HomeController(ILogger<HomeController> logger, ICourseService courseService, IUserService userService)
+    public HomeController(ILogger<HomeController> logger, ICourseService courseService, IUserService userService, ModelMapper mapper)
     {
         _logger = logger;
         this.courseService = courseService;
         this.userService = userService;
+        this.mapper = mapper;
     }
 
     // todo probably move to service
     public IActionResult Index()
     {
-        HomeIndexViewModel viewModel = new HomeIndexViewModel();
-        CourseQueryParameters parameters = new CourseQueryParameters();
-        UserQueryParameters userParameters = new UserQueryParameters();
+        var topRatedCourses = courseService.GetTopRatedCourses();
+        var newestCourses = courseService.GetNewestCourses();
+        var popularCourses = courseService.GetPopularCourses();
+        var teachers = userService.GetHomeTeachers();
 
-        viewModel.CoursesByDate = courseService.FilterCoursesBy(parameters).OrderByDescending(c => c.Id).Take(3).ToList();
-        viewModel.CoursesByPopularity = courseService.FilterCoursesBy(parameters).OrderByDescending(c => c.EnrolledStudents.Count()).Take(3).ToList();
-        viewModel.CoursesByRating = courseService.FilterCoursesBy(parameters).OrderByDescending(c => c.Ratings.Any() ? c.Ratings.Average(r => r.Value) : 0).Take(3).ToList();
-        viewModel.Teachers = userService.FilterBy(userParameters).Where(u => u.UserRole == UserRole.Teacher).Take(3).ToList();
+        HomeIndexViewModel vm = mapper.MapHomeVM(newestCourses, topRatedCourses, popularCourses, teachers);
 
-        return View(viewModel);
+        return View(vm);
     }
 
     public IActionResult Privacy()

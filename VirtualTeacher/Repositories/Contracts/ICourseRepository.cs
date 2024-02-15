@@ -12,6 +12,9 @@ namespace VirtualTeacher.Repositories.Contracts
         Course? GetCourseById(int id);
         Course? CreateCourse(CourseCreateDto dto, User teacher);
         Course? UpdateCourse(int id, CourseUpdateDto dto);
+        List<Course> GetNewestCourses();
+        List<Course> GetTopRatedCourses();
+        List<Course> GetPopularCourses();
         bool? DeleteCourse(int id);
         bool AddTeacher(int courseId, User teacher);
         bool Enroll(int courseId, User user);

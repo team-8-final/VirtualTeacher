@@ -112,6 +112,18 @@ public class ModelMapper
         };
     }
 
+    //Home VM
+    public HomeIndexViewModel MapHomeVM(List<Course> newestCourses, List<Course> topRatedCourses, List<Course> popularCourses, List<User> teachers)
+    {
+        return new HomeIndexViewModel
+        {
+            CoursesByDate = newestCourses,
+            CoursesByPopularity = popularCourses,
+            CoursesByRating = topRatedCourses,
+            Teachers = teachers
+        };
+    }
+
     public RatingResponseDto MapResponse(Rating rating)
     {
         return new RatingResponseDto

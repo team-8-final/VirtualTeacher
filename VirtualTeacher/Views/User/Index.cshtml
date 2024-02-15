@@ -8,16 +8,7 @@
 
 @*USER COUNTER & SORT DROPDOWN*@
 <div class="d-flex" style="margin-bottom: 5px">
-    @{
-        if (userCount != searchUserCount && searchUserCount != 0)
-        {
-            <strong style="margin-right: 15px;">Latest search fetched @searchUserCount users</strong>
-        }
-        else
-        {
-            <strong style="margin-right: 15px;">The site currently has @userCount registered users</strong>
-        }
-    }
+    <span style="margin-right: 15px;">The site currently has @userCount registered users</span>
 
     <div class="dropdown">
         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

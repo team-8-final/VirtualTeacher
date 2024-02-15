@@ -37,6 +37,27 @@ public class CourseRepository : ICourseRepository
         return course;
     }
 
+    public List<Course> GetNewestCourses()
+    {
+        List<Course> newestCourses = GetCourses().OrderByDescending(c => c.Id).Take(3).ToList();
+
+        return newestCourses;
+    }
+
+    public List<Course> GetTopRatedCourses()
+    {
+        List<Course> topCourses = GetCourses().OrderByDescending(c => c.Ratings.Any() ? c.Ratings.Average(r => r.Value) : 0).Take(3).ToList();
+
+        return topCourses;
+    }
+
+    public List<Course> GetPopularCourses()
+    {
+        List<Course> popularCourses = GetCourses().OrderByDescending(c => c.EnrolledStudents.Count()).Take(3).ToList();
+
+        return popularCourses;
+    }
+
     public Course? CreateCourse(CourseCreateDto dto, User teacher)
     {
         var newCourse = new Course()

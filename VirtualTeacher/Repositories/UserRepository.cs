@@ -147,7 +147,7 @@ namespace VirtualTeacher.Repositories
 
         public PaginatedList<User> FilterBy(UserQueryParameters parameters)
         {
-            IQueryable<User> result = GetUsers();
+            IQueryable<User> result = context.Users.Where(u => !u.IsDeleted);
 
             result = FilterByUsername(result, parameters.Username);
             result = FilterByEmail(result, parameters.Email);
@@ -164,9 +164,19 @@ namespace VirtualTeacher.Repositories
             return new PaginatedList<User>(result.ToList(), totalPages, parameters.PageNumber);
         }
 
+        public List<User> GetHomeTeachers()
+        {
+            List<User> teachers = context.Users
+                .Where(u => u.UserRole == UserRole.Teacher)
+                .Take(3)
+                .ToList();
+
+            return teachers;
+        }
+
         //Query methods
 
-        private static IQueryable<User> FilterByUsername(IQueryable<User> users, string username)
+        private static IQueryable<User> FilterByUsername(IQueryable<User> users, string? username)
         {
             if (!string.IsNullOrEmpty(username))
             {
@@ -176,7 +186,7 @@ namespace VirtualTeacher.Repositories
             else return users;
         }
 
-        private static IQueryable<User> FilterByEmail(IQueryable<User> users, string email)
+        private static IQueryable<User> FilterByEmail(IQueryable<User> users, string? email)
         {
             if (!string.IsNullOrEmpty(email))
             {
@@ -186,7 +196,7 @@ namespace VirtualTeacher.Repositories
             else return users;
         }
 
-        private static IQueryable<User> FilterByFirstName(IQueryable<User> users, string firstName)
+        private static IQueryable<User> FilterByFirstName(IQueryable<User> users, string? firstName)
         {
             if (!string.IsNullOrEmpty(firstName))
             {
@@ -196,7 +206,7 @@ namespace VirtualTeacher.Repositories
             else return users;
         }
 
-        private static IQueryable<User> FilterByLastName(IQueryable<User> users, string lastName)
+        private static IQueryable<User> FilterByLastName(IQueryable<User> users, string? lastName)
         {
             if (!string.IsNullOrEmpty(lastName))
             {
@@ -206,7 +216,7 @@ namespace VirtualTeacher.Repositories
             else return users;
         }
 
-        private static IQueryable<User> FilterByRole(IQueryable<User> users, string role)
+        private static IQueryable<User> FilterByRole(IQueryable<User> users, string? role)
         {
             if (!string.IsNullOrEmpty(role))
             {
@@ -227,12 +237,12 @@ namespace VirtualTeacher.Repositories
             else return users;
         }
 
-        private static IQueryable<User> OrderBy(IQueryable<User> users, string sortOrder)
+        private static IQueryable<User> OrderBy(IQueryable<User> users, string? sortOrder)
         {
             return (sortOrder == "desc") ? users.Reverse() : users;
         }
 
-        public IQueryable<User> SortBy(IQueryable<User> users, string sortByCriteria)
+        public IQueryable<User> SortBy(IQueryable<User> users, string? sortByCriteria)
         {
             {
                 switch (sortByCriteria)
