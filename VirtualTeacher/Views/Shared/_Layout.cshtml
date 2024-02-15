@@ -1,9 +1,10 @@
 ﻿@{
     string navbarUsername = "Account";
-    if (User.Identity is {IsAuthenticated: true})
+    if (User.Identity is { IsAuthenticated: true })
     {
         navbarUsername = User.Identity.Name;
     }
+
     var userRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role);
 }
 
@@ -11,7 +12,7 @@
 <html lang="en">
 
 <head>
-    <title>@ViewData["Title"] - VirtualTeacher</title>
+    <title>@ViewData["Title"] - Polyglot</title>
 
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -28,70 +29,65 @@
 
 <nav id="nav" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container-fluid">
-
         <div class="btn-group"></div>
         <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
-            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">VirtualTeacher</a>
-            <button class="btn btn-primary" onclick="openNav()">☰</button>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Polyglot</a>
+            @if (User.Identity is {IsAuthenticated: true})
+            {
+                <button class="btn btn-primary" onclick="openNav()">☰</button>
+            }
         </div>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-
         </button>
 
         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
             <ul class="navbar-nav flex-grow-1">
-
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="/Courses">All Courses</a>
                 </li>
-                @{
-                    @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item" >
-                                <a class="nav-link text-success" href="/Assignments">Assignments</a>
-                        </li>
-                    }
-                 }
-
-
-
+                @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/Assignments">Assignments</a>
+                    </li>
+                }
                 @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin"))
                 {
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Users</a>
                     </li>
                 }
+            </ul>
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="fa-solid fa-user"></i>&nbsp; @navbarUsername</a>
                     <ul class="dropdown-menu">
-                        @{
-                            if (User.Identity is { IsAuthenticated: true })
-                            {
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Index"><i class="fa-solid fa-address-card"></i>&nbsp; Profile Info</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Update"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update Profile</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Password"><i class="fa-solid fa-key"></i>&nbsp; Change Password</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp; Logout</a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Login"><i class="fa-solid fa-right-to-bracket"></i>&nbsp; Login</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Register"><i class="fa-solid fa-user-plus"></i>&nbsp; Register</a>
-                                </li>
-                            }
+                        @if (User.Identity is { IsAuthenticated: true })
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Index"><i class="fa-solid fa-address-card"></i>&nbsp; Profile Info</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Update"><i class="fa-solid fa-pen-to-square"></i>&nbsp; Update Profile</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Password"><i class="fa-solid fa-key"></i>&nbsp; Change Password</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp; Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Login"><i class="fa-solid fa-right-to-bracket"></i>&nbsp; Login</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Register"><i class="fa-solid fa-user-plus"></i>&nbsp; Register</a>
+                            </li>
                         }
                     </ul>
                 </li>
@@ -110,11 +106,11 @@
 </main>
 
 
-<footer id="footer" class="border-top footer text-muted">
+<footer id="footer" class="pt-2 border-top footer text-muted" style="text-align: center;">
     <div class="container">
         <span>
-            &copy; 2024 - VirtualTeacher -
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> - <a class="nav-link text-dark" href="/api/swagger" style="color: red !important; display: inline !important;">API</a>
+            Polyglot &copy; 2024 -
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a> - <a href="/api/swagger">API</a>
         </span>
     </div>
 </footer>

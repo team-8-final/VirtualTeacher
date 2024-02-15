@@ -20,6 +20,7 @@ html, body {
     margin: 0;
 }
 
+
 .modal-footer .left-side-container {
     margin-right: auto; /* This pushes the left-side container to the left */
 }
@@ -278,7 +279,7 @@ parent "position-relative" child "position-absolute"*/
 
 
 .start-5px {
-    left: 5px !important; 
+    left: 5px !important;
 }
 
 
@@ -350,5 +351,5 @@ parent "position-relative" child "position-absolute"*/
 }
 
 .no-padding {
-    padding: 0 !important; 
+    padding: 0 !important;
 }
