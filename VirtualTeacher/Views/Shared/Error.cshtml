@@ -1,7 +1,22 @@
-﻿@model VirtualTeacher.ViewModels.ErrorViewModel
-@{
+﻿@{
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error: @TempData["StatusCode"]</h1>
-<h2 class="text-danger">@TempData["ErrorMessage"]</h2>
+@model VirtualTeacher.ViewModels.ErrorViewModel
+
+
+<div class="d-flex justify-content-center">
+	<div class="card text-center" style="width: 25rem; background-color:#f8f9fa">
+		<div class="card-body" style="padding-bottom: 0px;">
+
+			<h1 class="text-primary" style="font-size: 20vh;">@TempData["StatusCode"]</h1>
+			<b class="text-black" style="font-size: 2vh;">@TempData["ErrorMessage"]</b>
+
+		</div>
+		<hr style="color: #fefefe; padding-top: 0px; padding-bottom: 0px;" />
+		<div class="card-footer">
+			<a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-sm">Back to Home</a>
+		</div>
+
+	</div>
+</div> 

@@ -203,7 +203,6 @@ public class CourseRepository : ICourseRepository
         lecture.Title = dto.Title;
         lecture.Description = dto.Description;
         lecture.VideoLink = dto.VideoLink;
-        lecture.AssignmentLink = dto.AssignmentLink;
 
         context.SaveChanges();
         return lecture;
@@ -217,7 +216,6 @@ public class CourseRepository : ICourseRepository
             Title = dto.Title,
             Description = dto.Description,
             VideoLink = dto.VideoLink,
-            AssignmentLink = dto.AssignmentLink,
             TeacherId = teacher.Id,
             CourseId = courseId
         };
