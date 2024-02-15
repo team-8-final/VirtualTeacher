@@ -7,7 +7,6 @@ namespace VirtualTeacher.ViewModels.Students
     public class AssignmentsViewModel
     {
         public List<Course>? FilteredCourses { get; set; }
-
         public List<UserResponseDto>? AllStudents { get; set; }
         public CourseQueryParameters? Parameters { get; set; }
 

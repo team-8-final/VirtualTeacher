@@ -56,7 +56,7 @@ namespace VirtualTeacher.Services
                 throw new EntityNotFoundException("No users found!");
 
             return userRepository.FilterBy(parameters);
-        }
+         }
 
         public User GetById(int id)
         {

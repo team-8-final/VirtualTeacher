@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Helpers.CustomAttributes;
@@ -169,6 +170,8 @@ namespace VirtualTeacher.Controllers.MVC
 
         }
 
+        [Authorize]
+        [HttpGet]
         public IActionResult Details([FromRoute] int id)
         {
             var course = courseService.GetCourseById(id);

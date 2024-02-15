@@ -27,21 +27,25 @@
             if (@Model.FilteredCourses != null){
                 foreach (var course in @Model.FilteredCourses)
                 {
-
                     <H4 style="color: blue" class="pt-2 pb-2">@course.Title</H4>
-
 
                     foreach(var lecture in course.Lectures)
                     {
 
-                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                        <div class="accordion " id="accordionPanelsStayOpenExample">
                             <div class="accordion-item ">
                                 <h2 class="accordion-header position-relative" id="panelsStayOpen-headingOne">
                                         <button class="accordion-button collapsed bg-info bg-gradient" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@lecture.Id" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
                                         <text>@lecture.Title</text>
                                         @{
-                                            int pendingSubmissions = lecture.Submissions.Where(s => s.Grade == null).Count();
-                                            int gradedSubmissions = lecture.Submissions.Where(s => s.Grade != null).Count();
+                                            int pendingSubmissions = lecture.Submissions
+                                                .Where(submission => submission.Grade == null 
+                                                && course.EnrolledStudents.Any(student => student.Id == submission.StudentId))
+                                                .Count();
+                                            int gradedSubmissions = lecture.Submissions
+                                                .Where(submission => submission.Grade != null
+                                                && course.EnrolledStudents.Any(student => student.Id == submission.StudentId))
+                                                .Count();
                                             if (pendingSubmissions > 0)
                                             {
                                                 <div class="ms-2" data-toggle="tooltip" data-placement="top" title="Submissions Pending Assessment"> @pendingSubmissions <i class="fa-solid fa-note-sticky" style="color: red"></i></div>
@@ -50,6 +54,7 @@
                                             {
                                                 <div class="ms-2" data-toggle="tooltip" data-placement="top" title="Graded Submissions"> @gradedSubmissions <i class="fa-solid fa-square-check" style="color: green"></i></div>
                                             }
+
                                             // DELETE UPLOAD ASSIGNMENT BUTTONS
                                             if (lecture.AssignmentLink != "")
                                             {
@@ -68,9 +73,9 @@
                                     {
                                         <div id="panelsStayOpen-@lecture.Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne" style="">
                                             <div class="accordion-body">
-
+                                                
                                                 @{
-                                                    User student = @course.EnrolledStudents.FirstOrDefault(student => student.Id == submission.StudentId);
+                                                    User student = course.EnrolledStudents.FirstOrDefault(student => student.Id == submission.StudentId);
                                                     if (student != null)
                                                     {
                                                         string fullName = $"{student.FirstName} {student.LastName}";
@@ -79,13 +84,19 @@
                                                         if (submission.Grade != null)
                                                         {
                                                             <div><i class="fa-solid fa-square-check" style="color: green"></i> Grade: @submission.Grade</div>
+                                                            <div>  </div>
                                                         }
                                                         else
                                                         {
-                                                            <div><i class="fa-solid fa-note-sticky" style="color: red"></i> Pending assessment </div>
+                                                            <div class="position-relative">
+                                                                <div class="inline-block "><i class="fa-solid fa-note-sticky" style="color: red"></i> Pending assessment </div>
+                                                                <div class="inline-block position-absolute end-150px"> Download File </div>
+                                                                <div class="inline-block position-absolute end-90px"> Grade </div>
+                                                            </div>
                                                         }
                                                     }
-                                                }
+                                                 }
+                                                
 
                                             </div>
                                         </div>

@@ -296,6 +296,9 @@ parent "position-relative" child "position-absolute"*/
     left: 20px !important;
 }
 
+.start-50px {
+    left: 50px !important;
+}
 
 
 
@@ -320,6 +323,7 @@ parent "position-relative" child "position-absolute"*/
     right: 25px !important;
 }
 
+
 .end-50px {
     right: 50px !important;
 }
@@ -332,8 +336,19 @@ parent "position-relative" child "position-absolute"*/
     right: 120px !important;
 }
 
+.end-150px {
+    right: 150px !important;
+}
+
 .custom-card-height-1 {
     min-height: 170px;
     overflow: auto;
 }
 
+.inline-block {
+    display: inline-block;
+}
+
+.no-padding {
+    padding: 0 !important; 
+}
