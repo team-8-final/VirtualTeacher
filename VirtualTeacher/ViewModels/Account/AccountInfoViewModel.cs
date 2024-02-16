@@ -28,5 +28,5 @@ public class AccountInfoViewModel
     public IList<Course> RatedCourses { get; set; } = new List<Course>();
 
     // TODO: implement when course comments are complete
-    // public IList<Course> CourseComments { get; set; } = null!;
+    public IList<Course> CourseComments { get; set; } = null!;
 }

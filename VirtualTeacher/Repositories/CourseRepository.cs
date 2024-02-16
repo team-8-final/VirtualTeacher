@@ -227,7 +227,7 @@ public class CourseRepository : ICourseRepository
     }
 
 
-    public PaginatedList<Course> FilterBy(CourseQueryParameters parameters) 
+    public PaginatedList<Course> FilterBy(CourseQueryParameters parameters)
     {
         IQueryable<Course> result = GetCourses();
 
@@ -548,6 +548,17 @@ public class CourseRepository : ICourseRepository
         context.Submissions.RemoveRange(submissionToDelete);
         context.SaveChanges();
         return true;
+    }
+
+    public List<Comment> GetCommentsByUser(User user)
+    {
+        var comments = context.Comments
+            .Include(c => c.Author)
+            .Include(c => c.Lecture)
+            .Where(c => c.Author == user)
+            .ToList();
+
+        return comments;
     }
 
     public bool CreateAssignment(int courseId, int lectureId, string fullPath)

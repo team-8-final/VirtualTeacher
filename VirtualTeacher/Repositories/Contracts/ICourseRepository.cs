@@ -47,5 +47,6 @@ namespace VirtualTeacher.Repositories.Contracts
         bool CreateAssignment(int courseId, int lectureId, string fullPath);
         bool DeleteAssignment(int courseId, int lectureId);
         bool DeleteAllSubmissions(int lectureId);
+        List<Comment> GetCommentsByUser(User user);
     }
 }

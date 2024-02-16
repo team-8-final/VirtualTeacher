@@ -308,75 +308,61 @@
 
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
-    let editButtons = document.querySelectorAll('.edit-comment-btn');
-    editButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            let commentId = btn.getAttribute('data-comment-id');
-            document.getElementById('commentId').value = commentId;
-        });
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    let editButtons = document.querySelectorAll('.edit-comment-btn');
-    editButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            let commentId = btn.getAttribute('data-comment-id');
-            let commentContent = btn.getAttribute('data-comment-content');
+    // Edit comment buttons
+    document.querySelectorAll('.edit-comment-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const commentId = this.getAttribute('data-comment-id');
+            const commentContent = this.getAttribute('data-comment-content');
             document.getElementById('commentId').value = commentId;
             document.getElementById('commentText').value = commentContent;
         });
     });
-});
 
-document.querySelectorAll('.delete-comment-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const commentId = this.getAttribute('data-comment-id');
-        fetch(`/${courseId}/${lectureId}/delete-comment/${commentId}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('Something went wrong');
-        })
-        .then(data => {
-            console.log('Comment deleted:', data);
-        })
-        .catch(error => console.error('Error:', error));
-    });
-});
-
-document.querySelectorAll('.delete-comment-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const commentId = this.getAttribute('data-comment-id');
-        document.getElementById('deleteCommentId').value = commentId;
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    let assignmentUploadInput = document.getElementById('assignmentUpload');
-    let uploadAssignmentBtn = document.getElementById('uploadAssignmentBtn');
-    assignmentUploadInput.addEventListener('change', function() {
-        if(this.files.length > 0) {
-            uploadAssignmentBtn.removeAttribute('disabled');
-        } else {
-            uploadAssignmentBtn.setAttribute('disabled', 'disabled');
-        }
+    // Delete comment buttons with fetch request
+    document.querySelectorAll('.delete-comment-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const commentId = this.getAttribute('data-comment-id');
+            fetch(`/${courseId}/${lectureId}/delete-comment/${commentId}`, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Something went wrong');
+            })
+            .then(data => {
+                console.log('Comment deleted:', data);
+            })
+            .catch(error => console.error('Error:', error));
+        });
     });
 
-    let submissionUploadInput = document.getElementById('submissionUpload');
-    let uploadSubmissionBtn = document.getElementById('uploadSubmissionBtn');
-    submissionUploadInput.addEventListener('change', function() {
-        if(this.files.length > 0) {
-            uploadSubmissionBtn.removeAttribute('disabled');
-        } else {
-            uploadSubmissionBtn.setAttribute('disabled', 'disabled');
-        }
+    // Update for delete-comment-btn to set value in modal
+    document.querySelectorAll('.delete-comment-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const commentId = this.getAttribute('data-comment-id');
+            document.getElementById('deleteCommentId').value = commentId;
+        });
     });
-});
 
+    // Assignment upload input listener
+    const assignmentUploadInput = document.getElementById('assignmentUpload');
+    const uploadAssignmentBtn = document.getElementById('uploadAssignmentBtn');
+    if (assignmentUploadInput && uploadAssignmentBtn) {
+        assignmentUploadInput.addEventListener('change', function() {
+            uploadAssignmentBtn.disabled = !this.files.length;
+        });
+    }
+
+    // Submission upload input listener
+    const submissionUploadInput = document.getElementById('submissionUpload');
+    const uploadSubmissionBtn = document.getElementById('uploadSubmissionBtn');
+    if (submissionUploadInput && uploadSubmissionBtn) {
+        submissionUploadInput.addEventListener('change', function() {
+            uploadSubmissionBtn.disabled = !this.files.length;
+        });
+    }
+});
 </script>

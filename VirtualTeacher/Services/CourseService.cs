@@ -330,6 +330,20 @@ public class CourseService : ICourseService
         return commentList;
     }
 
+    public List<Comment> GetCommentsByUser()
+    {
+        var loggedUser = accountService.GetLoggedUser();
+
+        if (loggedUser == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var commentList = courseRepository.GetCommentsByUser(loggedUser);
+
+        return commentList;
+    }
+
     public Comment CreateComment(int courseId, int lectureId, CommentCreateDto dto)
     {
         var course = GetCourseById(courseId);
