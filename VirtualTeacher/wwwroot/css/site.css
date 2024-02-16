@@ -341,6 +341,14 @@ parent "position-relative" child "position-absolute"*/
     right: 150px !important;
 }
 
+.end-160px {
+    right: 160px !important;
+}
+
+.end-170px {
+    right: 170px !important;
+}
+
 .custom-card-height-1 {
     min-height: 170px;
     overflow: auto;
@@ -353,3 +361,4 @@ parent "position-relative" child "position-absolute"*/
 .no-padding {
     padding: 0 !important;
 }
+

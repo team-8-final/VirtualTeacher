@@ -43,7 +43,7 @@ namespace VirtualTeacher.Repositories.Contracts
         Submission? GetSubmission(int lectureId, int userId);
         bool DeleteSubmission(int lectureId, int userId);
         bool CreateSubmission(int lectureId, int userId, byte? grade = null);
-        bool GradeSubmission(int lectureId, int userId, byte grade);
+        bool AssessSubmission(int lectureId, int userId, byte grade);
         bool CreateAssignment(int courseId, int lectureId, string fullPath);
         bool DeleteAssignment(int courseId, int lectureId);
         bool DeleteAllSubmissions(int lectureId);

@@ -6,6 +6,7 @@ namespace VirtualTeacher.ViewModels.Students
 {
     public class AssignmentsViewModel
     {
+        public int OpenPanel {  get; set; }
         public List<Course>? FilteredCourses { get; set; }
         public List<UserResponseDto>? AllStudents { get; set; }
         public CourseQueryParameters? Parameters { get; set; }

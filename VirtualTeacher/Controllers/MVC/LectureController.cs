@@ -203,6 +203,27 @@ public class LectureController : Controller
         }
     }
 
+    [IsTeacherOrAdmin]
+    [HttpPost("/{lectureId}/assess-submission")]
+    public IActionResult AssessSubmission(int userId, int lectureId, int grade)
+    {
+        try
+        {
+            if(grade > 100)
+            {
+                return BadRequest("The value of grade cannot be more than 100");
+            }
+            byte grade2 = (byte)grade;
+            courseService.AssessSubmission(lectureId, userId, grade2);
+
+            return RedirectToAction("Index", "Assignments", new { openPanel = lectureId });
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
     [HttpPost("/{lectureId}/create-submission")]
     public IActionResult CreateSubmission(int courseId, int lectureId, IFormFile file)
     {

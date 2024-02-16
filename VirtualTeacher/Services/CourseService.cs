@@ -4,6 +4,7 @@ using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.QueryParameters;
+using VirtualTeacher.Repositories;
 using VirtualTeacher.Repositories.Contracts;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels;
@@ -623,6 +624,18 @@ public class CourseService : ICourseService
         }
 
         return "Submission file deleted successfully.";
+    }
+
+    public string AssessSubmission(int lectureId, int userId, byte grade)
+    {
+        if(courseRepository.AssessSubmission(lectureId, userId, grade))
+        {
+            return $"Assessment successfull. New grade: {grade}";
+        }
+        else
+        {
+            throw new EntityNotFoundException($"Assessment failed. Submission was not found");
+        }
     }
 
 

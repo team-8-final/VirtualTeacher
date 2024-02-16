@@ -8,7 +8,7 @@
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
     <span>
-        <form asp-controller="AssignmentController" asp-action="Index" method="Get">
+        <form asp-controller="Assignment" asp-action="Index" method="Get">
             <div class="input-group mb-3 mt-3 ps-2 pe-2">
                 <button class="btn btn-outline-secondary" type="button" id="button-addon1">Go</button>
                 <input type="text" class="form-control " name="Title" placeholder="Search by course title" aria-label="search area">
@@ -55,7 +55,7 @@
                                                 <div class="ms-2" data-toggle="tooltip" data-placement="top" title="Graded Submissions"> @gradedSubmissions <i class="fa-solid fa-square-check" style="color: green"></i></div>
                                             }
 
-                                            // DELETE UPLOAD ASSIGNMENT BUTTONS
+                                            // DELETE/UPLOAD ASSIGNMENT BUTTONS INSIDE THE HEADER
                                             if (lecture.AssignmentLink != "")
                                             {
                                                 <div class="end-50px position-absolute"><i class="fa-solid fa-download" data-placement="top" title="Download Assignment File"></i> <i class="fa-solid fa-trash-can" data-placement="top" title="Delete Assignment File"></i> </div>
@@ -68,10 +68,11 @@
                                         
                                     </button>
                                 </h2>
+                                @* ASSIGNMENTS LIST *@
                                 @{
                                     foreach (var submission in @lecture.Submissions)
                                     {
-                                        <div id="panelsStayOpen-@lecture.Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne" style="">
+                                        <div id="panelsStayOpen-@lecture.Id" class="accordion-collapse collapse @(Model.OpenPanel == lecture.Id ? "show" : "")" aria-labelledby="panelsStayOpen-headingOne" style="">
                                             <div class="accordion-body">
                                                 
                                                 @{
@@ -84,17 +85,64 @@
                                                         if (submission.Grade != null)
                                                         {
                                                             <div><i class="fa-solid fa-square-check" style="color: green"></i> Grade: @submission.Grade</div>
+                                                            <div><i class="fa-solid fa-pen-to-square"></i> </div> //todo lead to new assessment, change grade
                                                             <div>  </div>
                                                         }
                                                         else
                                                         {
-                                                            <div class="position-relative">
+                                                            <div class="position-relative d-flex align-items-center">
                                                                 <div class="inline-block "><i class="fa-solid fa-note-sticky" style="color: red"></i> Pending assessment </div>
-                                                                <div class="inline-block position-absolute end-150px"> Download File </div>
-                                                                <div class="inline-block position-absolute end-90px"> Grade </div>
+                                                                <div class="inline-block position-absolute end-170px ">
+                                                                    <button type="button" class="btn btn-outline-primary">
+                                                                        Download File 
+                                                                    </button>
+                                                                </div>
+
+                                                                <div class="inline-block position-absolute end-90px ">
+                                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                                        Assess 
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         }
                                                     }
+
+                                                    <!-- Assess Submission Modal -->
+                                                    <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <div class="modal-title fs-5" id="staticBackdropLabel">
+                                                                        @course.Title 
+                                                                        <br/>
+                                                                        @lecture.Title
+                                                                        <br/>
+                                                                        
+                                                                    </div>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+
+                                                                <form asp-controller="Lecture" asp-action="AssessSubmission" method="post" enctype="multipart/form-data">
+                                                                      
+                                                                    <div class="modal-body">
+                                                                        Assessing submission from: @submission.Student.FirstName @submission.Student.LastName
+                                                                        
+                                                                        <input type="number" class="form-control" id="integerInput" name="grade" style="width: 100px;">
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                                                        <input type="hidden" name="userId" value="@submission.StudentId" />
+                                                                        <input type="hidden" name="lectureId" value="@lecture.Id" />
+
+                                                                        <button type="submit" class="btn btn-primary">Submit Grade</button>
+                                                                    </div>
+                                                                </form>
+                                                                
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                  }
                                                 
 
@@ -111,38 +159,9 @@
             }
         }
     </div>
-
-
-
-    @* FILTERS *@
-
-@*     <div style="width: 29%">
-        <div class="card border-light mb-3">
-            <form asp-controller="Students" asp-action="Index" method="Get" id="filterForm">
-                <div class="card-header bg-info bg-gradient">Filters:</div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-
-                        <div class="list-group-item"><strong>Assignments:</strong> </div>
-                        @{
-
-                        }
-                        <div class="list-group-item"><strong>Courses:</strong> </div>
-                        @{
-                            foreach (var course in Model.FilteredCourses)
-                            {
-                                <div class="list-group-item ps-4">
-                                    <input type="radio" class="deselectable" id="@("checkbox_" + course)" name="CourseTitle" value=@course>
-                                    @course.Title
-                                </div>
-                            }
-                        }
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div> *@
 </div>
+
+
 
 
 

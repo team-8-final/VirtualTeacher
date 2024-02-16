@@ -187,7 +187,7 @@ public class CourseRepository : ICourseRepository
             .Include(lecture => lecture.WatchedBy)
             .Include(lecture => lecture.Notes)
             .Include(lecture => lecture.Comments)
-            .ThenInclude(c => c.Author)
+                .ThenInclude(c => c.Author)
             .Include(lecture => lecture.Submissions)
             .Where(lecture => lecture.Course.Id == courseId)
             .FirstOrDefault(lecture => lecture.Id == lectureId);
@@ -504,7 +504,7 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
-    public bool GradeSubmission(int lectureId, int userId, byte grade)
+    public bool AssessSubmission(int lectureId, int userId, byte grade)
     {
         var submission = GetSubmission(lectureId, userId);
 

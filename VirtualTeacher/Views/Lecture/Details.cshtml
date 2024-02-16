@@ -148,6 +148,7 @@
                 }
             </div>
         </div>
+
         <div class="col-md-6">
             <h3>Upload Submission</h3>
             <form asp-controller="Lecture" asp-action="CreateSubmission" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post" enctype="multipart/form-data">
@@ -155,7 +156,7 @@
                     <div class="mb-3 me-2 flex-grow-1">
                         <input class="form-control" type="file" id="submissionUpload" name="file">
                     </div>
-                    <button type="submit" class="btn btn-primary mb-3" id="uploadSubmissionBtn" disabled>Upload</button>
+                    <button type="submit" class="btn btn-primary mb-3" id="uploadSubmissionBtn" >Upload</button>
                 </div>
             </form>
         </div>

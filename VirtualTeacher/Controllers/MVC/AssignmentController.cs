@@ -26,7 +26,7 @@ namespace VirtualTeacher.Controllers.MVC
 
         [HttpGet]
         [Route("/Assignments")]
-        public ActionResult Index(AssignmentsQueryParameters queryParameters)
+        public ActionResult Index(AssignmentsQueryParameters queryParameters, int openPanel)
         {
             queryParameters.PageSize = 100;
             var userId = int.Parse(User.FindFirstValue("UserId"));
@@ -40,23 +40,10 @@ namespace VirtualTeacher.Controllers.MVC
                 .Distinct()
                 .ToList();
 
-            studentsVM.AllStudents = mapper.MapStudentsToDto(allUsersObj); 
+            studentsVM.AllStudents = mapper.MapStudentsToDto(allUsersObj);
+            studentsVM.OpenPanel = openPanel;
 
             return View(studentsVM);
-        }
-
-        [HttpGet]
-        public ActionResult StudentsByName(string searchWord)  //needs a new view
-        {
-            var students = userService.GetUsersByKeyWord(searchWord);
-
-            return View(students);
-        }
-
-        public ActionResult StudentDetails(int studentId)  
-        {
-            throw new NotImplementedException();
-
         }
 
 
