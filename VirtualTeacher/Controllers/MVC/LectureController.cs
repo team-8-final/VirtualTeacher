@@ -78,8 +78,10 @@ public class LectureController : Controller
             var course = courseService.GetCourseById(courseId);
             var user = accountService.GetLoggedUser();
 
+
             ViewBag.Course = course;
             ViewBag.User = user;
+            ViewBag.Teacher = course.ActiveTeachers.FirstOrDefault();
 
             return View(lecture);
         }
@@ -213,7 +215,7 @@ public class LectureController : Controller
 
             _ = courseService.CreateSubmission(courseId, lectureId, file);
             return Redirect($"/Course/{courseId}/Lecture/{lectureId}");
-        }        
+        }
         catch (ArgumentException e)
         {
             return BadRequest(e.Message);

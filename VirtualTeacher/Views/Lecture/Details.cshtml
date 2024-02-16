@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Lecture";
+
 }
 
 @model Lecture
@@ -12,15 +13,27 @@
     }
 </style>
 
-@* Breadcrumb navigation *@
-<nav class="ms-0 me-0" aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId">@Model.Course.Title</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
-    </ol>
-</nav>
+@*COURSE HEADER*@
+<div class="d-flex course-header justify-content-between">
+
+    <div class="d-flex flex-column p-2" style="width: 75%">
+        <div>
+            <h4>
+                <img class="language-flag" src="~/images/flags/svgFlags/@(ViewBag.Course.CourseTopic).svg" alt="" />
+                <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId" style="text-decoration: none;">@Model.Course.Title</a>
+            </h4>
+        </div>
+
+        <div style="margin-bottom: 1px;">
+            <i class="fa-regular fa-calendar" style="margin-left:4px; margin-right:1px;"></i> @(ViewBag.Course.StartingDate > DateTime.Now ? ViewBag.Course.StartingDate?.ToString("MMM dd, yyyy") : "Ongoing")
+            <i class="fa-regular fa-user" style="margin-left:4px; margin-right: 1px;"></i> @ViewBag.Course.EnrolledStudents.Count
+            <i class="fa-regular fa-file" style="margin-left:4px; margin-right: 1px;"></i> @ViewBag.Course.Lectures.Count
+        </div>
+
+    </div>
+
+</div>
+<br/>
 
 <div class="row" style="padding-left: 12px;">
     @* Embedded video *@
@@ -36,7 +49,16 @@
     <div class="col-md-3">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                <strong>Lectures</strong>
+                <div class="d-flex justify-content-between">
+                    <strong>Lectures</strong>
+                    @{
+                        @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Admin") || User.IsInRole("Teacher")))
+
+                        {
+                            <a class="btn btn-success btn-sm" asp-controller="Lecture" asp-action="Create" asp-route-courseId="@Model.Id">New</a>
+                        }
+                    }
+                </div>
             </div>
             <ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
                 @{
@@ -84,7 +106,8 @@
             </div>
         </div>
         <div class="col-md-6">
-            @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Teacher") || User.IsInRole("Admin")))
+            @if (User.Identity is { IsAuthenticated: true }
+                 && (User.IsInRole("Admin") || (User.IsInRole("Teacher") && ViewBag.User.Id == ViewBag.Teacher.Id)))
             {
                 <h3>Upload Assignment</h3>
                 <form asp-controller="Lecture" asp-action="CreateAssignment" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post" enctype="multipart/form-data">
@@ -92,7 +115,7 @@
                         <div class="mb-3 me-2 flex-grow-1">
                             <input class="form-control" type="file" id="assignmentUpload" name="file">
                         </div>
-<button type="submit" class="btn btn-primary mb-3" id="uploadAssignmentBtn" disabled>Upload</button>
+                        <button type="submit" class="btn btn-primary mb-3" id="uploadAssignmentBtn" disabled>Upload</button>
                     </div>
                 </form>
             }
@@ -132,7 +155,7 @@
                     <div class="mb-3 me-2 flex-grow-1">
                         <input class="form-control" type="file" id="submissionUpload" name="file">
                     </div>
-<button type="submit" class="btn btn-primary mb-3" id="uploadSubmissionBtn" disabled>Upload</button>
+                    <button type="submit" class="btn btn-primary mb-3" id="uploadSubmissionBtn" disabled>Upload</button>
                 </div>
             </form>
         </div>
@@ -165,17 +188,21 @@
 
                         <div class="ms-1">
                             @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin")
-                                  || comment.AuthorId == ViewBag.User.Id)
+                                 || comment.AuthorId == ViewBag.User.Id)
                             {
                                 <i class="fa-regular fa-pen-to-square ms-4"> </i>
                                 <a href="#" class="text-primary small ms-0 edit-comment-btn" data-bs-toggle="modal"
-                                   data-bs-target="#editCommentModal" data-comment-id="@comment.Id" data-comment-content="@comment.Content">Edit</a>
+                                   data-bs-target="#editCommentModal" data-comment-id="@comment.Id" data-comment-content="@comment.Content">
+                                    Edit
+                                </a>
 
                                 <i class="fa-regular fa-trash-can ms-2"></i>
                                 <a href="#" class="text-danger small ms-0 delete-comment-btn"
                                    data-bs-toggle="modal"
                                    data-bs-target="#deleteCommentModal"
-                                   data-comment-id="@comment.Id">Delete</a>
+                                   data-comment-id="@comment.Id">
+                                    Delete
+                                </a>
                             }
                         </div>
 
@@ -262,8 +289,8 @@
             </div>
 
             <form asp-controller="Lecture" asp-action="DeleteComment" method="post"
-                    asp-route-courseId="@Model.CourseId"
-                    asp-route-lectureId="@Model.Id">
+                  asp-route-courseId="@Model.CourseId"
+                  asp-route-lectureId="@Model.Id">
 
                 <div class="modal-body">
                     <p>Are you sure you want to delete this comment?</p>
@@ -278,8 +305,6 @@
         </div>
     </div>
 </div>
-
-
 
 
 <script>
