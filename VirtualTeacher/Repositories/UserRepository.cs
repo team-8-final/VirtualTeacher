@@ -164,11 +164,12 @@ namespace VirtualTeacher.Repositories
             return new PaginatedList<User>(result.ToList(), totalPages, parameters.PageNumber);
         }
 
-        public List<User> GetAllTeachers()
+        public List<User> GetAvailableTeachers(int courseId)
         {
             List<User> teachers = context.Users
-                .Where(u => u.UserRole == UserRole.Teacher)
-                .ToList();
+                    .Where(u => u.UserRole == UserRole.Teacher)
+                    .Where(u => !u.CreatedCourses.Any(c => c.Id == courseId))
+                    .ToList();
 
             return teachers;
         }

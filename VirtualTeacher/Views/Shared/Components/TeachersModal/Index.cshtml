@@ -1,0 +1,51 @@
+﻿@model List<User>
+
+@*ADD TEACHERS MODAL*@
+<div class="modal fade" id="teachersModal" tabindex="-1" aria-labelledby="teachersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="teachersModalLabel">Add a new teacher</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="text" class="form-control form-control-sm" id="teachersSearchBar" placeholder="Search">
+                </div>
+                <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
+                    @{
+                        foreach (var teacher in Model)
+                        {
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    @teacher.FirstName @teacher.LastName
+
+                                    <a asp-controller="Course" asp-action="AddTeacher" asp-route-courseId="@TempData["courseId"]" asp-route-username="@teacher.Username" class="btn btn-outline-secondary btn-sm">
+                                        <strong>+</strong>
+                                    </a>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*TEACHER MODAL SEARCH*@
+<script>
+    document.getElementById('teachersSearchBar').addEventListener('input', function () {
+        var searchTerm = this.value.toLowerCase();
+        var listItems = document.querySelectorAll('#teachersModal .list-group-item');
+
+        listItems.forEach(function (item) {
+            var studentName = item.textContent.toLowerCase();
+            if (studentName.includes(searchTerm)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+</script>

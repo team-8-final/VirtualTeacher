@@ -207,10 +207,9 @@ namespace VirtualTeacher.Controllers.MVC
             }
         }
 
-        //todo add notifications for exceptions
         [IsTeacherOrAdmin]
-        [HttpPost]
-        public IActionResult AddTeacher([FromForm] int courseId, [FromForm] string username)
+        [HttpGet]
+        public IActionResult AddTeacher(int courseId, string username)
         {
             try
             {
@@ -218,7 +217,7 @@ namespace VirtualTeacher.Controllers.MVC
 
                 return RedirectToAction("Details", "Course", new { id = courseId });
             }
-            catch (EntityNotFoundException e)
+            catch (EntityNotFoundException e) //todo most likely useless
             {
                 TempData["StatusCode"] = StatusCodes.Status404NotFound;
                 TempData["ErrorMessage"] = e.Message;

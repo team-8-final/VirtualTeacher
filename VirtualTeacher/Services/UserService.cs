@@ -50,9 +50,9 @@ namespace VirtualTeacher.Services
             return userRepository.GetHomeTeachers();
         }
 
-        public List<User> GetAllTeachers()
+        public List<User> GetAvailableTeachers(int courseId)
         {
-            return userRepository.GetAllTeachers();
+            return userRepository.GetAvailableTeachers(courseId);
         }
 
         public PaginatedList<User> FilterBy(UserQueryParameters parameters)

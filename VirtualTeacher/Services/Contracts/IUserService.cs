@@ -11,7 +11,7 @@ namespace VirtualTeacher.Services.Contracts
         User GetById(int id);
         User GetByUsername(string name);
         List<User> GetHomeTeachers();
-        List<User> GetAllTeachers();
+        List<User> GetAvailableTeachers(int courseId);
         public List<User> GetUsersByKeyWord(string keyWord);
         User Create(UserCreateDto dto);
         User Update(int idToUpdate, UserUpdateDto dto);

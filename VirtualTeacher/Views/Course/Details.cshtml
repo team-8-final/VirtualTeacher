@@ -46,38 +46,6 @@
     </div>
 </div>
 
-@*ADD TEACHER MODAL*@
-<div class="modal fade" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="addTeacherModalLabel">Add a new teacher</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <form asp-controller="Course" asp-action="AddTeacher" method="post">
-
-                <div class="modal-body">
-                    <div class="form-floating mb-3">
-                        <input name="username" type="text" class="form-control" id="floatingUsername" placeholder="Username" required>
-                        <label for="floatingUsername">Username</label>
-
-                        <input type="hidden" name="courseId" value="@Model.Id" class="form-input" />
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button id="addTeacherButton" type="submit" class="btn btn-primary">Add</button>
-                </div>
-
-            </form>
-        </div>
-  </div>
-
-</div>
-
 @*RATING MODAL*@
 <div class="modal fade" id="rateModal" tabindex="-1" aria-labelledby="rateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -240,16 +208,16 @@
 
                         @{
                             @*ADD TEACHER MODAL BUTTON*@
-                            @*todo maybe move somewhere/make it look better*@
                             if (isActiveTeacherOrAdmin)
                             {
-                                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
-                                    <b>+</b>
+                                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#teachersModal">
+                                    <strong>Add</strong>
                                 </button>
+
+                                @await Component.InvokeAsync("TeachersModal", Model.Id)
                             }
                         }
                         
-
                         @*STUDENT MODAL BUTTON*@
                         @{
                             if (isEnrolled || isActiveTeacherOrAdmin)
