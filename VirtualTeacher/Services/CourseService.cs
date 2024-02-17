@@ -144,7 +144,7 @@ public class CourseService : ICourseService
     }
 
     //Add new active teacher
-    public string AddTeacher(int courseId, int teacherId)
+    public string AddTeacher(int courseId, string username)
     {
         var loggedUser = accountService.GetLoggedUser();
         var course = GetCourseById(courseId);
@@ -153,10 +153,10 @@ public class CourseService : ICourseService
             && loggedUser.UserRole != UserRole.Admin)
             throw new UnauthorizedOperationException("Only active course teachers or admins can assign new teachers.");
 
-        if (course.ActiveTeachers.Any(t => t.Id == teacherId))
+        if (course.ActiveTeachers.Any(t => t.Username == username))
             throw new DuplicateEntityException("User is already an active teacher in the course");
 
-        var teacher = userService.GetById(teacherId);
+        var teacher = userService.GetByUsername(username);
 
         if (teacher.UserRole != UserRole.Teacher)
             throw new InvalidOperationException("Only teachers can be assigned to the list of active course teachers.");

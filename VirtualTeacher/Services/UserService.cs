@@ -50,6 +50,11 @@ namespace VirtualTeacher.Services
             return userRepository.GetHomeTeachers();
         }
 
+        public List<User> GetAllTeachers()
+        {
+            return userRepository.GetAllTeachers();
+        }
+
         public PaginatedList<User> FilterBy(UserQueryParameters parameters)
         {
             if (userRepository.GetUserCount() == 0)

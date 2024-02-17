@@ -164,15 +164,31 @@ namespace VirtualTeacher.Repositories
             return new PaginatedList<User>(result.ToList(), totalPages, parameters.PageNumber);
         }
 
-        public List<User> GetHomeTeachers()
+        public List<User> GetAllTeachers()
         {
             List<User> teachers = context.Users
                 .Where(u => u.UserRole == UserRole.Teacher)
-                .Include(u => u.CreatedCourses)
-                .Take(3)
                 .ToList();
 
             return teachers;
+        }
+
+        public List<User> GetHomeTeachers()
+        {
+            Random random = new Random();
+
+            List<User> teachers = context.Users
+                .Where(u => u.UserRole == UserRole.Teacher)
+                .Where(u => u.CreatedCourses.Count() > 0)
+                .Include(u => u.CreatedCourses)
+                .ToList();
+
+            List<User> randomTeachers = teachers
+                .OrderBy(x => random.Next())
+                .Take(3)
+                .ToList();
+
+            return randomTeachers;
         }
 
         //Query methods

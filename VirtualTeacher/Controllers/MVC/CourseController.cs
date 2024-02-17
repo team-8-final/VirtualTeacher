@@ -207,5 +207,40 @@ namespace VirtualTeacher.Controllers.MVC
             }
         }
 
+        //todo add notifications for exceptions
+        [IsTeacherOrAdmin]
+        [HttpPost]
+        public IActionResult AddTeacher([FromForm] int courseId, [FromForm] string username)
+        {
+            try
+            {
+                courseService.AddTeacher(courseId, username);
+
+                return RedirectToAction("Details", "Course", new { id = courseId });
+            }
+            catch (EntityNotFoundException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status404NotFound;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (DuplicateEntityException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status409Conflict;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (InvalidOperationException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status400BadRequest;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+
+        }
+
     }
 }

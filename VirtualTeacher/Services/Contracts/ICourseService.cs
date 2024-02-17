@@ -18,7 +18,7 @@ public interface ICourseService
     string DeleteCourse(int id);
 
     string Enroll(int courseId);
-    string AddTeacher(int courseId, int teacherId);
+    string AddTeacher(int courseId, string username);
 
     List<Rating> GetRatings(int courseId);
     Rating RateCourse(int courseId, RatingCreateDto dto);

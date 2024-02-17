@@ -237,7 +237,7 @@ public class CourseApiController : ControllerBase
     /// <response code="200">The user has been successfully enlisted as a teacher in the course</response>
     /// <response code="400">Only teachers can be assigned to the list of active course teachers.</response>
     /// <response code="401">Only active course teachers or admins can assign new teachers.</response>
-    /// <response code="404">A course/teacher with this Id was not found</response>
+    /// <response code="404">A course/teacher with this id/username was not found</response>
     /// <response code="409">User is already an active teacher in the course</response>
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("{courseId}/Teachers/{teacherId}")]
@@ -247,11 +247,11 @@ public class CourseApiController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public IActionResult AddTeacher(int courseId, int teacherId)
+    public IActionResult AddTeacher(int courseId, string username)
     {
         try
         {
-            return Ok(courseService.AddTeacher(courseId, teacherId));
+            return Ok(courseService.AddTeacher(courseId, username));
         }
         catch (EntityNotFoundException e)
         {
