@@ -5,11 +5,43 @@
 
 @model CourseUpdateViewModel
 
-<h4>Update course '@Model.Title'</h4>
+@*DELETE COURSE MODAL*@
+<div class="modal fade" id="deleteCourseModal" tabindex="-1" aria-labelledby="deleteCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCourseModalLabel">Delete Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete course '@Model.Title'?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<form asp-controller="Course" asp-action="Update" method="post">
+@*DELETE NOTIFICATION*@
+<div id="notificationPopup" class="alert" role="alert" style="display: none; position: fixed; bottom: 20px; right: 20px; width: auto; max-width: 450px; z-index: 9999; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding-right: 15px; background: #a94442; color: white; border-radius: 4px;">
+    <span id="notificationMessage" style="display: inline-block; max-width: 80%;"></span>
+    <button id="closeNotification" style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; margin-left: 10px; border: none; background: none; color: white; float: right;">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
 
-    <div style="width: 60%">
+
+<h4>
+    Update course '@Model.Title'
+    <a asp-controller="Course" asp-action="Details" asp-route-id="@courseId" class="link-opacity-75">Back</a>
+</h4>
+
+
+<div style="width: 60%">
+    <form id="updateForm" asp-controller="Course" asp-action="Update" method="post">
+
         <div class="mb-3">
             <input asp-for="Title" class="form-control" id="courseTitle" placeholder="@Model.Title">
             <span asp-validation-for="Title" class="text-danger"></span>
@@ -40,10 +72,64 @@
             <input asp-for="Published" type="checkbox" id="publish" name="publish" disabled="@Model.Published">
         </div>
 
-        <div class="mb-3">
-            <a asp-controller="Course" asp-action="Details" asp-route-id="@courseId" class="btn btn-danger">Cancel</a>
-            <input type="submit" value="Update" class="btn btn-primary" />
-        </div>
+    </form>
+
+    <div class="mb-3">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCourseModal">
+            <i class="fa-regular fa-trash-can"></i> Delete
+        </button>
+        <input id="updateButton" type="submit" value="Update" class="btn btn-primary" />
     </div>
 
-</form>
+</div>
+
+<script>
+    @*DELETE COURSE*@
+    document.getElementById('confirmDelete').addEventListener('click', function () {
+        fetch('/Course/Delete/@courseId', { method: 'GET' })
+            .then(response => response.json())
+            .then(({ success, errorMessage }) => {
+
+                let notificationPopup = document.getElementById('notificationPopup');
+                let notificationMessage = document.getElementById('notificationMessage');
+                notificationPopup.style.display = 'block';
+                notificationPopup.style.bottom = '20px';
+                notificationPopup.style.right = '20px';
+
+                if (success) {
+                    notificationPopup.classList.add('alert-success');
+                    notificationPopup.style.backgroundColor = '#3c763d';
+                    notificationMessage.innerHTML = 'Course deleted successfully.<br>Redirecting to home page in 5 seconds...';
+
+                    let countdown = 5;
+                    let intervalId = setInterval(() => {
+                        countdown--;
+
+                        if (countdown <= 0) {
+                            clearInterval(intervalId);
+                            window.location.href = '/Home/Index';
+                        } else {
+                            notificationMessage.innerHTML = 'Course deleted successfully.<br>Redirecting to home page in ' + countdown + ' seconds...';
+                        }
+                    }, 1000);
+                } else {
+                    notificationPopup.classList.add('alert-danger');
+                    notificationMessage.textContent = errorMessage;
+                }
+
+                let myModal = bootstrap.Modal.getInstance(document.getElementById('deleteCourseModal'));
+                myModal.hide();
+            });
+    });
+
+    @*DELETE NOTIFICATION*@
+    document.getElementById('closeNotification').addEventListener('click', function () {
+        let notificationPopup = document.getElementById('notificationPopup');
+        notificationPopup.style.display = 'none';
+    });
+
+    @*UPDATE COURSE FORM*@
+    document.getElementById("updateButton").addEventListener("click", function () {
+        document.getElementById("updateForm").submit();
+    });
+</script>

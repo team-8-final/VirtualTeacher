@@ -12,6 +12,9 @@ namespace VirtualTeacher.Repositories;
 public class CourseRepository : ICourseRepository
 {
     private readonly AppDbContext context;
+    private const string baseCourseVideoLink = "https://www.youtube.com/embed/gwXpWWxZeJo";
+    //private const string baseLectureVideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk";
+
 
     public CourseRepository(AppDbContext context)
     {
@@ -66,6 +69,7 @@ public class CourseRepository : ICourseRepository
             Description = dto.Description ?? "",
             StartingDate = dto.StartingDate,
             CourseTopic = dto.CourseTopic,
+            VideoLink = dto.VideoLink ?? baseCourseVideoLink,
             Published = dto.Published,
             EnrolledStudents = new List<User>(),
             Lectures = new List<Lecture>(),
@@ -91,6 +95,7 @@ public class CourseRepository : ICourseRepository
         updatedCourse.Title = dto.Title ?? updatedCourse.Title;
         updatedCourse.Description = dto.Description ?? updatedCourse.Description;
         updatedCourse.StartingDate = dto.StartingDate ?? updatedCourse.StartingDate;
+        updatedCourse.VideoLink = dto.VideoLink ?? updatedCourse.VideoLink;
         updatedCourse.CourseTopic = dto.CourseTopic;
         updatedCourse.Published = dto.Published;
 

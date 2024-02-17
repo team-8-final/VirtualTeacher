@@ -30,6 +30,11 @@
         </div>
 
         <div class="mb-3">
+            <input asp-for="VideoLink" class="form-control" id="lectureVideo" rows="1" placeholder="Place your video link (not required)">
+            <span asp-validation-for="VideoLink" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
             <label for="startingDate">Start Date:</label>
             <input asp-for="StartingDate" type="date" id="startingDate" name="startingDate">
         </div>

@@ -18,6 +18,8 @@ public class CourseResponseDto
 
     public string CourseTopic { get; set; } = null!;
 
+    public string VideoLink { get; set; } = null!;
+
     public bool? Published { get; set; }
 
     public IList<string> EnrolledStudents { get; set; } = null!;

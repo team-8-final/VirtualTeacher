@@ -190,5 +190,22 @@ namespace VirtualTeacher.Controllers.MVC
 
         }
 
+        //todo test if more catch blocks are needed
+        [IsTeacherOrAdmin]
+        [HttpGet]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            try
+            {
+                courseService.DeleteCourse(id);
+
+                return Json(new { success = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { success = false, errorMessage = e.Message });
+            }
+        }
+
     }
 }

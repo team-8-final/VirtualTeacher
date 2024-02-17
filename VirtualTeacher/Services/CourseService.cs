@@ -55,6 +55,12 @@ public class CourseService : ICourseService
         var loggedUser = accountService.GetLoggedUser();
         var createdCourse = courseRepository.CreateCourse(dto, loggedUser);
 
+        if (!string.IsNullOrEmpty(dto.VideoLink))
+        {
+            dto.VideoLink = ConvertLink(dto.VideoLink);
+        }
+
+
         return createdCourse ?? throw new Exception($"The course could not be created.");
     }
 

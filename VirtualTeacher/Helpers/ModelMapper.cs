@@ -80,6 +80,7 @@ public class ModelMapper
             Description = course.Description,
             StartingDate = course.StartingDate,
             CourseTopic = course.CourseTopic.ToString(),
+            VideoLink = course.VideoLink,
             Published = course.Published,
 
             EnrolledStudents = new List<string>(

@@ -16,5 +16,9 @@ public class CourseUpdateDto
 
     public CourseTopic CourseTopic { get; set; }
 
+    [RegularExpression("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$",
+        ErrorMessage = "Please submit a valid YouTube video link.")]
+    public string? VideoLink { get; set; }
+
     public bool Published { get; set; }
 }

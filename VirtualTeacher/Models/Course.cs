@@ -19,6 +19,8 @@ public class Course
 
     public CourseTopic CourseTopic { get; set; }
 
+    [MaxLength(8192)] public string VideoLink { get; set; } = "https://www.youtube.com/embed/gwXpWWxZeJo";
+
     public bool Published { get; set; }
 
     public bool IsDeleted { get; set; }
@@ -26,6 +28,5 @@ public class Course
     public IList<User> EnrolledStudents { get; set; } = null!;
     public IList<Lecture> Lectures { get; set; } = null!;
     public IList<Rating> Ratings { get; set; } = null!;
-
     public IList<User> ActiveTeachers { get; set; } = null!;
 }
