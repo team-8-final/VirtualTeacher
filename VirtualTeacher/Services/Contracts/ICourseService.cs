@@ -51,4 +51,5 @@ public interface ICourseService
     string GetAssignmentFilePath(int courseId, int lectureId);
     string CreateAssignment(int courseId, int lectureId, IFormFile file);
     string DeleteAssignment(int courseId, int lectureId);
+    List<Comment> GetCommentsByUser();
 }

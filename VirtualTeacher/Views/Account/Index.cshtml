@@ -111,15 +111,14 @@
                 </li>
             </ul>
 
-            @* <ul class="list-group list-group-flush no-border"> *@
-            @*     TODO: implement when comments are ready *@
-            @*     <li class="list-group-item no-border"> *@
-            @*         Course Comments: <strong>@Model.C</strong> *@
-            @*     </li> *@
-            @*     <li class="list-group-item no-border"> *@
-            @*         Course Ratings: <strong>@Model.RatedCourses.Count</strong> *@
-            @*     </li> *@
-            @* </ul> *@
+            <ul class="list-group list-group-flush no-border">
+                <li class="list-group-item no-border">
+                    Course Comments: <strong>@Model.CourseComments.Count</strong>
+                </li>
+                <li class="list-group-item no-border">
+                    Course Ratings: <strong>@Model.RatedCourses.Count</strong>
+                </li>
+            </ul>
 
         </div>
 
@@ -153,7 +152,9 @@
                                     <li class="list-group-item d-flex justify-content-between align-items-start">
                                         <div class="ms-2 me-auto">
                                             <div class="fw-bold">
-                                                @lecture.Title &nbsp;
+                                                <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                                                    @lecture.Title &nbsp;
+                                                </a>
                                                 @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
                                                 {
                                                     <i class="fa-solid fa-circle-check" style="color: green;"></i>
@@ -179,12 +180,12 @@
             @foreach (var course in Model.CompletedCourses)
             {
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading-@course.Id">
+                    <h2 class="accordion-header" id="heading-completed-@course.Id">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-completed-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
                             <img class="language-flag" src="~/images/flags/@(course.CourseTopic).jpg" alt=""/> &nbsp; @course.Title
                         </button>
                     </h2>
-                    <div id="collapse-completed-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#completedCourses">
+                    <div id="collapse-completed-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-completed-@course.Id" data-bs-parent="#completedCourses">
                         <div class="accordion-body">
 
                             <ol class="list-group list-group-flush list-group-numbered">
@@ -193,7 +194,9 @@
                                     <li class="list-group-item d-flex justify-content-between align-items-start">
                                         <div class="ms-2 me-auto">
                                             <div class="fw-bold">
-                                                @lecture.Title &nbsp;
+                                                <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                                                    @lecture.Title &nbsp;
+                                                </a>
                                                 @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
                                                 {
                                                     <i class="fa-solid fa-circle-check" style="color: green;"></i>
@@ -222,12 +225,12 @@
                 @foreach (var course in Model.CreatedCourses)
                 {
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading-@course.Id">
+                        <h2 class="accordion-header" id="heading-created-@course.Id">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-created-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
                                 <img class="language-flag" src="~/images/flags/@(course.CourseTopic).jpg" alt=""/> &nbsp; @course.Title
                             </button>
                         </h2>
-                        <div id="collapse-created-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-@course.Id" data-bs-parent="#createdCourses">
+                        <div id="collapse-created-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-created-@course.Id" data-bs-parent="#createdCourses">
                             <div class="accordion-body">
 
                                 <ol class="list-group list-group-flush list-group-numbered">
@@ -236,7 +239,52 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-start">
                                             <div class="ms-2 me-auto">
                                                 <div class="fw-bold">
-                                                    @lecture.Title &nbsp;
+                                                    <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                                                        @lecture.Title &nbsp;
+                                                    </a>
+                                                    @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                                    {
+                                                        <i class="fa-solid fa-circle-check" style="color: green;"></i>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ol>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <h3 class="username mt-4">Draft Courses</h3>
+            @if (Model.CreatedCourses.All(c => c.Published))
+            {
+                <div class="text-muted text-center">The user doesn't have any draft courses. </div>
+            }
+
+            <div class="accordion" id="draftCourses">
+                @foreach (var course in Model.CreatedCourses.Where(c => c.Published == false))
+                {
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-draft-@course.Id">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-draft-@course.Id" aria-expanded="false" aria-controls="collapse-@course.Id">
+                                <img class="language-flag" src="~/images/flags/@(course.CourseTopic).jpg" alt=""/> &nbsp; @course.Title
+                            </button>
+                        </h2>
+                        <div id="collapse-draft-@course.Id" class="accordion-collapse collapse" aria-labelledby="heading-draft-@course.Id" data-bs-parent="#draftCourses">
+                            <div class="accordion-body">
+
+                                <ol class="list-group list-group-flush list-group-numbered">
+                                    @foreach (var lecture in course.Lectures)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                                            <div class="ms-2 me-auto">
+                                                <div class="fw-bold">
+                                                    <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                                                        @lecture.Title &nbsp;
+                                                    </a>
                                                     @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
                                                     {
                                                         <i class="fa-solid fa-circle-check" style="color: green;"></i>

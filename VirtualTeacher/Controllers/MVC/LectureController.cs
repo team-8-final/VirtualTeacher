@@ -42,7 +42,6 @@ public class LectureController : Controller
         try
         {
             var newLecture = courseService.CreateLecture(lectureVM, courseId);
-            //TempData["CourseId"] = courseId;
 
             return RedirectToAction("Details", "Lecture", new { courseId, id = newLecture.Id });
         }
@@ -108,7 +107,7 @@ public class LectureController : Controller
         }
     }
 
-    [HttpPost("/{lectureId}/get-assignment")]
+    [HttpGet("/{lectureId}/get-assignment")]
     public IActionResult GetAssignment(int courseId, int lectureId)
     {
         try
@@ -176,7 +175,7 @@ public class LectureController : Controller
         }
     }
 
-    [HttpPost("/{lectureId}/get-submission")]
+    [HttpGet("/{lectureId}/get-submission")]
     public IActionResult GetSubmission(int courseId, int lectureId)
     {
         try

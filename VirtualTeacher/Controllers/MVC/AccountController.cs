@@ -43,7 +43,7 @@ public class AccountController : Controller
                 UserRole = loggedUser.UserRole,
                 CompletedCourses = accountService.GetCompletedCourses(),
                 RatedCourses = accountService.GetRatedCourses(),
-                // CourseComments = courseService.GetComments()
+                CourseComments = courseService.GetCommentsByUser()
             };
 
             return View("Index", model);
@@ -409,16 +409,10 @@ public class AccountController : Controller
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // TODO: Implement notification bar
-            // TempData["StatusCode"] = StatusCodes.Status202Accepted;
-            // TempData["SuccessMessage"] = "User logged out successfully.";
             return RedirectToAction("Index", "Home");
         }
         catch (Exception e)
         {
-            // TODO: Implement notification bar
-            // TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
-            // TempData["ErrorMessage"] = e.Message;
             return RedirectToAction("Error", "Shared");
         }
     }
@@ -433,26 +427,15 @@ public class AccountController : Controller
 
             Logout();
 
-            // TODO: Implement notification bar
-            // return RedirectToAction("Index", "Home");
-
             return Json(new { success = true });
 
         }
         catch (InvalidOperationException e)
         {
-            // TempData["StatusCode"] = StatusCodes.Status400BadRequest;
-            // TempData["ErrorMessage"] = e.Message;
-            // return RedirectToAction("Error", "Shared");
-
             return Json(new { success = false, errorMessage = e.Message });
         }
         catch (Exception e)
         {
-            // TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
-            // TempData["ErrorMessage"] = e.Message;
-            // return RedirectToAction("Error", "Shared");
-
             return Json(new { success = false, errorMessage = e.Message });
         }
     }
