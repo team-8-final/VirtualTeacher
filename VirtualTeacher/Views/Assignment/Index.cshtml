@@ -84,23 +84,36 @@
                                                         <div>Submited by: @fullName</div>
                                                         if (submission.Grade != null)
                                                         {
-                                                            <div><i class="fa-solid fa-square-check" style="color: green"></i> Grade: @submission.Grade</div>
-                                                            <div><i class="fa-solid fa-pen-to-square"></i> </div> //todo lead to new assessment, change grade
-                                                            <div>  </div>
+                                                        <div class="position-relative d-flex align-items-center">
+                                                            <div class="ms-2"><i class="fa-solid fa-square-check" style="color: green"></i> Grade: @submission.Grade</div>
+                                                                <div class="inline-block position-absolute end-230px ">
+                                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#assessSubmissionModal-@submission.Id">
+                                                                        Change Grade
+                                                                    </button>
+                                                                    
+                                                                </div>
+                                                                <div class="inline-block position-absolute end-90px ">
+                                                                    <button type="button" class="btn btn-outline-primary">
+                                                                        Download File
+                                                                    </button>
+                                                                </div>
+                                                            
+                                                        </div>
                                                         }
                                                         else
                                                         {
                                                             <div class="position-relative d-flex align-items-center">
-                                                                <div class="inline-block "><i class="fa-solid fa-note-sticky" style="color: red"></i> Pending assessment </div>
-                                                                <div class="inline-block position-absolute end-170px ">
-                                                                    <button type="button" class="btn btn-outline-primary">
-                                                                        Download File 
+                                                                <div class="inline-block ms-2"><i class="fa-solid fa-note-sticky" style="color: red"></i> Pending assessment </div>
+                                                                <div class="inline-block position-absolute end-230px ">
+                                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#assessSubmissionModal-@submission.Id">
+                                                                        Assess
                                                                     </button>
+                                                                    
                                                                 </div>
 
                                                                 <div class="inline-block position-absolute end-90px ">
-                                                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                                        Assess 
+                                                                    <button type="button" class="btn btn-outline-primary">
+                                                                        Download File
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -108,11 +121,11 @@
                                                     }
 
                                                     <!-- Assess Submission Modal -->
-                                                    <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal fade " id="assessSubmissionModal-@submission.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="assessSubmissionModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog modal-dialog-centered">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <div class="modal-title fs-5" id="staticBackdropLabel">
+                                                                    <div class="modal-title fs-5" id="assessSubmissionModalLabel">
                                                                         @course.Title 
                                                                         <br/>
                                                                         @lecture.Title
@@ -122,12 +135,34 @@
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
 
-                                                                <form asp-controller="Lecture" asp-action="AssessSubmission" method="post" enctype="multipart/form-data">
+                                                                <form action="@Url.Action("AssessSubmission", "Lecture", new { courseId = course.Id, lectureId = lecture.Id })" method="post">
                                                                       
                                                                     <div class="modal-body">
-                                                                        Assessing submission from: @submission.Student.FirstName @submission.Student.LastName
+                                                                        @{
+                                                                            if(submission.Grade == null)
+                                                                            {
+                                                                                <div class="mb-3">
+                                                                                    Assessing submission from: @submission.Student.FirstName @submission.Student.LastName
+                                                                                </div>
+                                                                                <div>
+                                                                                    Select a value from 0 to 100:
+                                                                                    <input type="number" class="form-control" name="grade" style="width: 100px;">
+                                                                                </div>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <div class="mb-3">
+                                                                                    You are about to change the grade of: @submission.Student.FirstName @submission.Student.LastName
+                                                                                    <br/>
+                                                                                    Current grade: @submission.Grade
+                                                                                </div>
+                                                                                <div>
+                                                                                    Select a value from 0 to 100:
+                                                                                    <input type="number" class="form-control" name="grade" style="width: 100px;">
+                                                                                </div>
+                                                                            }
+                                                                    }
                                                                         
-                                                                        <input type="number" class="form-control" id="integerInput" name="grade" style="width: 100px;">
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -138,8 +173,6 @@
                                                                         <button type="submit" class="btn btn-primary">Submit Grade</button>
                                                                     </div>
                                                                 </form>
-                                                                
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -166,21 +199,3 @@
 
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get all radio buttons with the class "deselectable"
-        var radioButtons = document.querySelectorAll('.deselectable');
-
-        // Add click event listener to each radio button
-        radioButtons.forEach(function (radioButton) {
-            var wasChecked = radioButton.checked; // Track previous checked state
-            radioButton.addEventListener('click', function () {
-                // If the radio button was previously checked, deselect it
-                if (wasChecked) {
-                    this.checked = false;
-                }
-                wasChecked = !wasChecked; // Update previous checked state
-            });
-        });
-    });
-</script>

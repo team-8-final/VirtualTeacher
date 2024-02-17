@@ -301,6 +301,16 @@ parent "position-relative" child "position-absolute"*/
     left: 50px !important;
 }
 
+.start-250px {
+    left: 250px !important;
+}
+.start-350px {
+    left: 350px !important;
+}
+
+.start-400px {
+    left: 400px !important;
+}
 
 
 .end-5px {
@@ -347,6 +357,10 @@ parent "position-relative" child "position-absolute"*/
 
 .end-170px {
     right: 170px !important;
+}
+
+.end-230px {
+    right: 230px !important;
 }
 
 .custom-card-height-1 {

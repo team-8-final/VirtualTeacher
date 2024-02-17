@@ -45,18 +45,5 @@ namespace VirtualTeacher.Controllers.MVC
 
             return View(studentsVM);
         }
-
-
-        public ActionResult GradeAssignment(int assignmentId)
-        {
-            return View();
-        }
-
-        public ActionResult ChangeGradeAssignment(int assignmentId)
-        {
-            return View();
-        }
-
-
     }
 }
