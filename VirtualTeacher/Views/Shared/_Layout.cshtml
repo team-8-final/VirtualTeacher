@@ -27,14 +27,17 @@
 
 <body>
 
+@* Top Navigation *@
 <nav id="nav" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container-fluid">
         <div class="btn-group"></div>
         <div class="btn-group navbar-brand" role="group" aria-label="Basic example">
-            <a asp-controller="Home" asp-action="Index" class="btn btn-primary"><i class="fa-regular fa-comments"></i> <strong>Polyglot</strong></a>
-            @if (User.Identity is {IsAuthenticated: true})
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                <i class="fa-regular fa-comments"></i> <strong>Polyglot</strong>
+            </a>
+            @if (User.Identity is { IsAuthenticated: true })
             {
-                <button class="btn btn-primary" onclick="openNav()">☰</button>
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">☰</button>
             }
         </div>
 
@@ -96,16 +99,26 @@
     </div>
 </nav>
 
+@* Sidebar *@
 @if (User.Identity is { IsAuthenticated: true })
 {
-    @await Component.InvokeAsync("Sidebar")
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header" style="box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); z-index: 1050;">
+            <h3 class="offcanvas-title fw-bolder" id="offcanvasExampleLabel">My Polyglot Courses</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            @await Component.InvokeAsync("Sidebar")
+        </div>
+    </div>
 }
 
+@* Main Body *@
 <main id="main" role="main" class="pb-3 ps-0 pe-0 rounded-1">
     @RenderBody()
 </main>
 
-
+@* Footer *@
 <footer id="footer" class="pt-2 border-top footer text-muted" style="text-align: center;">
     <div class="container">
         <span>
@@ -114,21 +127,6 @@
         </span>
     </div>
 </footer>
-
-@*todo fix sidebar positioning*@
-<script>
-    function openNav() {
-        document.getElementById("mySidebar").style.width = "300px";
-        document.getElementById("mySidebar").style.marginLeft = "160px";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidebar").style.width = "0";
-        document.getElementById("mySidebar").style.marginLeft = "100px";
-
-        document.getElementById("main").style.marginLeft = "100px";
-    }
-</script>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,17 +1,21 @@
-@model User;
-
-<div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-
+<div>
     @foreach (var course in Model.EnrolledCourses)
     {
-        <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">@course.Title</a>
-
-        @foreach (var lecture in course.Lectures)
-        {
-            <small style="font-size: 1rem; display: block; margin-left: 1.5rem; margin-bottom: 0.25rem;">
-                <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@lecture.CourseId" asp-route-id="@lecture.Id" style="font-size: inherit;">@lecture.Title</a>
-            </small>
-        }
+        <div class="d-flex align-items-center mb-2 mt-4">
+            <img class="language-flag me-2" src="~/images/flags/@(course.CourseTopic).jpg" alt="" style="width: 30px; height: auto;"/>
+            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id" class="ms-1 fw-bold text-decoration-none" style="font-size: 1.5rem;">@course.Title</a>
+        </div>
+        <ol class="list-group list-group-numbered list-group-flush">
+            @foreach (var lecture in course.Lectures)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div>
+                            <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@lecture.CourseId" asp-route-id="@lecture.Id" class="text-decoration-none">@lecture.Title</a>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ol>
     }
 </div>
