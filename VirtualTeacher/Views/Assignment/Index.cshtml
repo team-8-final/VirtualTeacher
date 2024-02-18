@@ -57,7 +57,7 @@
                                                 <div class="ms-2" data-toggle="tooltip" data-placement="top" title="Graded Submissions"> @gradedSubmissions <i class="fa-solid fa-square-check" style="color: green"></i></div>
                                             }
 
-                                            // DELETE/UPLOAD ASSIGNMENT BUTTONS INSIDE THE HEADER
+                                            
                                             if (lecture.AssignmentLink != "")
                                             {
                                                 <div class="end-50px position-absolute" title="This lecture has an assignment">
@@ -86,9 +86,25 @@
                                     
                                     <div id="panelsStayOpen-@lecture.Id" class="accordion-collapse collapse @(Model.OpenPanel == lecture.Id ? "show" : "")" aria-labelledby="panelsStayOpen-headingOne" style="">
 
-                                        @if(lecture.AssignmentLink == "")   // lecture has no assignment 
-                                        {
-                                            <div class="accordion-body">This lecture does not have an assignment</div>
+                                        @if(lecture.AssignmentLink == "")   // lecture has no assignment
+                                            {
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="accordion-body">
+                                                        <div>
+                                                                This lecture does not have an assignment
+                                                        </div>
+                                                    </div>
+                                                    <div class="accordion-body d-flex justify-content-end" style="padding: 0;">
+                                                        <div class="inline-block accordion-body end-10px">
+                                                            <div class="d-flex">
+                                                                <form asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" method="get" enctype="multipart/form-data">
+
+                                                                    <button type="submit" class="fa-solid fa-upload btn-icon"></button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                         }
                                         else                                //has assignment but has no submissions yet
                                         {
@@ -104,9 +120,9 @@
                                                             <i class="fa-solid fa-download btn-icon"></i>
                                                         </a>
 
-                                                        <form asp-controller="Lecture" asp-action="CreateAssignment" asp-route-courseId="course.Id" asp-route-lectureId="lecture.Id" method="post" enctype="multipart/form-data">
+                                                        <form asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id"  method="get" enctype="multipart/form-data">
                                                         
-                                                            <button type="submit" class="fa-solid fa-upload btn-icon" href="@Url.Action("GetAssignment", "Lecture", new { courseId = course.Id, lectureId = lecture.Id })" title="Upload Assignment"></button>
+                                                            <button type="submit" class="fa-solid fa-upload btn-icon" ></button>
                                                         </form>
 
                                                     </div>
