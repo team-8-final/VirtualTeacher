@@ -6,6 +6,7 @@ using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.ViewModels;
+using VirtualTeacher.ViewModels.Lectures;
 
 namespace VirtualTeacher.Helpers;
 
@@ -122,6 +123,30 @@ public class ModelMapper
             CoursesByPopularity = popularCourses,
             CoursesByRating = topRatedCourses,
             Teachers = teachers
+        };
+    }
+
+    //Course Update VM
+    public CourseUpdateViewModel MapUpdateVM(Course course)
+    {
+        return new CourseUpdateViewModel
+        {
+            Title = course.Title,
+            Description = course.Description,
+            StartingDate = course.StartingDate,
+            CourseTopic = course.CourseTopic,
+            Published = course.Published
+        };
+    }
+
+    //Lecture Update VM
+    public LectureUpdateViewModel MapUpdateVM(Lecture lecture)
+    {
+        return new LectureUpdateViewModel
+        {
+            Title = lecture.Title,
+            Description = lecture.Description,
+            VideoLink = lecture.VideoLink
         };
     }
 

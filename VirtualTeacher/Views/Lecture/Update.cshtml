@@ -1,0 +1,130 @@
+﻿@{
+    ViewData["Title"] = "Update Lecture";
+    var courseId = ViewContext.RouteData.Values["courseId"];
+    var lectureId = ViewContext.RouteData.Values["lectureId"];
+}
+
+@model LectureUpdateViewModel
+
+
+@*DELETE LECTURE MODAL*@
+<div class="modal fade" id="deleteLectureModal" tabindex="-1" aria-labelledby="deleteLectureLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteLectureModalLabel">Delete Lecture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete lecture '@Model.Title'?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*DELETE NOTIFICATION*@
+<div id="notificationPopup" class="alert" role="alert" style="display: none; position: fixed; bottom: 20px; right: 20px; width: auto; max-width: 450px; z-index: 9999; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding-right: 15px; background: #a94442; color: white; border-radius: 4px;">
+    <span id="notificationMessage" style="display: inline-block; max-width: 80%;"></span>
+    <button id="closeNotification" style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; margin-left: 10px; border: none; background: none; color: white; float: right;">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
+
+<div class="form-container">
+    <form asp-controller="Lecture" asp-action="Update" asp-route-courseId="@courseId" asp-route-lectureId="@lectureId" method="post">
+        
+        <div class="d-flex" style="padding-bottom: 15px;">
+            <div class="me-auto">
+                <h3 style="text-align:center;">Update Lecture</h3>
+            </div>
+
+            <div class="align-self-end">
+                <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@courseId" asp-route-id="@lectureId">
+                    <h5>Back</h5>
+                </a>
+            </div>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Title" type="text" class="form-control" id="floatingTitle" placeholder="@Model.Title">
+            <label asp-for="Title" for="floatingTitle">Title</label>
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+
+        <div class="form-floating mb-3">
+            <input asp-for="Description" type="text" class="form-control" id="floatingDescription" placeholder="@Model.Description">
+            <label asp-for="Description" for="floatingDescription">Description</label>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="VideoLink" type="text" class="form-control" id="floatingVideoLink" placeholder="@Model.VideoLink">
+            <label asp-for="VideoLink" for="floatingVideoLink">Video Link</label>
+            <span asp-validation-for="VideoLink" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin: 25px auto 0 auto; display: block; width: 100%">
+            <i class="fa-regular fa-pen-to-square"></i> Update Lecture
+        </button>
+
+    </form>
+
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteLectureModal" style="margin: 15px auto 0 auto; display: block; width: 100%">
+        <i class="fa-regular fa-trash-can"></i> Delete Lecture
+    </button>
+
+</div>
+
+
+<script>
+@*DELETE COURSE*@
+    document.getElementById('confirmDelete').addEventListener('click', function () {
+        fetch('/Course/@courseId/Lecture/@lectureId/Delete', { method: 'GET' })
+            .then(response => response.json())
+            .then(({ success, errorMessage }) => {
+
+                let notificationPopup = document.getElementById('notificationPopup');
+                let notificationMessage = document.getElementById('notificationMessage');
+                notificationPopup.style.display = 'block';
+                notificationPopup.style.bottom = '20px';
+                notificationPopup.style.right = '20px';
+
+                if (success) {
+                    notificationPopup.classList.add('alert-success');
+                    notificationPopup.style.backgroundColor = '#3c763d';
+                    notificationMessage.innerHTML = 'Lecture deleted successfully.<br>Redirecting to course page in 5 seconds...';
+
+                    let countdown = 5;
+                    let intervalId = setInterval(() => {
+                        countdown--;
+
+                        if (countdown <= 0) {
+                            clearInterval(intervalId);
+                            window.location.href = '/Course/Details/@courseId';
+                        } else {
+                            notificationMessage.innerHTML = 'Lecture deleted successfully.<br>Redirecting to course page in ' + countdown + ' seconds...';
+                        }
+                    }, 1000);
+                } else {
+                    notificationPopup.classList.add('alert-danger');
+                    notificationMessage.textContent = errorMessage;
+                }
+
+                let myModal = bootstrap.Modal.getInstance(document.getElementById('deleteLectureModal'));
+                myModal.hide();
+            });
+    });
+
+@*DELETE NOTIFICATION*@
+    document.getElementById('closeNotification').addEventListener('click', function () {
+        let notificationPopup = document.getElementById('notificationPopup');
+        notificationPopup.style.display = 'none';
+    });
+
+
+</script>

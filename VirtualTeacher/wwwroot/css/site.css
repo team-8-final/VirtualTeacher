@@ -383,3 +383,8 @@ parent "position-relative" child "position-absolute"*/
     padding: 0 !important;
 }
 
+.form-container {
+    max-width: 350px;
+    margin: auto;
+}
+

@@ -264,6 +264,7 @@ public class CourseService : ICourseService
             throw new UnauthorizedAccessException($"A lecture can be updated only by Teachers in the same Course or an Admin.");
         }
 
+        dto.VideoLink = ConvertLink(dto.VideoLink);
 
         // todo to allow the co-teachers to be able to edit the lecture of the other teachers in the
 

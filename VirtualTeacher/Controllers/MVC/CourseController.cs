@@ -12,7 +12,6 @@ namespace VirtualTeacher.Controllers.MVC
 {
     public class CourseController : Controller
     {
-
         private readonly ICourseService courseService;
         private readonly ModelMapper mapper;
 
@@ -92,15 +91,7 @@ namespace VirtualTeacher.Controllers.MVC
             try
             {
                 var course = courseService.GetCourseById(id);
-
-                var courseVM = new CourseUpdateViewModel
-                {
-                    Title = course.Title,
-                    Description = course.Description,
-                    StartingDate = course.StartingDate,
-                    CourseTopic = course.CourseTopic,
-                    Published = course.Published
-                };
+                CourseUpdateViewModel courseVM = mapper.MapUpdateVM(course);
 
                 return View(courseVM);
             }

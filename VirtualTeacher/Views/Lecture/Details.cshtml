@@ -20,7 +20,8 @@
         <div>
             <h4>
                 <img class="language-flag" src="~/images/flags/svgFlags/@(ViewBag.Course.CourseTopic).svg" alt="" />
-                <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId" style="text-decoration: none;">@Model.Course.Title</a>
+                <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId" style="color: #ffffff">@Model.Course.Title</a>
+                <span> > @Model.Title </span>
             </h4>
         </div>
 
@@ -39,9 +40,20 @@
     @* Embedded video *@
     <div class="card p-2 col-md-9">
         <iframe style="width: 100%; aspect-ratio: 16/9" src="@Model.VideoLink" title="lecture" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        
         <div class="card-body">
             <h4 class="card-title">@Model.Description</h4>
-            <p class="card-text text-muted">Teacher: @Model.Teacher.FirstName @Model.Teacher.LastName</p>
+            <hr/>
+            <div class="d-flex justify-content-between">
+
+                <p class="card-text text-muted">Teacher: @Model.Teacher.FirstName @Model.Teacher.LastName</p>
+
+                @*UPDATE LECTURE BUTTON*@
+                @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Admin") || User.IsInRole("Teacher")))
+                {
+                    <a class="btn btn-success btn-sm" style="height: 30px;" asp-controller="Lecture" asp-action="Update" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id">Update Lecture</a>
+                }
+            </div>
         </div>
     </div>
 

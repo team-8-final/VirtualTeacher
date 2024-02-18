@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VirtualTeacher.Exceptions;
+using VirtualTeacher.Helpers;
 using VirtualTeacher.Helpers.CustomAttributes;
+using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels.Lectures;
@@ -13,11 +15,13 @@ public class LectureController : Controller
 {
     private readonly ICourseService courseService;
     private readonly IAccountService accountService;
+    private readonly ModelMapper mapper;
 
-    public LectureController(ICourseService courseService, IAccountService accountService)
+    public LectureController(ICourseService courseService, IAccountService accountService, ModelMapper mapper)
     {
         this.courseService = courseService;
         this.accountService = accountService;
+        this.mapper = mapper;
     }
 
     [IsTeacherOrAdmin]
@@ -25,7 +29,6 @@ public class LectureController : Controller
     public IActionResult Create(int courseId)
     {
         var lectureVM = new LectureCreateViewModel();
-        //TempData["CourseId"] = courseId;
 
         return View();
     }
@@ -107,6 +110,78 @@ public class LectureController : Controller
         }
     }
 
+    [IsTeacherOrAdmin]
+    [HttpGet]
+    [Route("{lectureId}/Update")]
+    public IActionResult Update([FromRoute] int courseId, [FromRoute] int lectureId)
+    {
+        try
+        {
+            var lecture = courseService.GetLectureById(courseId, lectureId);
+            LectureUpdateViewModel lectureVM = mapper.MapUpdateVM(lecture);
+
+            return View(lectureVM);
+        }
+        catch (EntityNotFoundException e)
+        {
+            Response.StatusCode = StatusCodes.Status404NotFound;
+            ViewData["ErrorMessage"] = e.Message;
+
+            return RedirectToAction("Error", "Shared");
+        }
+    }
+
+    [IsTeacherOrAdmin]
+    [HttpPost]
+    [Route("{lectureId}/Update")]
+    public IActionResult Update([FromRoute] int courseId, [FromRoute] int lectureId, LectureUpdateViewModel lectureVM)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(lectureVM);
+        }
+        try
+        {
+            var updatedLecture = courseService.UpdateLecture(lectureVM, courseId, lectureId);
+
+            return RedirectToAction("Details", "Lecture", new { courseId, id = updatedLecture.Id });
+        }
+        catch (UnauthorizedOperationException e)
+        {
+            TempData["StatusCode"] = StatusCodes.Status401Unauthorized;
+            TempData["ErrorMessage"] = e.Message;
+
+            return RedirectToAction("Error", "Shared");
+        }
+        catch (Exception e)
+        {
+            TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+            TempData["ErrorMessage"] = e.Message;
+
+            return RedirectToAction("Error", "Shared");
+        }
+    }
+
+    //todo add more catch blocks if needed
+    [IsTeacherOrAdmin]
+    [HttpGet]
+    [Route("{lectureId}/Delete")]
+    public IActionResult Delete([FromRoute] int courseId, [FromRoute] int lectureId)
+    {
+        try
+        {
+            courseService.DeleteLecture(courseId, lectureId);
+
+            return Json(new { success = true });
+        }
+        catch (Exception e)
+        {
+            return Json(new { success = false, errorMessage = e.Message });
+        }
+    }
+
+    // Assignments
+
     [HttpGet("/{lectureId}/get-assignment")]
     public IActionResult GetAssignment(int courseId, int lectureId)
     {
@@ -180,6 +255,8 @@ public class LectureController : Controller
             return BadRequest("Assignment could not be deleted. Please try again.");
         }
     }
+
+    // Submissions
 
     [HttpGet("/{lectureId}/get-submission")]
     public IActionResult GetSubmission(int courseId, int lectureId)
@@ -295,6 +372,8 @@ public class LectureController : Controller
             return BadRequest("Submission could not be deleted. Please try again.");
         }
     }
+
+    // Comments
 
     [HttpPost("/{lectureId}/add-comment")]
     public IActionResult AddComment(int courseId, int lectureId, string content)
