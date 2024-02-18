@@ -22,15 +22,16 @@
 
     @* LIST OF ASSIGNMENTS *@
 
-    <div style="width: 100%">
+    <div style="width: 100%" class="">
         @{
             if (@Model.FilteredCourses != null){
                 foreach (var course in @Model.FilteredCourses)
                 {
                     <H4 style="color: blue" class="pt-2 pb-2">@course.Title</H4>
-
+                    
                     foreach(var lecture in course.Lectures)
                     {
+                        <div class="pb-2">
                         <div class="accordion " id="accordionPanelsStayOpenExample">
                             <div class="accordion-item ">
                                 <h2 class="accordion-header position-relative" id="panelsStayOpen-headingOne">
@@ -62,22 +63,17 @@
                                                 <div class="end-50px position-absolute" title="This lecture has an assignment">
                                                     <i class="fa-regular fa-clipboard"></i>
                                                 </div>
-
-
-                                                <div class="end-50px position-absolute" style="display: none">
-                                                    <i class="fa-solid fa-download" data-placement="top" href="@Url.Action("GetAssignment", "Lecture", new { courseId = course.Id, lectureId = lecture.Id })" title="Download Assignment"></i> 
-                                                    <i class="fa-solid fa-trash-can" data-placement="top" title="Delete Assignment"></i> 
-                                                </div>
                                             }
                                             else
                                             {
-                                                <div class="end-50px position-absolute" title="This lecture does not have an assignment">
+
+                                                <div class="end-50px position-absolute " title="This lecture does not have an assignment">
                                                     <i class="fa-solid fa-xmark"></i>
                                                 </div>
 
                                                 <div class="end-50px position-absolute" style="display: none">
                                                     <form asp-controller="Lecture" asp-action="DeleteAssignment" asp-route-courseId="@course.Id" asp-route-lectureId="@lecture.Id" method="post">
-                                                       <i class="fa-solid fa-upload" data-placement="top" title="Upload Assignment"></i>
+                                                       <i class="fa-solid fa-upload" data-placement="top" title="Upload new Assignment"></i>
                                                     </form>
                                                 </div>
                                             }
@@ -90,13 +86,35 @@
                                     
                                     <div id="panelsStayOpen-@lecture.Id" class="accordion-collapse collapse @(Model.OpenPanel == lecture.Id ? "show" : "")" aria-labelledby="panelsStayOpen-headingOne" style="">
 
-                                        @if(lecture.AssignmentLink == "") // lecture has assignment 
+                                        @if(lecture.AssignmentLink == "")   // lecture has no assignment 
                                         {
                                             <div class="accordion-body">This lecture does not have an assignment</div>
                                         }
-                                        else
+                                        else                                //has assignment but has no submissions yet
                                         {
-                                            if (lecture.Submissions.Count() == 0) //if there are any submissions
+                                            <div class="accordion-body d-flex justify-content-end" style="padding: 0;">
+                                                <div class="inline-block accordion-body end-10px" style=" padding-bottom: 0px;">
+                                                    <div class="d-flex" >
+        
+                                                        <form action="@Url.Action("DeleteAssignment", "Lecture", new { courseId = course.Id, lectureId = lecture.Id, requestLocation = "teacherPanel" })" method="post" title="Delete an Assignment">
+                                                            <button type="submit" class="btn-icon fa-solid fa-trash-can" ></button>
+                                                        </form>
+
+                                                        <a style="color: black" href="@Url.Action("GetAssignment", "Lecture", new { courseId = course.Id, lectureId = lecture.Id })">
+                                                            <i class="fa-solid fa-download btn-icon"></i>
+                                                        </a>
+
+                                                        <form asp-controller="Lecture" asp-action="CreateAssignment" asp-route-courseId="course.Id" asp-route-lectureId="lecture.Id" method="post" enctype="multipart/form-data">
+                                                        
+                                                            <button type="submit" class="fa-solid fa-upload btn-icon" href="@Url.Action("GetAssignment", "Lecture", new { courseId = course.Id, lectureId = lecture.Id })" title="Upload Assignment"></button>
+                                                        </form>
+
+                                                    </div>
+                                                </div>
+                                             </div>
+
+                                            <div class="">
+                                            @if (lecture.Submissions.Count() == 0) 
                                             {
                                                 <div class="accordion-body">No submissions yet</div>
                                             }
@@ -225,6 +243,7 @@
 
                                                 }
                                             }
+                                            </div>
                                         }
 
                                    
@@ -232,6 +251,7 @@
                                 }
 
                             </div>
+                        </div>
                         </div>
                     }
                 }

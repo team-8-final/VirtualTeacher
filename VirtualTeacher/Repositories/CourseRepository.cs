@@ -590,7 +590,7 @@ public class CourseRepository : ICourseRepository
             return false;
         }
 
-        lecture.AssignmentLink = null;
+        lecture.AssignmentLink = "";
         context.SaveChanges();
 
         return true;

@@ -238,6 +238,12 @@ footer {
 /*positionning classes below
 parent "position-relative" child "position-absolute"*/
 
+.btn-icon {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
 .top-5px {
     top: 5px !important;
 }

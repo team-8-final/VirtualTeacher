@@ -158,11 +158,17 @@ public class LectureController : Controller
     }
 
     [HttpPost("/{lectureId}/delete-assignment")]
-    public IActionResult DeleteAssignment(int courseId, int lectureId)
+    public IActionResult DeleteAssignment(int courseId, int lectureId, string requestLocation)
     {
         try
         {
             var message = courseService.DeleteAssignment(courseId, lectureId);
+
+            if(requestLocation == "teacherPanel")
+            {
+                return Redirect($"/Assignments");
+            }
+
             return Redirect($"/Course/{courseId}/Lecture/{lectureId}");
         }
         catch (EntityNotFoundException e)

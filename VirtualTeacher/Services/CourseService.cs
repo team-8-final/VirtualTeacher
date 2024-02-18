@@ -492,7 +492,7 @@ public class CourseService : ICourseService
     public string DeleteAssignment(int courseId, int lectureId)
     {
         _ = GetCourseById(courseId);
-        var lecture = GetLectureById(courseId, lectureId);
+        var lecture = GetLectureById(courseId, lectureId); //todo ideally we can have a method for all that logic
 
         var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
         var assignmentDirectory = Path.Combine(privateRoot, "Assignments", "course-" + courseId);
