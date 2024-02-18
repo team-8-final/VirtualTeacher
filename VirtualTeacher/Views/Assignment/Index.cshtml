@@ -194,7 +194,7 @@
                                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                         </div>
 
-                                                                        <form action="@Url.Action("AssessSubmission", "Lecture", new { courseId = course.Id, lectureId = lecture.Id })" method="post">
+                                                                        <form id="assessSubmissionForm-@submission.Id" action="@Url.Action("AssessSubmission", "Lecture", new { courseId = course.Id, lectureId = lecture.Id })" method="post">
 
                                                                             <div class="modal-body">
                                                                                 @{
@@ -205,7 +205,7 @@
                                                                                         </div>
                                                                                         <div>
                                                                                             Select a value from 0 to 100:
-                                                                                            <input type="number" class="form-control" name="grade" style="width: 100px;">
+                                                                                            <input type="number" class="form-control" id="gradeInput-@submission.Id" name="grade" style="width: 100px;">
                                                                                         </div>
                                                                                     }
                                                                                     else
@@ -217,7 +217,7 @@
                                                                                         </div>
                                                                                         <div>
                                                                                             Select a value from 0 to 100:
-                                                                                            <input type="number" class="form-control" name="grade" style="width: 100px;">
+                                                                                            <input type="number" class="form-control" id="gradeInput-@submission.Id" name="grade" style="width: 100px;">
                                                                                         </div>
                                                                                     }
                                                                                 }
@@ -229,7 +229,8 @@
                                                                                 <input type="hidden" name="userId" value="@submission.StudentId" />
                                                                                 <input type="hidden" name="lectureId" value="@lecture.Id" />
 
-                                                                                <button type="submit" class="btn btn-primary">Submit Grade</button>
+                                                                                        <button type="button" class="btn btn-primary" onclick="validateAndSubmit('@submission.Id')">Submit Grade</button>
+
                                                                             </div>
                                                                         </form>
                                                                     </div>
@@ -261,6 +262,30 @@
 </div>
 
 
+
+
+<script>
+    function validateAndSubmit(submissionId) {
+        var gradeInput = document.getElementById("gradeInput-" + submissionId);
+
+        if (!gradeInput) {
+            // If grade input doesn't exist, proceed without validation
+            document.getElementById("assessSubmissionForm-" + submissionId).submit();
+            return;
+        }
+
+        var grade = parseInt(gradeInput.value);
+
+        if (isNaN(grade) || grade < 0 || grade > 100) {
+            // Display JavaScript alert for out of range grade
+            alert("Grade must be a number between 0 and 100.");
+            return false; // Prevent form submission
+        }
+
+        // If validation passes, submit the form
+        document.getElementById("assessSubmissionForm-" + submissionId).submit();
+    }
+</script>
 
 
 
