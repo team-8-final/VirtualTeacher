@@ -45,7 +45,8 @@ public interface ICourseService
     string CreateSubmission(int courseId, int lectureId, IFormFile file);
     string DeleteSubmission(int courseId, int lectureId);
     string AssessSubmission(int lectureId, int userId, byte grade);
-    string GetSubmissionFilePath(int courseId, int lectureId);
+    string GetSubmissionFilePath(int courseId, int lectureId); // get logged user submission
+    string GetSubmissionFilePath(int courseId, int lectureId, int studentId); // get student submission by teacher
     Submission? GetSubmission(int courseId, int lectureId, int userId);
 
     string GetAssignmentFilePath(int courseId, int lectureId);

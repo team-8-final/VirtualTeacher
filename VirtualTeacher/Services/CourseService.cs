@@ -542,6 +542,25 @@ public class CourseService : ICourseService
         return existingFiles[0];
     }
 
+    public string GetSubmissionFilePath(int courseId, int lectureId, int studentId)
+    {
+        _ = GetCourseById(courseId);
+        _ = GetLectureById(courseId, lectureId);
+
+        var user = userService.GetById(studentId);
+
+        var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
+        var submissionDirectory = Path.Combine(privateRoot, "Submissions", "course-" + courseId, "lecture-" + lectureId);
+
+        var existingFiles = Directory.GetFiles(submissionDirectory, user.Username + ".*");
+        if (existingFiles.Length == 0)
+        {
+            throw new FileNotFoundException("No submission file found for this user.");
+        }
+
+        return existingFiles[0];
+    }
+
     public Submission? GetSubmission(int courseId, int lectureId, int userId)
     {
         _ = GetCourseById(courseId);

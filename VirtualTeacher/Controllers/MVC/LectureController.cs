@@ -202,6 +202,32 @@ public class LectureController : Controller
         }
     }
 
+    public IActionResult GetSubmission(int courseId, int lectureId, int studentId)
+    {
+        try
+        {
+            var filePath = courseService.GetSubmissionFilePath(courseId, lectureId, studentId);
+
+            if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
+            {
+                return NotFound("Submission file not found.");
+            }
+
+            var fileName = Path.GetFileName(filePath);
+            var mimeType = "application/octet-stream";
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, mimeType, fileName);
+        }
+        catch (EntityNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception)
+        {
+            return BadRequest("An error occurred while downloading the file.");
+        }
+    }
+
     [IsTeacherOrAdmin]
     [HttpPost("/{lectureId}/assess-submission")]
     public IActionResult AssessSubmission(int userId, int lectureId, int grade)
