@@ -135,6 +135,7 @@ public class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IAccountService, AccountService>();
         builder.Services.AddScoped<ICourseService, CourseService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
 
         //Helpers
         builder.Services.AddScoped<ModelMapper>();

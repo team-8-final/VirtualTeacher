@@ -7,6 +7,9 @@ using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.ViewModels.Account;
+using VirtualTeacher.Helpers;
+using MailKit;
+using VirtualTeacher.Models.DTOs;
 
 namespace VirtualTeacher.Controllers.MVC;
 
@@ -15,12 +18,14 @@ public class AccountController : Controller
     private readonly IUserService userService;
     private readonly IAccountService accountService;
     private readonly ICourseService courseService;
+    private readonly IEmailService emailService;
 
-    public AccountController(IUserService userService, IAccountService accountService, ICourseService courseService)
+    public AccountController(IUserService userService, IAccountService accountService, ICourseService courseService, IEmailService emailService)
     {
         this.userService = userService;
         this.accountService = accountService;
         this.courseService = courseService;
+        this.emailService = emailService;
     }
 
     [HttpGet]
@@ -216,6 +221,15 @@ public class AccountController : Controller
                 RememberLogin = false,
             };
 
+            //todo move this to mapper, make it look professional
+            var emailDto = new EmailDto
+            {
+                To = user.Email,
+                Subject = "Polyglot Registration",
+                Body = $"You ({user.Username}) have successfully registered to Polyglot courses!"
+            };
+
+            emailService.SendEmail(emailDto);
             Login(loginViewModel);
             return RedirectToAction("Index", "Account");
         }

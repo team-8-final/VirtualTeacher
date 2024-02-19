@@ -21,19 +21,34 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="studentModalLabel">Enrolled Students</h1>
+                <h1 class="modal-title fs-5" id="studentModalLabel">Students</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <input type="text" class="form-control form-control-sm" id="searchBar" placeholder="Search">
-                </div>
+                @{
+                    if (Model.EnrolledStudents.Count() != 0)
+                    {
+                        <div class="mb-3">
+                            <input type="text" class="form-control form-control-sm" id="searchBar" placeholder="Search">
+                        </div>
+                    }
+                }
+
                 <ul class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
                     @{
-                        foreach (var student in Model.EnrolledStudents)
+                        if (Model.EnrolledStudents.Count() != 0)
+                        {
+                            foreach (var student in Model.EnrolledStudents)
+                            {
+                                <li class="list-group-item">
+                                    @student.FirstName @student.LastName
+                                </li>
+                            }
+                        }
+                        else
                         {
                             <li class="list-group-item">
-                                @student.FirstName @student.LastName
+                                There are no enrolled students.
                             </li>
                         }
                     }
