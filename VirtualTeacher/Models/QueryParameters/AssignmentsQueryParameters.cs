@@ -5,13 +5,10 @@ namespace VirtualTeacher.Models.QueryParameters
 {
     public class AssignmentsQueryParameters : CourseQueryParameters
     {
-        //public int? PanelOpen {  get; set; }
 
-        public string? CourseTitle { get; set; }
+        public string? SearchWord { get; set; }
 
-        public int? TeacherId { get; set; }
-
-        public string? SearchWord { get; set; } //search word
+        public int? OpenPanel { get; set; }
 
     }
 }

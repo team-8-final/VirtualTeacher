@@ -26,19 +26,27 @@ namespace VirtualTeacher.Controllers.MVC
 
         [HttpGet]
         [Route("/Assignments")]
-        public ActionResult Index(AssignmentsQueryParameters queryParameters, int openPanel)
+        public ActionResult Index( int openPanel, string searchWord)
         {
-            queryParameters.PageSize = 100;
             var userId = int.Parse(User.FindFirstValue("UserId"));
 
             AssignmentsViewModel studentsVM = new AssignmentsViewModel();
+            
+            List<Course> courses = courseService.FilterByTeacherId(userId).ToList();
+            if(searchWord != null)
+            {
+                courses = courses.Where(course => course.Title.Contains(searchWord)).ToList();
+            }
 
-            studentsVM.FilteredCourses = courseService.FilterByTeacherId(userId).ToList();
+            studentsVM.FilteredCourses = courses;
 
-                List<User> allUsersObj = studentsVM.FilteredCourses
+
+
+            List<User> allUsersObj = studentsVM.FilteredCourses
                 .SelectMany(course => course.EnrolledStudents)
                 .Distinct()
                 .ToList();
+
 
             studentsVM.AllStudents = mapper.MapStudentsToDto(allUsersObj);
             studentsVM.OpenPanel = openPanel;
