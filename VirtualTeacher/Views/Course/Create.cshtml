@@ -4,50 +4,62 @@
 
 @model CourseCreateViewModel
 
-<h4>Create a new course</h4>
+<div class="form-container">
+    <form asp-controller="Course" asp-action="Create" method="post">
 
-<form asp-controller="Course" asp-action="Create" method="post">
+        <div class="d-flex" style="padding-bottom: 15px;">
+            <div class="me-auto">
+                <h3 style="text-align:center;">Create Course</h3>
+            </div>
 
-    <div style="width: 60%">
-        <div class="mb-3">
-            <input asp-for="Title" class="form-control" id="courseTitle" placeholder="Title your course">
+            <div class="align-self-end">
+                <a asp-controller="Course" asp-action="Index">
+                    <h5>Back</h5>
+                </a>
+            </div>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Title" type="text" class="form-control" id="floatingTitle" placeholder="Title your course">
+            <label asp-for="Title" for="floatingTitle">Title</label>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <textarea asp-for="Description" class="form-control" id="courseDescription" rows="2" placeholder="Describe your course">@Model.Description</textarea>
+        <div class="form-floating mb-3">
+            <textarea asp-for="Description" type="text" class="form-control" id="floatingDescription" rows="2" placeholder="Describe your course"></textarea>
+            <label asp-for="Description" for="floatingDescription">Description</label>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label for="courseTopic">Select Topic:</label>
+        <div class="form-floating mb-3">
             <select asp-for="CourseTopic" class="form-control" id="courseTopic" name="courseTopic">
                 @foreach (var topic in Enum.GetValues(typeof(CourseTopic)))
                 {
                     <option value="@topic">@topic</option>
                 }
             </select>
+            <label asp-for="CourseTopic">Select Topic</label>
         </div>
 
-        <div class="mb-3">
-            <input asp-for="VideoLink" class="form-control" id="lectureVideo" rows="1" placeholder="Place your video link (not required)">
+        <div class="form-floating mb-3">
+            <input asp-for="VideoLink" type="text" class="form-control" id="floatingLink" placeholder="Place your video link (not required)">
+            <label asp-for="VideoLink" for="floatingLink">Video Link (not required)</label>
             <span asp-validation-for="VideoLink" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label for="startingDate">Start Date:</label>
-            <input asp-for="StartingDate" type="date" id="startingDate" name="startingDate">
+        <div class="form-floating mb-3" style="display: inline-block; width: 60%;">
+            <input asp-for="StartingDate" type="date" id="StartingDate" name="startingDate" class="form-control" style="width: 100%;">
+            <label asp-for="StartingDate">Start Date</label>
         </div>
 
-        <div class="mb-3">
-            <label for="publish">Publish:</label>
-            <input asp-for="Published" type="checkbox" id="publish" name="publish">
+        <div class="form-check form-check-reverse mb-3" style="display: inline-block; width: 30%; margin-right: 25px;">
+            <input asp-for="Published" type="checkbox" id="publishedCheckbox" name="Published" class="form-check-input" />
+            <label for="publishedCheckbox" class="form-check-label">Publish</label>
         </div>
 
-        <div class="mb-3">
-            <a asp-controller="Course" asp-action="Index" class="btn btn-danger">Cancel</a>
-            <input type="submit" value="Post" class="btn btn-primary" />
-        </div>
-    </div>
+        <button type="submit" value="post" class="btn btn-primary" style="margin: 25px auto 0 auto; display: block; width: 100%">
+            <i class="fa-regular fa-pen-to-square"></i> Create Course
+        </button>
 
-</form>
+    </form>
+</div>

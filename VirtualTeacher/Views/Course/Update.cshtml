@@ -33,53 +33,70 @@
 </div>
 
 
-<h4>
-    Update course '@Model.Title'
-    <a asp-controller="Course" asp-action="Details" asp-route-id="@courseId" class="link-opacity-75">Back</a>
-</h4>
+<div class="form-container">
+    <form asp-controller="Course" asp-action="Update" method="post">
 
+        <div class="d-flex" style="padding-bottom: 15px;">
+            <div class="me-auto">
+                <h3 style="text-align:center;">Update Course</h3>
+            </div>
 
-<div style="width: 60%">
-    <form id="updateForm" asp-controller="Course" asp-action="Update" method="post">
+            <div class="align-self-end">
+                <a asp-controller="Course" asp-action="Details" asp-route-id="@courseId">
+                    <h5>Back</h5>
+                </a>
+            </div>
+        </div>
 
-        <div class="mb-3">
-            <input asp-for="Title" class="form-control" id="courseTitle" placeholder="@Model.Title">
+        <div class="form-floating mb-3">
+            <input asp-for="Title" type="text" class="form-control" id="floatingTitle" placeholder="@Model.Title">
+            <label asp-for="Title" for="floatingTitle">Title</label>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <textarea asp-for="Description" class="form-control" id="courseDescription" rows="2" placeholder="Describe your course">@Model.Description</textarea>
+        <div class="form-floating mb-3">
+            <textarea asp-for="Description" type="text" class="form-control" id="floatingDescription" rows="4" placeholder="@Model.Description"></textarea>
+            <label asp-for="Description" for="floatingDescription">Description</label>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label for="courseTopic">Select Topic:</label>
-            <select asp-for="CourseTopic" class="form-control" id="courseTopic" name="courseTopic">
+        <div class="form-floating mb-3">
+
+            <select asp-for="CourseTopic" class="form-control" id="courseTopic" name="courseTopic" id="floatingTopic">
                 @foreach (var topic in Enum.GetValues(typeof(CourseTopic)))
                 {
                     <option value="@topic">@topic</option>
                 }
             </select>
+            <label asp-for="CourseTopic" for="floatingTopic">Topic</label>
+
         </div>
 
-        <div class="mb-3">
-            <label for="startingDate">Start Date:</label>
-            <input asp-for="StartingDate" type="date" id="startingDate" name="startingDate">
+        <div class="form-floating mb-3">
+            <input asp-for="VideoLink" type="text" class="form-control" id="floatingLink" placeholder="@Model.VideoLink">
+            <label asp-for="VideoLink" for="floatingLink">Video Link (not required)</label>
+            <span asp-validation-for="VideoLink" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label for="publish">Publish:</label>
-            <input asp-for="Published" type="checkbox" id="publish" name="publish" disabled="@Model.Published">
+        <div class="form-floating mb-3" style="display: inline-block; width: 60%;">
+            <input asp-for="StartingDate" type="date" id="StartingDate" name="startingDate" class="form-control" style="width: 100%;">
+            <label asp-for="StartingDate">Start Date</label>
         </div>
+
+        <div class="form-check form-check-reverse mb-3" style="display: inline-block; width: 30%; margin-right: 25px;">
+            <input asp-for="Published" type="checkbox" id="publishedCheckbox" name="Published" class="form-check-input" disabled="@Model.Published" />
+            <label for="publishedCheckbox" class="form-check-label">Publish</label>
+        </div>
+
+        <button type="submit" value="post" class="btn btn-primary" style="margin: 25px auto 0 auto; display: block; width: 100%">
+            <i class="fa-regular fa-pen-to-square"></i> Update Course
+        </button>
 
     </form>
 
-    <div class="mb-3">
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCourseModal">
-            <i class="fa-regular fa-trash-can"></i> Delete
-        </button>
-        <input id="updateButton" type="submit" value="Update" class="btn btn-primary" />
-    </div>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCourseModal" style="margin: 15px auto 0 auto; display: block; width: 100%">
+        <i class="fa-regular fa-trash-can"></i> Delete Course
+    </button>
 
 </div>
 

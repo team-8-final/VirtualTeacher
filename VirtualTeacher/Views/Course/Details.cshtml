@@ -137,6 +137,12 @@
             <h4>
                 <img class="language-flag" src="~/images/flags/svgFlags/@(Model.CourseTopic).svg" alt="" />
                 @Model.Title
+                @{
+                    if (!Model.Published)
+                    {
+                        <span> (Draft)</span>
+                    }
+                }
             </h4>
         </div>
 
@@ -270,18 +276,28 @@
                     }
                     else
                     {
-                        int counter = 1;
-
-                        foreach (var lecture in Model.Lectures)
+                        if (Model.Lectures.Count() != 0)
                         {
-                            <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@Model.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
-                            <li class="list-group-item custom-hover">
-                                    @counter. @lecture.Title
-                            </li>
-                            </a>
+                            int counter = 1;
 
-                            counter++;
+                            foreach (var lecture in Model.Lectures)
+                            {
+                                <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@Model.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                                <li class="list-group-item custom-hover">
+                                        @counter. @lecture.Title
+                                </li>
+                                </a>
+
+                                counter++;
+                            }
                         }
+                        else
+                        {
+                            <li class="list-group-item custom-hover">
+                                There are no lectures yet.
+                            </li>
+                        }
+
                     }
                 }
             </ul>

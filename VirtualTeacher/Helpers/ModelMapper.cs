@@ -135,7 +135,8 @@ public class ModelMapper
             Description = course.Description,
             StartingDate = course.StartingDate,
             CourseTopic = course.CourseTopic,
-            Published = course.Published
+            Published = course.Published,
+            VideoLink = course.VideoLink
         };
     }
 

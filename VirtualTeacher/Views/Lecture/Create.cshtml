@@ -1,37 +1,47 @@
 ﻿@{
     ViewData["Title"] = "New Lecture";
+    var courseId = ViewContext.RouteData.Values["courseId"];
 }
 
 @model LectureCreateViewModel
 
-<h4>Create a new lecture</h4>
+<div class="form-container">
 
-<form asp-controller="Lecture" asp-action="Create" method="post">
+    <div class="d-flex" style="padding-bottom: 15px;">
+        <div class="me-auto">
+            <h3 style="text-align:center;">Create Lecture</h3>
+        </div>
 
-    <div style="width: 60%">
+        <div class="align-self-end">
+            <a asp-controller="Course" asp-action="Details" asp-route-id="@courseId">
+                <h5>Back</h5>
+            </a>
+        </div>
+    </div>
 
-        <div class="mb-3">
-            <input asp-for="Title" class="form-control" id="lectureTitle" placeholder="Title your lecture">
+    <form asp-controller="Lecture" asp-action="Create" method="post">
+
+        <div class="form-floating mb-3">
+            <input asp-for="Title" type="text" class="form-control" id="floatingTitle" placeholder="Title your lecture">
+            <label asp-for="Title" for="floatingTitle">Title</label>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <textarea asp-for="Description" class="form-control" id="lectureDescription" rows="2" placeholder="Describe your lecture">@Model.Description</textarea>
+        <div class="form-floating mb-3">
+            <textarea asp-for="Description" type="text" class="form-control" id="floatingDescription" rows="2" placeholder="Describe your lecture"></textarea>
+            <label asp-for="Description" for="floatingDescription">Description</label>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <input asp-for="VideoLink" class="form-control" id="lectureVideo" rows="1" placeholder="Place your video link">
+        <div class="form-floating mb-3">
+            <input asp-for="VideoLink" type="text" class="form-control" id="floatingLink" placeholder="Place your video link (not required)">
+            <label asp-for="VideoLink" for="floatingLink">Video Link</label>
             <span asp-validation-for="VideoLink" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            @*to do - breaks when model state isnt valid*@
-            @*<a asp-controller="Course" asp-action="Details" asp-route-id="@TempData["CourseId"]" class="btn btn-danger">Cancel</a>  *@
-            <input class="btn btn-danger" name="action" onclick="history.back()" type="submit" value="Cancel"/>
-            <input type="submit" value="Post" class="btn btn-primary" />
-        </div>
+        <button type="submit" value="post" class="btn btn-primary" style="margin: 25px auto 0 auto; display: block; width: 100%">
+            <i class="fa-regular fa-pen-to-square"></i> Create Lecture
+        </button>
 
-    </div>
-
-</form>
+    </form>
+</div>

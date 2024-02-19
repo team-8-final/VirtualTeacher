@@ -67,13 +67,13 @@ public class CourseService : ICourseService
     {
 
         var loggedUser = accountService.GetLoggedUser();
-        var createdCourse = courseRepository.CreateCourse(dto, loggedUser);
 
-        if (!string.IsNullOrEmpty(dto.VideoLink))
+        if (string.IsNullOrEmpty(dto.VideoLink) == false)
         {
             dto.VideoLink = ConvertLink(dto.VideoLink);
         }
 
+        var createdCourse = courseRepository.CreateCourse(dto, loggedUser);
 
         return createdCourse ?? throw new Exception($"The course could not be created.");
     }
@@ -86,6 +86,11 @@ public class CourseService : ICourseService
         if (loggedUser.UserRole != UserRole.Admin && foundCourse.ActiveTeachers.All(t => t != loggedUser))
         {
             throw new UnauthorizedOperationException($"A course can be updated only by its authors or an admin.");
+        }
+
+        if (string.IsNullOrEmpty(dto.VideoLink) == false && dto.VideoLink != foundCourse.VideoLink)
+        {
+            dto.VideoLink = ConvertLink(dto.VideoLink);
         }
 
         var updatedCourse = courseRepository.UpdateCourse(id, dto);
