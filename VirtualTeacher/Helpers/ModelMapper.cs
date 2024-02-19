@@ -227,4 +227,18 @@ public class ModelMapper
             CreatedOn = comment.CreatedOn
         };
     }
+
+    //Teacher Application DTO
+
+    public ApplicationResponseDto MapResponse(TeacherApplication application)
+    {
+        return new ApplicationResponseDto()
+        {
+            Id = application.Id,
+            Teacher = application.Teacher.Username,
+            TeacherId = application.TeacherId,
+            Course = application.Course.Title,
+            CourseId = application.CourseId
+        };
+    }
 }

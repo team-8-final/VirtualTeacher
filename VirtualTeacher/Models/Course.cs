@@ -29,4 +29,6 @@ public class Course
     public IList<Lecture> Lectures { get; set; } = null!;
     public IList<Rating> Ratings { get; set; } = null!;
     public IList<User> ActiveTeachers { get; set; } = null!;
+    //public IList<TeacherApplication> TeacherApplications { get; set; } = null!;
+
 }

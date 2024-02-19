@@ -130,12 +130,15 @@ public class Program
         //Repos
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+        builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 
         //Services
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IAccountService, AccountService>();
         builder.Services.AddScoped<ICourseService, CourseService>();
         builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddScoped<IApplicationService, ApplicationService>();
+
 
         //Helpers
         builder.Services.AddScoped<ModelMapper>();

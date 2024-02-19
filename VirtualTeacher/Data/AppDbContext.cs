@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<Comment> Comments { get; set; } = null!;
     public DbSet<Note> Notes { get; set; } = null!;
     public DbSet<Submission> Submissions { get; set; } = null!;
+    public DbSet<TeacherApplication> TeacherApplications { get; set; } = null!;
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -45,6 +46,14 @@ public class AppDbContext : DbContext
                 new() { Id = 1, CourseId = 1, StudentId = 1, Value = 5, Review = "Very cool course!" },
                 new() { Id = 2, CourseId = 2, StudentId = 1, Value = 1, Review = "Not good." },
                 new() { Id = 3, CourseId = 1, StudentId = 2, Value = 1, Review = "Avoid this course." },
+            });
+
+        modelBuilder.Entity<TeacherApplication>().HasData(
+            new List<TeacherApplication>
+            {
+                new() {Id = 1, TeacherId = 4, CourseId = 1},
+                new() {Id = 2, TeacherId = 8, CourseId = 2},
+                new() {Id = 3, TeacherId = 1, CourseId = 14}
             });
 
         modelBuilder.Entity<Submission>().HasData(SubmissionsData.Seed());
@@ -140,6 +149,16 @@ public class AppDbContext : DbContext
             .WithMany(user => user.LectureComments)
             .HasForeignKey(comment => comment.AuthorId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        //modelBuilder.Entity<TeacherApplication>()
+        //   .HasOne(a => a.Teacher)
+        //   .WithMany(user => user.TeacherApplications)
+        //   .HasForeignKey(a => a.TeacherId);
+
+        //modelBuilder.Entity<TeacherApplication>()
+        //    .HasOne(a => a.Course)
+        //    .WithMany(course => course.TeacherApplications)
+        //    .HasForeignKey(a => a.CourseId);
 
         // uniques
         modelBuilder.Entity<User>()
