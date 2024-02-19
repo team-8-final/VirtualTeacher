@@ -2,7 +2,6 @@
     ViewData["Title"] = "Courses";
     string byTitle = "title";
     string byRating = "rating";
-    bool techerSpecific;
 }
 
 @model CoursesListViewModel
@@ -39,6 +38,12 @@
             <a asp-controller="Course" asp-action="Index" asp-action="Index" asp-route-TeacherUsername="@User.FindFirst(ClaimTypes.Name).Value.ToString()" class="btn btn-success">Courses I am Teaching</a>
         }
     </span>
+    <span style="flex: 1;" class="ms-1 me-1">
+        @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Teacher"))
+        {
+            <a asp-controller="Course" asp-action="Index" asp-action="Index" asp-route-TeacherUsername="@User.FindFirst(ClaimTypes.Name).Value.ToString()" asp-route-SeeDrafts="true" class="btn btn-success">Drafts</a>
+        }
+    </span>
 
     <span class="ms-1 me-1">
         @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Admin") || User.IsInRole("Teacher"))
@@ -69,6 +74,7 @@
         @{
             if (Model.Courses != null)
             {
+
                 foreach (var course in Model.Courses)
                 {
                     fullDescription = course.Description;
@@ -82,13 +88,20 @@
                         shortDescription = fullDescription;
                     }
 
-                    <div class="card mb-3 position-relative" >
-                        <div class="card-body custom-card-height-1">
-                            <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id"><H5>@course.Title</H5></a>
+                    <div class="card mb-3 position-relative" >  @* if for teachers *@
+
+                       @{bool isDraft = !course.Published;}
+
+                        <div class="  card-body custom-card-height-1 @(isDraft? "border border-warning" : "")  ">
+
+                            <a class="inline-block" asp-controller="Course" asp-action="Details" asp-route-id="@course.Id"><H5>@course.Title</H5></a>
+                            
+                            <br/>
+                            
                             @{
                                 if (course.StartingDate < DateTime.Now)
                                 {
-                                    <div style="color: greenyellow; display:inline">Ongoing </div>
+                                    <div style="color: green; display:inline">Ongoing </div>
                                 }
                                 else
                                 {
@@ -118,6 +131,7 @@
                             <div class="position-absolute top-10px end-15px">
                                 <img class="language-flag" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
                             </div>
+                            <p class="position-relative text-danger text-end bottom-25px"> @(isDraft ? "THIS IS A DRAFT" : "")</p>
 
                             <div>
                                 <div class="position-absolute bottom-15px start-15px">
@@ -179,6 +193,8 @@
 
                              </div>
                         </div>
+
+
                     </div>
                 }
             } else
@@ -198,6 +214,7 @@
                             <input type="hidden" name="Topic" value="@Model.Parameters.Topic" />
                             <input type="hidden" name="TeacherUsername" value="@Model.Parameters.TeacherUsername" />
                             <input type="hidden" name="SortBy" value="@Model.Parameters.SortBy" />
+                            <input type="hidden" name="SeeDrafts" value="@Model.Parameters.SeeDrafts.ToString().ToLower()" />
 
                             <button type="submit" class="page-link @prevState" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
@@ -223,6 +240,7 @@
                                     <input type="hidden" name="Topic" value="@Model.Parameters.Topic" />
                                     <input type="hidden" name="TeacherUsername" value="@Model.Parameters.TeacherUsername" />
                                     <input type="hidden" name="SortBy" value="@Model.Parameters.SortBy" />
+                                        <input type="hidden" name="SeeDrafts" value="@Model.Parameters.SeeDrafts.ToString().ToLower()" />
 
                                     <button type="submit" class="page-link">@i</button>
                                 </form>
@@ -237,6 +255,7 @@
                             <input type="hidden" name="Topic" value="@Model.Parameters.Topic" />
                             <input type="hidden" name="TeacherUsername" value="@Model.Parameters.TeacherUsername" />
                             <input type="hidden" name="SortBy" value="@Model.Parameters.SortBy" />
+                            <input type="hidden" name="SeeDrafts" value="@Model.Parameters.SeeDrafts.ToString().ToLower()" />
 
                             <button type="submit" class="page-link @nextState aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>

@@ -236,9 +236,18 @@ public class CourseRepository : ICourseRepository
     {
         IQueryable<Course> result = GetCourses();
 
+        if (parameters.SeeDrafts)
+        {
+            result = FilterDrafts(result);
+        }
+        else
+        {
+            result = FilterByLoggedUserRole(result, parameters.LoggedUserRole);
+        }
+
+        result = FilterByTeacherUsername(result, parameters.TeacherUsername);
         result = FilterByTitle(result, parameters.Title);
         result = FilterByTopic(result, parameters.Topic);
-        result = FilterByTeacherUsername(result, parameters.TeacherUsername);
         result = FilterByRating(result, parameters.Rating);
         result = FilterByMinRating(result, parameters.MinRating);
         result = SortBy(result, parameters.SortBy);
@@ -254,6 +263,27 @@ public class CourseRepository : ICourseRepository
         result = result.Skip(parameters.PageSize * (parameters.PageNumber - 1)).Take(parameters.PageSize);
 
         return new PaginatedList<Course>(result.ToList(), totalPages, parameters.PageNumber);
+    }
+
+    private IQueryable<Course> FilterDrafts(IQueryable<Course> courses)
+    {
+        return courses.Where(course => !course.Published);
+    }
+    private IQueryable<Course> FilterByLoggedUserRole(IQueryable<Course> courses, UserRole loggedUserRole)
+    {
+        if (loggedUserRole != UserRole.Admin)
+        {
+            //can't see deleted
+            //cant see drafts
+            return courses.Where(course => course.IsDeleted != true && course.Published == true);
+
+        }
+        else if (loggedUserRole == UserRole.Admin)
+        {
+            return courses;
+        }
+
+        return courses;
     }
 
     private static IQueryable<Course> FilterByTitle(IQueryable<Course> courses, string? title)

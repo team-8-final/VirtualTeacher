@@ -28,12 +28,26 @@ public class CourseService : ICourseService
 
     public List<Course> GetAllCourses()
     {
-        CourseQueryParameters emptyParams = new CourseQueryParameters();
-        emptyParams.PageSize = int.MaxValue;
-        return courseRepository.FilterBy(emptyParams);
+        CourseQueryParameters parameters = new CourseQueryParameters();
+        parameters.PageSize = int.MaxValue;
+        
+
+        return courseRepository.FilterBy(parameters);
     }
     public PaginatedList<Course> FilterCoursesBy(CourseQueryParameters parameters)
     {
+        User loggedUser = new User();
+        if (accountService.UserIsLoggedIn())
+        {
+            loggedUser = accountService.GetLoggedUser();
+        }
+        else
+        {
+            loggedUser.UserRole = UserRole.Anonymous;
+        }
+
+        parameters.LoggedUserRole = loggedUser.UserRole;
+
         return courseRepository.FilterBy(parameters);
     }
 

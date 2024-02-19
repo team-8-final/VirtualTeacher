@@ -5,6 +5,9 @@ namespace VirtualTeacher.Models.QueryParameters;
 
 public class CourseQueryParameters
 {
+    public UserRole LoggedUserRole { get; set; }
+
+    public bool SeeDrafts { get; set; }
     public string? Title { get; set; }
     public CourseTopic? Topic { get; set; }
     public string? TeacherUsername { get; set; }
