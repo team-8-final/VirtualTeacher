@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Lecture";
-
 }
 
 @model Lecture
@@ -19,7 +18,7 @@
     <div class="d-flex flex-column p-2" style="width: 75%">
         <div>
             <h4>
-                <img class="language-flag" src="~/images/flags/svgFlags/@(ViewBag.Course.CourseTopic).svg" alt="" />
+                <img class="language-flag" src="~/images/flags/svgFlags/@(ViewBag.Course.CourseTopic).svg" alt=""/>
                 <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId" style="color: #ffffff">@Model.Course.Title</a>
                 <span> > @Model.Title </span>
             </h4>
@@ -40,7 +39,7 @@
     @* Embedded video *@
     <div class="card p-2 col-md-9">
         <iframe style="width: 100%; aspect-ratio: 16/9" src="@Model.VideoLink" title="lecture" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        
+
         <div class="card-body">
             <h4 class="card-title">@Model.Description</h4>
             <hr/>
@@ -91,95 +90,130 @@
     </div>
 </div>
 
-@* Assignment *@
-<div class="mt-5">
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <h3>Assignment</h3>
-            <div class="d-flex justify-content-start align-items-center">
-                @if (!string.IsNullOrEmpty(Model.AssignmentLink))
-                {
-                    <a href="@Url.Action("GetAssignment", "Lecture", new { courseId = Model.CourseId, lectureId = Model.Id })" class="btn btn-primary me-2">Download Assignment</a>
-                }
-                else
-                {
-                    <p class="me-2">No assignment uploaded.</p>
-                }
+@* Notes *@
+<div class="d-flex align-items-center mt-4">
+    <h3 class="mb-1">Lecture Notes</h3>
+    <span class="text-muted ms-2">(only visible to you)</span>
+</div>
 
-                @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Admin") || User.IsInRole("Teacher")))
-                {
-                    if (!string.IsNullOrEmpty(Model.AssignmentLink))
-                    {
-                        <form asp-controller="Lecture" asp-action="DeleteAssignment" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post">
-                            <button type="submit" class="btn btn-danger">Delete Assignment</button>
-                        </form>
-                    }
-                }
-            </div>
+<div class="mb-5" style="position: relative;">
+
+    <form asp-controller="Lecture" asp-action="SaveNote" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post">
+        <div class="form-group">
+            <textarea class="form-control" id="noteContent" name="content" rows="6" placeholder="Enter your note here..." style="padding-bottom: 3rem;">@ViewBag.Note</textarea>
+            <button type="submit" class="btn btn-primary" style="position: absolute; right: 1rem; bottom: 1rem; z-index: 2;">Save Note</button>
         </div>
-        <div class="col-md-6">
-            @if (User.Identity is { IsAuthenticated: true }
-                 && (User.IsInRole("Admin") || (User.IsInRole("Teacher") && ViewBag.User.Id == ViewBag.Teacher.Id)))
-            {
-                <h3>Upload Assignment</h3>
-                <form asp-controller="Lecture" asp-action="CreateAssignment" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post" enctype="multipart/form-data">
-                    <div class="d-flex align-items-center">
-                        <div class="mb-3 me-2 flex-grow-1">
-                            <input class="form-control" type="file" id="assignmentUpload" name="file">
+    </form>
+</div>
+
+
+<div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                Lecture Assignment
+            </button>
+        </h2>
+        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+            <div class="accordion-body">
+                @* Assignment *@
+                <div class="mt-1">
+                    <div class="row">
+                        <div class="col-md-6 mb-1">
+                            <h4>Assignment</h4>
+                            <div class="d-flex justify-content-start align-items-center">
+                                @if (!string.IsNullOrEmpty(Model.AssignmentLink))
+                                {
+                                    <a href="@Url.Action("GetAssignment", "Lecture", new { courseId = Model.CourseId, lectureId = Model.Id })" class="btn btn-primary me-2">Download Assignment</a>
+                                }
+                                else
+                                {
+                                    <p class="me-2">No assignment uploaded.</p>
+                                }
+
+                                @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Admin") || User.IsInRole("Teacher")))
+                                {
+                                    if (!string.IsNullOrEmpty(Model.AssignmentLink))
+                                    {
+                                        <form asp-controller="Lecture" asp-action="DeleteAssignment" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post">
+                                            <button type="submit" class="btn btn-danger">Delete Assignment</button>
+                                        </form>
+                                    }
+                                }
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary mb-3" id="uploadAssignmentBtn" disabled>Upload</button>
+                        <div class="col-md-6">
+                            @if (User.Identity is { IsAuthenticated: true }
+                                 && (User.IsInRole("Admin") || (User.IsInRole("Teacher") && ViewBag.User.Id == ViewBag.Teacher.Id)))
+                            {
+                                <h4>Upload Assignment</h4>
+                                <form asp-controller="Lecture" asp-action="CreateAssignment" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post" enctype="multipart/form-data">
+                                    <div class="d-flex align-items-center">
+                                        <div class="mb-3 me-2 flex-grow-1">
+                                            <input class="form-control" type="file" id="assignmentUpload" name="file">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mb-3" id="uploadAssignmentBtn" disabled>Upload</button>
+                                    </div>
+                                </form>
+                            }
+                        </div>
                     </div>
-                </form>
-            }
-        </div>
-    </div>
-</div>
-
-<hr>
-
-@* Submission *@
-<div class="mt-5 @(string.IsNullOrEmpty(Model.AssignmentLink) ? "disabled-section" : "")">
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <h3>Submission</h3>
-            <div class="d-flex justify-content-start align-items-center">
-                @if (Model.Submissions.Any(s => s.StudentId == ViewBag.User.Id) && !string.IsNullOrEmpty(Model.AssignmentLink))
-                {
-                    <a href="@Url.Action("GetSubmission", "Lecture", new { courseId = Model.CourseId, lectureId = Model.Id })" class="btn btn-primary me-2">Download Submission</a>
-                }
-                else
-                {
-                    <p class="me-2">No submission uploaded.</p>
-                }
-
-                @if (Model.Submissions.Any(s => s.StudentId == ViewBag.User.Id) && !string.IsNullOrEmpty(Model.AssignmentLink))
-                {
-                    <form asp-controller="Lecture" asp-action="DeleteSubmission" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post">
-                        <button type="submit" class="btn btn-danger">Delete Submission</button>
-                    </form>
-                }
+                </div>
             </div>
         </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                Your Submission
+            </button>
+        </h2>
+        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+            <div class="accordion-body">
+                @* Submission *@
+                <div class="mt-1 @(string.IsNullOrEmpty(Model.AssignmentLink) ? "disabled-section" : "")">
+                    <div class="row">
+                        <div class="col-md-6 mb-1">
+                            <h4>Submission</h4>
+                            <div class="d-flex justify-content-start align-items-center">
+                                @if (Model.Submissions.Any(s => s.StudentId == ViewBag.User.Id) && !string.IsNullOrEmpty(Model.AssignmentLink))
+                                {
+                                    <a href="@Url.Action("GetSubmission", "Lecture", new { courseId = Model.CourseId, lectureId = Model.Id })" class="btn btn-primary me-2">Download Submission</a>
+                                }
+                                else
+                                {
+                                    <p class="me-2">No submission uploaded.</p>
+                                }
 
-        <div class="col-md-6">
-            <h3>Upload Submission</h3>
-            <form asp-controller="Lecture" asp-action="CreateSubmission" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post" enctype="multipart/form-data">
-                <div class="d-flex align-items-center">
-                    <div class="mb-3 me-2 flex-grow-1">
-                        <input class="form-control" type="file" id="submissionUpload" name="file">
+                                @if (Model.Submissions.Any(s => s.StudentId == ViewBag.User.Id) && !string.IsNullOrEmpty(Model.AssignmentLink))
+                                {
+                                    <form asp-controller="Lecture" asp-action="DeleteSubmission" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post">
+                                        <button type="submit" class="btn btn-danger">Delete Submission</button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4>Upload Submission</h4>
+                            <form asp-controller="Lecture" asp-action="CreateSubmission" asp-route-courseId="@Model.CourseId" asp-route-lectureId="@Model.Id" method="post" enctype="multipart/form-data">
+                                <div class="d-flex align-items-center">
+                                    <div class="mb-3 me-2 flex-grow-1">
+                                        <input class="form-control" type="file" id="submissionUpload" name="file">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mb-3" id="uploadSubmissionBtn">Upload</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary mb-3" id="uploadSubmissionBtn" >Upload</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-
-
-<hr>
 
 @* Comments *@
-<div class="mt-2">
+<div class="mt-5">
     <h3>
         Comments
     </h3>
@@ -378,4 +412,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
 </script>

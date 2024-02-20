@@ -38,7 +38,7 @@ public interface ICourseService
     Comment UpdateComment(int courseId, int lectureId, int commentId, CommentCreateDto dto);
     string DeleteComment(int courseId, int lectureId, int commentId);
 
-    public string GetNoteContent(int courseId, int lectureId);
+    public string GetNote(int courseId, int lectureId);
 
     public string UpdateNoteContent(int courseId, int lectureId, string updatedContent);
 

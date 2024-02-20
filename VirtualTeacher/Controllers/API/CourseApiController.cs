@@ -907,7 +907,7 @@ public class CourseApiController : ControllerBase
     {
         try
         {
-            return Ok(courseService.GetNoteContent(courseId, lectureId));
+            return Ok(courseService.GetNote(courseId, lectureId));
         }
         catch(UnauthorizedOperationException e)
         {

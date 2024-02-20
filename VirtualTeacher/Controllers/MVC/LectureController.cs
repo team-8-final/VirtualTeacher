@@ -83,6 +83,7 @@ public class LectureController : Controller
 
             ViewBag.Course = course;
             ViewBag.User = user;
+            ViewBag.Note = courseService.GetNote(courseId, id);
             ViewBag.Teacher = course.ActiveTeachers.FirstOrDefault();
 
             return View(lecture);
@@ -140,6 +141,7 @@ public class LectureController : Controller
         {
             return View(lectureVM);
         }
+
         try
         {
             var updatedLecture = courseService.UpdateLecture(lectureVM, courseId, lectureId);
@@ -239,7 +241,7 @@ public class LectureController : Controller
         {
             var message = courseService.DeleteAssignment(courseId, lectureId);
 
-            if(requestLocation == "teacherPanel")
+            if (requestLocation == "teacherPanel")
             {
                 return Redirect($"/Assignments");
             }
@@ -317,10 +319,11 @@ public class LectureController : Controller
     {
         try
         {
-            if(grade > 100)
+            if (grade > 100)
             {
                 return BadRequest("The value of grade cannot be more than 100");
             }
+
             byte grade2 = (byte)grade;
             courseService.AssessSubmission(lectureId, userId, grade2);
 
@@ -419,6 +422,36 @@ public class LectureController : Controller
         try
         {
             _ = courseService.DeleteComment(courseId, lectureId, commentId);
+            return Redirect($"/Course/{courseId}/Lecture/{lectureId}");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    // notes
+
+    [HttpGet("/{lectureId}/get-note")]
+    public IActionResult GetNote(int courseId, int lectureId)
+    {
+        try
+        {
+            var note = courseService.GetNote(courseId, lectureId);
+            return Json(note);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpPost("/{lectureId}/save-note")]
+    public IActionResult SaveNote(int courseId, int lectureId, string content)
+    {
+        try
+        {
+            var result = courseService.UpdateNoteContent(courseId, lectureId, content);
             return Redirect($"/Course/{courseId}/Lecture/{lectureId}");
         }
         catch (Exception e)

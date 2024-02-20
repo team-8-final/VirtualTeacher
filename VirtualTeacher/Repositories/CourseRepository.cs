@@ -475,7 +475,7 @@ public class CourseRepository : ICourseRepository
 
         if (context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId) == null)  // if the Note does not exist
         {
-            throw new EntityNotFoundException("You have no notes for this Lecture");
+            return "";
         }
 
         return context.Notes.FirstOrDefault(note => note.LectureId == lectureId && note.StudentId == userId).Content

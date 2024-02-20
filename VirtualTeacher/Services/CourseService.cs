@@ -430,7 +430,7 @@ public class CourseService : ICourseService
 
     //Notes
 
-    public string GetNoteContent(int courseId, int lectureId)
+    public string GetNote(int courseId, int lectureId)
     {
         var loggedUser = accountService.GetLoggedUser();
         _ = GetLectureById(courseId, lectureId); // checks if the lecture exists
