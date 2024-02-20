@@ -243,11 +243,6 @@ public static class LecturesData
             var fileNameWithoutExtension = "lecture-" + lectureId;
             var existingFiles = Directory.GetFiles(assignmentDirectory, fileNameWithoutExtension + ".*");
 
-            foreach (var existingFile in existingFiles)
-            {
-                File.Delete(existingFile);
-            }
-
             var fileExtension = ".txt";
             var fullPath = Path.Combine(assignmentDirectory, fileNameWithoutExtension + fileExtension);
 
