@@ -48,7 +48,7 @@ Follow these steps to set up and run the application:
 
 ## Database Diagram
 
-<img></img>
+<img https://ibb.co/Mg9Hs1g />
 
 <br>
 
@@ -59,12 +59,11 @@ Follow these steps to set up and run the application:
 ---
 
 ## Contributors
-{{For further information, please feel free to contact us: - or some other message}}
+For further information, please feel free to contact us:
 
 | Authors              | Emails    | GitHub|
-| ------               | ------    |------ |
-| First and Last names | email     | link  |
+| Stanimir Nenkov             | stanimir.nenkov.a54@learn.telerikacademy.com	  | [link](https://github.com/stnmrr) |
+| Tomi Tsolov               | tvtsolov@gmail.com    | [link](https://github.com/tvtsolov) |
+| George Halachev | [ApiExplorerSettings(IgnoreApi = true)]     | [link](https://github.com/george-halachev)  |
 
 ---
-<br />
-{{You may also include other sections depending on your project and wishes}}
