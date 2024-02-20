@@ -463,7 +463,7 @@ For further information, please feel free to contact us:
 
 | Authors                   | Emails                                                      | GitHub                                      |
 | ------                    | ------                                                      | ------                                      |
-| Stanimir Nenkov           | stanimir.nenkov.a54@learn.telerikacademy.com	              | [link](https://github.com/stnmrr)           |
+| Stanimir Nenkov           | staanimir@gmail.com                        	              | [link](https://github.com/stnmrr)           |
 | Tomi Tsolov               | tvtsolov@gmail.com                                          | [link](https://github.com/tvtsolov)         |
 | George Halachev           | george.halachev@gmail.com                                   | [link](https://github.com/george-halachev)  |
 
