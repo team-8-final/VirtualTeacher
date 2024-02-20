@@ -62,5 +62,10 @@ namespace VirtualTeacher.Repositories
             return context.TeacherApplications
                 .Any(a => a.StudentId == studentId && !a.IsCompleted);
         }
+
+        public int GetActiveApplicationsCount()
+        {
+            return context.TeacherApplications.Where(a => !a.IsCompleted).Count();
+        }
     }
 }

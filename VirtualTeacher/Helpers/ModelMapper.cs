@@ -38,7 +38,7 @@ public class ModelMapper
             FirstName = user.FirstName,
             LastName = user.LastName,
             UserRole = user.UserRole.ToString(),
-            EnrolledCourses = user.EnrolledCourses?.Select(c => c.Title).ToList() ?? new List<string>()
+            EnrolledCourses = user.EnrolledCourses?.Select(c => c.Title).ToList() ?? new List<string>(),
         };
     }
 

@@ -40,9 +40,12 @@ public class User
     public IList<Note> Notes { get; set; } = null!;
     public IList<Comment> LectureComments { get; set; } = null!;
 
+    public int? TeacherApplicationdId { get; set; }
+    public TeacherApplication? TeacherApplication { get; set; }
+
+
     // teachers only
     public IList<Course> CreatedCourses { get; set; } = null!;
     public IList<Lecture> CreatedLectures { get; set; } = null!;
     public IList<Submission> CreatedAssignments { get; set; } = null!;
-    //public TeacherApplication TeacherApplication
 }

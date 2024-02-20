@@ -148,6 +148,18 @@ public class AppDbContext : DbContext
             .HasForeignKey(comment => comment.AuthorId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<TeacherApplication>()
+             .HasOne(application => application.Student)
+             .WithOne(student => student.TeacherApplication)
+             .HasForeignKey<TeacherApplication>(application => application.StudentId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<User>()
+            .HasOne(user => user.TeacherApplication)
+            .WithOne(application => application.Student)
+            .HasForeignKey<TeacherApplication>(application => application.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         // uniques
         modelBuilder.Entity<User>()
             .HasIndex(user => user.Username)

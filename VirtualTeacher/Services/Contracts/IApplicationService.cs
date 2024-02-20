@@ -8,5 +8,6 @@ namespace VirtualTeacher.Services.Contracts
         TeacherApplication GetById(int id);
         public TeacherApplication CreateApplication();
         public string ResolveApplication(int applicationId, bool resolution);
+        public int GetActiveApplicationsCount();
     }
 }

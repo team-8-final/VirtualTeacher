@@ -55,7 +55,9 @@ namespace VirtualTeacher.Repositories
 
         public User? GetById(int id)
         {
-            User? user = GetUsers().FirstOrDefault(u => u.Id == id);
+            User? user = GetUsers()
+                .Include(u => u.TeacherApplication)
+                .FirstOrDefault(u => u.Id == id);
 
             return user;
         }
