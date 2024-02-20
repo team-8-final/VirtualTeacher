@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="PrivateData\Assignments\" />
+    <Folder Include="PrivateData\Submissions\" />
   </ItemGroup>
 
 </Project>

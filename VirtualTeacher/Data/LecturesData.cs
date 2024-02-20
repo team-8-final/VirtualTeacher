@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using VirtualTeacher.Models;
 using VirtualTeacher.Models.Enums;
 
@@ -7,11 +9,10 @@ public static class LecturesData
 {
     public static List<Lecture> Seed()
     {
-        return new List<Lecture>
+        List < Lecture> lectures = new List<Lecture>
         {
-            // Lectures for Course 1: English for Beginners
-            new() { Id = 1, TeacherId = 2, CourseId = 1, Title = "Basic Grammar", Description = "Learn the foundational grammar necessary for daily conversations.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
-            new() { Id = 2, TeacherId = 2, CourseId = 1, Title = "Common Vocabulary", Description = "Expand your English vocabulary with everyday words.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
+            new() { Id = 1, TeacherId = 2, CourseId = 1, Title = "Basic Grammar", Description = "Learn the foundational grammar necessary for daily conversations.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = GenerateAssignmentLink(1,1)},
+            new() { Id = 2, TeacherId = 2, CourseId = 1, Title = "Common Vocabulary", Description = "Expand your English vocabulary with everyday words.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = GenerateAssignmentLink(1,2)},
             new() { Id = 3, TeacherId = 2, CourseId = 1, Title = "Simple Sentences", Description = "Construct simple sentences for effective communication.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
             new() { Id = 4, TeacherId = 2, CourseId = 1, Title = "Conversational Phrases", Description = "Master phrases that make conversations flow smoothly.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
             new() { Id = 5, TeacherId = 2, CourseId = 1, Title = "Pronunciation Practice", Description = "Improve your English pronunciation and sound more natural.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
@@ -71,7 +72,7 @@ public static class LecturesData
             new() { Id = 43, TeacherId = 10, CourseId = 9, Title = "Sentence Structure", Description = "Advanced sentence structure techniques for clarity and fluency.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
 
             // Lectures for Course 10: Advanced German: Language & Culture
-            new() { Id = 44, TeacherId = 2, CourseId = 10, Title = "German Dialects", Description = "Explore the variety and richness of German dialects.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
+            new() { Id = 44, TeacherId = 2, CourseId = 10, Title = "German Dialects", Description = "Explore the variety and richness of German dialects.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = GenerateAssignmentLink(10,44)},
             new() { Id = 45, TeacherId = 2, CourseId = 10, Title = "German Literature", Description = "An introduction to classic and contemporary German literature.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
             new() { Id = 46, TeacherId = 2, CourseId = 10, Title = "German History and Culture", Description = "Understand the historical events that shaped Germany and its culture.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
             new() { Id = 47, TeacherId = 2, CourseId = 10, Title = "Formal and Informal Speech", Description = "Nuances of formal and informal speech in German.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
@@ -226,5 +227,49 @@ public static class LecturesData
             new() { Id = 156, TeacherId = 4, CourseId = 30, Title = "Russian Cinema and Media", Description = "Analyze Russian cinema and media to understand contemporary societal issues.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
             new() { Id = 157, TeacherId = 4, CourseId = 30, Title = "Analyzing Russian Texts", Description = "Learn techniques for analyzing Russian literary and non-literary texts.", VideoLink = "https://www.youtube.com/embed/e6FKOPlZmYk", AssignmentLink = ""},
         };
+
+
+        foreach (var lecture in lectures.Where(lecture => lecture.Id==1))
+        {
+            lecture.AssignmentLink = GenerateAssignmentLink(lecture.CourseId, lecture.Id);
+        }
+
+
+
+
+        static string GenerateAssignmentLink(int courseId, int lectureId)
+        {
+            var privateRoot = Path.Combine(Directory.GetCurrentDirectory(), "PrivateData");
+            var assignmentDirectory = Path.Combine(privateRoot, "Assignments", "course-" + courseId);
+
+            if (!Directory.Exists(assignmentDirectory))
+            {
+                Directory.CreateDirectory(assignmentDirectory);
+            }
+
+            var fileNameWithoutExtension = "lecture-" + lectureId;
+            var existingFiles = Directory.GetFiles(assignmentDirectory, fileNameWithoutExtension + ".*");
+
+            foreach (var existingFile in existingFiles)
+            {
+                File.Delete(existingFile);
+            }
+
+            // Assuming you have some logic to determine the fileExtension and file paths
+            var fileExtension = ".txt";
+            var fullPath = Path.Combine(assignmentDirectory, fileNameWithoutExtension + fileExtension);
+
+            // Assuming you have some logic to create the assignment in the database
+            // courseRepository.CreateAssignment(courseId, lectureId, fullPath);
+
+            // Return the constructed assignment link
+            return fullPath;
+        }
+
+
+
+
+        return lectures;
+
     }
 }
