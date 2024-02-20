@@ -356,7 +356,7 @@
                             }
                         </div>
                         <span class="badge bg-black bg-opacity-25 rounded-pill" style="margin-top: 14px;">
-                            @rating.Value / 5
+                            @await Html.PartialAsync("_DisplayRating", rating.Value)
                         </span>
                     </li>
                 }

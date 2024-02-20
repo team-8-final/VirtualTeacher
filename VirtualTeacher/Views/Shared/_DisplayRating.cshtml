@@ -1,25 +1,41 @@
 ﻿
 
-@model int
+@model double
 
 <div class="">
 
     <span >
         <div class="rating-group">
             @{
-                double endValue = @Model;
-                for (double i = 1; i <= 5; i ++)
+                double roundedRating = Model;
+                bool hasHalfStarValue = Math.Truncate(roundedRating) > 0;
+                double endValue = roundedRating;
+                bool isHalf = true;
+                for (double i = 0.5; i <= 5; i += 0.5)
                 {
-                    if (i <= endValue)
+                    if (isHalf)
                     {
-                        <label class="rating__label " style="cursor: default !important;"><i class="rating__icon rating__icon--star fa fa-star yellow-star"></i>
-
-                        </label>
+                        if (i <= endValue)
+                        {
+                            <label class="rating__label rating__label--half"><i class="rating__icon rating__icon--star fa fa-star-half yellow-star"></i></label>
+                        }
+                        else
+                        {
+                            <label class="rating__label rating__label--half"><i class="rating__icon rating__icon--star fa fa-star-half white-star"></i></label>
+                        }
                     }
                     else
                     {
-                        <label class="rating__label" style="cursor: default !important;"><i class="rating__icon rating__icon--star fa fa-star white-star"></i></label>
+                        if (i <= endValue)
+                        {
+                            <label class="rating__label"><i class="rating__icon rating__icon--star fa fa-star yellow-star"></i></label>
+                        }
+                        else
+                        {
+                            <label class="rating__label"><i class="rating__icon rating__icon--star fa fa-star white-star"></i></label>
+                        }
                     }
+                    isHalf = !isHalf;
                 }
             }
 

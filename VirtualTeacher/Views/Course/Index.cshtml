@@ -163,7 +163,7 @@
                                 <div class="position-absolute bottom-10px end-15px">
                                     @{
                                         double rating = (course.Ratings.Any() ? course.Ratings.Average(r => r.Value) : 0.0);
-                                        int roundedRating = Convert.ToInt32(Math.Ceiling(rating));
+                                        double roundedRating = Math.Round(rating * 2) / 2;
                                     }
 
                                     <div>
@@ -333,6 +333,7 @@
                                     <label aria-label="5 stars" class="rating__label" for="rating2-50"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
                                         <input class="rating__input" name="MinRating" id="rating2-50" value="5" type="radio" @(Model.Parameters.MinRating == 5 ? "checked" : "")>
                                 </div>
+
                             </div>
 
                             <div class="modal-footer">
