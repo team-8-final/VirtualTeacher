@@ -6,6 +6,7 @@ using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.DTOs.User;
 using Microsoft.EntityFrameworkCore;
 using VirtualTeacher.Exceptions;
+using VirtualTeacher.Models.DTOs.Account;
 
 namespace VirtualTeacher.Repositories
 {
@@ -83,7 +84,7 @@ namespace VirtualTeacher.Repositories
             return user;
         }
 
-        public User? UpdateUser(int id, UserUpdateDto updateData)
+        public User? UpdateAccount(int id, AccountUpdateDto updateData)
         {
             var updatedUser = GetById(id);
 
@@ -95,6 +96,27 @@ namespace VirtualTeacher.Repositories
 
             updatedUser.Email = updateData.Email ?? updatedUser.Email;
             updatedUser.Password = updateData.Password ?? updatedUser.Password;
+
+            context.Update(updatedUser);
+            context.SaveChanges();
+
+            return updatedUser;
+        }
+
+        public User? UpdateUser(int id, UserUpdateDto updateData)
+        {
+            var updatedUser = GetById(id);
+
+            if (updatedUser == null)
+                return null;
+
+            updatedUser.FirstName = updateData.FirstName ?? updatedUser.FirstName;
+            updatedUser.LastName = updateData.LastName ?? updatedUser.LastName;
+
+            updatedUser.Username = updateData.Username ?? updatedUser.Username;
+            updatedUser.Email = updateData.Email ?? updatedUser.Email;
+
+            updatedUser.UserRole = updateData.UserRole;
 
             context.Update(updatedUser);
             context.SaveChanges();

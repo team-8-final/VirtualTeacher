@@ -1,32 +1,80 @@
 ﻿@{
     ViewData["Title"] = "Users";
     var userCount = Convert.ToInt32(ViewData["UserCount"]);
-    var searchUserCount = Model.Count();
+    var searchUserCount = Model.Users.Count();
+    var applicationCount = Model.Applications.Count();
 }
 
-@model PaginatedList<User>
+@model UserIndexViewModel
+
+@*TEACHER APPLICATION BLOCK*@
+<div class="accordion" id="accordionExample" style="width: 47rem; margin-bottom: 20px;">
+    <div class="accordion-item">
+
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <b>Teacher Applications</b>
+                @{
+                    if (applicationCount != 0)
+                    {
+                        <span> (@applicationCount unresolved)</span>
+                    }
+                }
+            </button>
+        </h2>
+
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+
+            <div class="accordion-body">
+                @{
+                    if (Model.Applications.Count() == 0)
+                    {
+                        <span> No applications.</span>
+                    }
+                    else
+                    {
+                        int counter = 1;
+                        foreach (var application in Model.Applications)
+                        {
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <span>@counter. @application.Student.FirstName @application.Student.LastName (&#64;@application.Student.Username) - @application.Student.Email </span>
+                                </div>
+
+                                <div>
+                                    <a asp-controller="Application" asp-action="Resolve" asp-route-applicationId="@application.Id" asp-route-verdict="approve" class="btn btn-success btn-sm" method="get">Approve</a>
+                                    <a asp-controller="Application" asp-action="Resolve" asp-route-applicationId="@application.Id" asp-route-verdict="deny" class="btn btn-danger btn-sm">Deny</a>
+                                </div>
+                                
+                            </div>
+                           
+                            if (counter != applicationCount)
+                            {
+                                <hr />
+                            }
+
+                            counter++;
+                        }
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr style="width: 47rem;"/>
 
 @*USER COUNTER & SORT DROPDOWN*@
 <div class="d-flex" style="margin-bottom: 5px">
     <span style="margin-right: 15px;">The site currently has @userCount registered users</span>
-
-    <div class="dropdown">
-        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Sort By
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="username" asp-route-SortOrder="@ViewData["SortOrder"]">Username</a></li>
-            <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="firstname" asp-route-SortOrder="@ViewData["SortOrder"]">First Name </a></li>
-            <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="lastname" asp-route-SortOrder="@ViewData["SortOrder"]">Last Name</a></li>
-            <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="role" asp-route-SortOrder="@ViewData["SortOrder"]">Role</a> </li>
-        </ul>
-    </div>
 </div>
 
 <div class="d-flex justify-content-between">
     <div style="width: 75%;">
         @{
-            if (Model.Count == 0)
+            if (Model.Users.Count == 0)
             {
                 <p>
                     No users found. <a asp-controller="User" asp-action="Index" style="text-decoration: none;">Reset?</a>
@@ -35,38 +83,20 @@
             else
             {
                 int counter = 1;
-                foreach (var user in Model)
+                foreach (var user in Model.Users)
                 {
                     <div class="card" style="margin-bottom: 5px;">
-                        
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    @counter. @user.FirstName @user.LastName (&#64;@user.Username) - @user.Email - @user.UserRole
-                                </div>
+                        <a a asp-controller="User" asp-action="Update" asp-route-id="@user.Id" class="custom-hover" style="text-decoration:none; color: #000000">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
 
-                                <div>
-                                    <div class="btn-group">
-                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Role
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a class="dropdown-item" type="button" asp-controller="User" asp-action="ChangeRole" asp-route-id="@user.Id" asp-route-roleId="0">Student</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" type="button" asp-controller="User" asp-action="ChangeRole" asp-route-id="@user.Id" asp-route-roleId="1">Teacher</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" type="button" asp-controller="User" asp-action="ChangeRole" asp-route-id="@user.Id" asp-route-roleId="2">Admin</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Delete</a>
-                                </div>
+                                    <div>@counter. @user.FirstName @user.LastName (&#64;@user.Username) - @user.Email</div>
+
+                                    <div>@user.UserRole</div>
+                                    
+                                </div>  
                             </div>
-                        </div>
-
+                        </a>
                     </div>
 
                     counter++;
@@ -103,7 +133,27 @@
                         </select>
                     </div>
 
-                    <input type="submit" value="Search" class="btn btn-primary btn-sm">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <input type="submit" value="Search" class="btn btn-secondary btn-sm">
+                        </div>
+
+                        <div>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Sort By
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="username" asp-route-SortOrder="@ViewData["SortOrder"]">Username</a></li>
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="firstname" asp-route-SortOrder="@ViewData["SortOrder"]">First Name </a></li>
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="lastname" asp-route-SortOrder="@ViewData["SortOrder"]">Last Name</a></li>
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index" asp-route-SortBy="role" asp-route-SortOrder="@ViewData["SortOrder"]">Role</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </form>           
             </div>
         </div>
@@ -112,10 +162,10 @@
 
 @*PAGINATION*@
 @{
-    string prevState = (Model.HasPreviousPage) ? "" : "disabled";
-    string nextState = (Model.HasNextPage) ? "" : "disabled";
-    int prevPage = Model.PageNumber - 1;
-    int nextPage = Model.PageNumber + 1;
+    string prevState = (Model.Users.HasPreviousPage) ? "" : "disabled";
+    string nextState = (Model.Users.HasNextPage) ? "" : "disabled";
+    int prevPage = Model.Users.PageNumber - 1;
+    int nextPage = Model.Users.PageNumber + 1;
 }
 
 <div class="d-flex justify-content-center" style="margin-top: 5px;">
@@ -129,9 +179,9 @@
             </li>
 
             @{
-                for (int i = 1; i <= Model.TotalPages; i++)
+                for (int i = 1; i <= Model.Users.TotalPages; i++)
                 {
-                    if (i == Model.PageNumber)
+                    if (i == Model.Users.PageNumber)
                     {
                         <li class="page-item">
                             <a class="page-link active" aria-current="page">@i</a>

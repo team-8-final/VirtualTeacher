@@ -1,4 +1,5 @@
 ﻿using VirtualTeacher.Models;
+using VirtualTeacher.Models.DTOs.Account;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.QueryParameters;
 
@@ -14,7 +15,8 @@ namespace VirtualTeacher.Services.Contracts
         List<User> GetAvailableTeachers(int courseId);
         public List<User> GetUsersByKeyWord(string keyWord);
         User Create(UserCreateDto dto);
-        User Update(int idToUpdate, UserUpdateDto dto);
+        User UpdateAccount(int idToUpdate, AccountUpdateDto dto);
+        User UpdateUser(int idToUpdate, UserUpdateDto dto);
         string Delete(int id);
         User ChangeRole(int id, int roleId);
         int GetUserCount();

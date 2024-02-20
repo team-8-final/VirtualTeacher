@@ -16,7 +16,7 @@ namespace VirtualTeacher.Services.Contracts
         string EncodePassword(string password);
         User GetLoggedUser();
         bool UserIsLoggedIn();
-        User AccountUpdate(UserUpdateDto dto);
+        User AccountUpdate(AccountUpdateDto dto);
         string Sha512(string input);
         string SaveAccountAvatar(IFormFile file);
         string GetUserAvatar(string username);

@@ -3,9 +3,8 @@
     public class ApplicationResponseDto
     {
         public int Id { get; set; }
-        public string Teacher { get; set; } = null!;
-        public int TeacherId { get; set; }
-        public string Course { get; set; } = null!;
-        public int CourseId { get; set; }
+        public string Student { get; set; } = null!;
+        public int StudentId { get; set; }
+        public bool IsCompleted { get; set; }
     }
 }

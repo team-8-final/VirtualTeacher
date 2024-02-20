@@ -19,43 +19,27 @@ namespace VirtualTeacher.Repositories
         {
             List<TeacherApplication> applications = context.TeacherApplications.
                 Where(a => !a.IsCompleted)
-                .Include(a => a.Teacher)
-                .Include(a => a.Course)
+                .Include(a => a.Student)
                 .ToList();
 
             return applications;
         }
 
-        public List<TeacherApplication> GetCourseApplications(int courseId)
-        {
-            List<TeacherApplication> courseApplications = context.TeacherApplications
-                .Where(a => !a.IsCompleted)
-                .Where(a => a.CourseId == courseId)
-                .Include(a => a.Teacher)
-                .Include(a => a.Course)
-                .ToList();
-
-            return courseApplications;
-        }
-
         public TeacherApplication? GetById(int id)
         {
             TeacherApplication? application = context.TeacherApplications
-                .Include(a => a.Teacher)
-                .Include(a => a.Course)
+                .Include(a => a.Student)
                 .FirstOrDefault(a => a.Id == id);
 
             return application;
         }
     
-        public TeacherApplication CreateApplication(Course course, User teacher)
+        public TeacherApplication CreateApplication(User student)
         {
             var newApplication = new TeacherApplication
             {
-                CourseId = course.Id,
-                Course = course,
-                TeacherId = teacher.Id,
-                Teacher = teacher
+                StudentId = student.Id,
+                Student = student
             };
 
             context.TeacherApplications.Add(newApplication);
@@ -73,10 +57,10 @@ namespace VirtualTeacher.Repositories
         }
 
         //Validations
-        public bool CheckDuplicateApplication(int courseId, int teacherId)
+        public bool CheckDuplicateApplication(int studentId)
         {
             return context.TeacherApplications
-                .Any(a => a.CourseId == courseId && a.TeacherId == teacherId && !a.IsCompleted);
+                .Any(a => a.StudentId == studentId && !a.IsCompleted);
         }
     }
 }

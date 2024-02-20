@@ -141,7 +141,7 @@ namespace VirtualTeacher.Controllers.API
             try
             {
                 accountService.ValidateAuthorOrAdmin(id);
-                var updatedUser = userService.Update(id, updateData);
+                var updatedUser = userService.UpdateUser(id, updateData);
                 var userDto = mapper.MapResponse(updatedUser);
 
                 return Ok(userDto);

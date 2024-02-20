@@ -20,7 +20,7 @@
                                 <div class="d-flex justify-content-between">
                                     @teacher.FirstName @teacher.LastName
 
-                                    <a asp-controller="Course" asp-action="AddTeacher" asp-route-courseId="@TempData["courseId"]" asp-route-username="@teacher.Username" class="btn btn-outline-secondary btn-sm">
+                                    <a asp-controller="Course" asp-action="AddTeacher" asp-route-courseId="@TempData["courseId"]" asp-route-teacherId="@teacher.Id" class="btn btn-outline-secondary btn-sm">
                                         <strong><i class="fa-solid fa-plus"></i></strong>
                                     </a>
                                 </div>

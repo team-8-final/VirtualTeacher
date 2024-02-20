@@ -13,7 +13,7 @@ namespace VirtualTeacher.Controllers.API
 {
     [ApiController]
     [Route("api/")]
-    [Tags("Course > Application")]
+    [Tags("User > Teacher Application")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ApplicationApiController : ControllerBase
     {
@@ -58,50 +58,20 @@ namespace VirtualTeacher.Controllers.API
         }
 
         /// <summary>
-        /// Retrieves all Teacher Applications in a specific Course.
-        /// </summary>
-        /// <remarks>
-        /// Only admins and active course teachers are able to receive this list.
-        /// </remarks>
-        /// <returns>
-        /// The list of Teacher Applications containing application id, user id, course id.
-        /// </returns>
-        /// <response code="200">The list has been successfully retrieved</response>
-        /// <response code="401">Only admins and active course teachers can view active course applications.</response>
-        [HttpGet("course/{courseId}/applications")]
-        public IActionResult GetCourseApplications(int courseId)
-        {
-            try
-            {
-                var applications = applicationService
-                   .GetCourseApplications(courseId)
-                   .Select(application => mapper
-                   .MapResponse(application)).ToList();
-
-
-                return Ok(applications);
-            }
-            catch (UnauthorizedOperationException e)
-            {
-                return Unauthorized(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Creates a Teacher Applications in a specific Course, by the logged user.
+        /// Creates a Teacher Application, by the logged user.
         /// </summary>
         /// <returns>
-        /// The created Teacher Application details
+        /// The created Teacher Application details.
         /// </returns>
         /// <response code="200">The application was successfully created</response>
-        /// <response code="400">You are already an active teacher in this course / You already have a pending teacher application in this course  </response>
-        /// <response code="401">Only teacher users can apply to be teachers in a course.</response>
-        [HttpPost("course/{courseId}/application")]
-        public IActionResult CreateApplication(int courseId)
+        /// <response code="400">You already have a pending teacher application.</response>
+        /// <response code="401">Only student users can apply to become teachers.</response>
+        [HttpPost("course/application")]
+        public IActionResult CreateApplication()
         {
             try
             {
-                var teacherApplication = applicationService.CreateApplication(courseId);
+                var teacherApplication = mapper.MapResponse(applicationService.CreateApplication());
 
                 return Ok(teacherApplication);
             }
@@ -125,8 +95,8 @@ namespace VirtualTeacher.Controllers.API
         /// Confirmation of the Teacher Application resolution.
         /// </returns>
         /// <response code="200">The application was resolved successfully.</response>
-        /// <response code="400">You are already an active teacher in this course</response>
-        /// <response code="401">Only admins and active course teachers can resolve applications.</response>
+        /// <response code="400">You are already a teacher.</response>
+        /// <response code="401">Only admins can resolve applications.</response>
         /// <response code="404">Application with this id was not found.</response>
         /// <response code="409">This application is already marked as complete.</response>
         [HttpPut("{applicationId}")]

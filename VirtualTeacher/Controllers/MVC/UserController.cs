@@ -1,19 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VirtualTeacher.Exceptions;
+using VirtualTeacher.Helpers;
 using VirtualTeacher.Helpers.CustomAttributes;
+using VirtualTeacher.Models;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.QueryParameters;
+using VirtualTeacher.Services;
 using VirtualTeacher.Services.Contracts;
+using VirtualTeacher.ViewModels.Users;
 
 namespace VirtualTeacher.Controllers.MVC
 {
     public class UserController : Controller
     {
         private readonly IUserService userService;
+        private readonly IApplicationService applicationService;
+        private readonly ModelMapper mapper;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IApplicationService applicationService, ModelMapper mapper)
         {
             this.userService = userService;
+            this.applicationService = applicationService;
+            this.mapper = mapper;
         }
 
         [IsAdmin]
@@ -25,26 +33,33 @@ namespace VirtualTeacher.Controllers.MVC
             ViewData["SortOrder"] = string.IsNullOrEmpty(parameters.SortOrder) ? "desc" : "";
             ViewData["UserCount"] = userService.GetUserCount();
             var users = userService.FilterBy(parameters);
+            var applications = applicationService.GetAllApplications();
 
-            return View(users);
+            UserIndexViewModel vm = new UserIndexViewModel()
+            {
+                Users = users,
+                Applications = applications
+            };
+
+            return View(vm);
         }
 
         [IsAdmin]
         [HttpGet]
-        [Route("{id}/ChangeRole/{roleId}")]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult ChangeRole([FromRoute] int id, [FromRoute] int roleId)
+        [Route("User/{id}/Update/")]
+        public IActionResult Update([FromRoute] int id)
         {
             try
             {
-                userService.ChangeRole(id, roleId);
+                var user = userService.GetById(id);
+                UserUpdateViewModel userVM = mapper.MapUpdateVM(user);
 
-                return RedirectToAction("Index", "Users");
+                return View(userVM);
             }
-            catch (InvalidUserInputException e)
+            catch (EntityNotFoundException e)
             {
-                TempData["StatusCode"] = StatusCodes.Status400BadRequest;
-                TempData["ErrorMessage"] = e.Message;
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                ViewData["ErrorMessage"] = e.Message;
 
                 return RedirectToAction("Error", "Shared");
             }
@@ -57,36 +72,48 @@ namespace VirtualTeacher.Controllers.MVC
             }
         }
 
+        //todo exceptions
+        [IsAdmin]
+        [HttpPost]
+        [Route("User/{id}/Update/")]
+        public IActionResult Update([FromRoute] int id, UserUpdateViewModel userVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(userVM);
+            }
+            try
+            {
+                var updatedUser = userService.UpdateUser(id, userVM);
+
+                return RedirectToAction("Index", "User");
+            }
+            catch (Exception e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+        }
+
         [IsAdmin]
         [HttpGet]
+        [Route("User/{id}/Delete")]
         public IActionResult Delete([FromRoute] int id)
         {
             try
             {
                 userService.Delete(id);
 
-                return RedirectToAction("Index", "Users");
-            }
-            catch (InvalidUserInputException e)
-            {
-                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
-                TempData["ErrorMessage"] = e.Message;
-
-                return RedirectToAction("Error", "Shared");
-            }
-            catch (UnauthorizedOperationException e)
-            {
-                TempData["StatusCode"] = StatusCodes.Status401Unauthorized;
-                TempData["ErrorMessage"] = e.Message;
-
-                return RedirectToAction("Error", "Shared");
+                return Json(new { success = true });
             }
             catch (Exception e)
             {
                 TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
                 TempData["ErrorMessage"] = e.Message;
 
-                return RedirectToAction("Error", "Shared");
+                return Json(new { success = false, errorMessage = e.Message });
             }
         }
     }

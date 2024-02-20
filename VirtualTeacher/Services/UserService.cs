@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Models;
+using VirtualTeacher.Models.DTOs.Account;
 using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.Enums;
 using VirtualTeacher.Models.QueryParameters;
@@ -90,7 +91,7 @@ namespace VirtualTeacher.Services
             return foundUser ?? throw new EntityNotFoundException($"User with email '{email}' was not found.");
         }
 
-        public User Update(int idToUpdate, UserUpdateDto dto)
+        public User UpdateAccount(int idToUpdate, AccountUpdateDto dto)
         {
             if (userRepository.CheckDuplicateEmail(dto.Email))
                 throw new DuplicateEntityException($"Email {dto.Email} is already in use!");
@@ -99,6 +100,21 @@ namespace VirtualTeacher.Services
             {
                 dto.Password = accountService.Sha512(dto.Password);
             }
+
+            var updatedUser = userRepository.UpdateAccount(idToUpdate, dto);
+
+            return updatedUser ?? throw new Exception("Your profile could not be updated.");
+        }
+
+        public User UpdateUser(int idToUpdate, UserUpdateDto dto)
+        {
+            var user = GetById(idToUpdate);
+
+            if (user.Email != dto.Email && userRepository.CheckDuplicateEmail(dto.Email))
+                throw new DuplicateEntityException($"Email {dto.Email} is already in use!");
+
+            if (user.Username != dto.Username && userRepository.CheckDuplicateUsername(dto.Username))
+                throw new DuplicateEntityException($"Username {dto.Username} is already in use!");
 
             var updatedUser = userRepository.UpdateUser(idToUpdate, dto);
 
@@ -148,5 +164,7 @@ namespace VirtualTeacher.Services
         {
             return userRepository.GetUserCount();
         }
+
+
     }
 }

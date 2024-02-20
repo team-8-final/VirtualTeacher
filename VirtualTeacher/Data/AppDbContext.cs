@@ -51,9 +51,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TeacherApplication>().HasData(
             new List<TeacherApplication>
             {
-                new() {Id = 1, TeacherId = 4, CourseId = 1},
-                new() {Id = 2, TeacherId = 8, CourseId = 2},
-                new() {Id = 3, TeacherId = 1, CourseId = 14}
+                new() {Id = 1, StudentId = 15},
             });
 
         modelBuilder.Entity<Submission>().HasData(SubmissionsData.Seed());
@@ -149,16 +147,6 @@ public class AppDbContext : DbContext
             .WithMany(user => user.LectureComments)
             .HasForeignKey(comment => comment.AuthorId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        //modelBuilder.Entity<TeacherApplication>()
-        //   .HasOne(a => a.Teacher)
-        //   .WithMany(user => user.TeacherApplications)
-        //   .HasForeignKey(a => a.TeacherId);
-
-        //modelBuilder.Entity<TeacherApplication>()
-        //    .HasOne(a => a.Course)
-        //    .WithMany(course => course.TeacherApplications)
-        //    .HasForeignKey(a => a.CourseId);
 
         // uniques
         modelBuilder.Entity<User>()

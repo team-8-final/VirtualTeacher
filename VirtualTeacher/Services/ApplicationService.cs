@@ -12,17 +12,14 @@ namespace VirtualTeacher.Services
     public class ApplicationService : IApplicationService
     {
         private readonly IApplicationRepository applicationRepository;
-        private readonly ICourseService courseService;
         private readonly IAccountService accountService;
         private readonly IUserService userService;
 
-        public ApplicationService(IApplicationRepository applicationRepository, ICourseService courseService, IAccountService accountService, IUserService userService)
+        public ApplicationService(IApplicationRepository applicationRepository, IAccountService accountService, IUserService userService)
         {
             this.applicationRepository = applicationRepository;
-            this.courseService = courseService;
             this.accountService = accountService;
             this.userService = userService;
-
         }
 
         public List<TeacherApplication> GetAllApplications()
@@ -37,62 +34,41 @@ namespace VirtualTeacher.Services
             return applications;
         }
 
-        public List<TeacherApplication> GetCourseApplications(int courseId)
+        public TeacherApplication CreateApplication()
         {
             var loggedUser = accountService.GetLoggedUser();
-            var course = courseService.GetCourseById(courseId);
 
-            if (loggedUser.UserRole != UserRole.Admin
-                && course.ActiveTeachers.All(t => t != loggedUser))
-                throw new UnauthorizedOperationException("Only admins and active course teachers can view active course applications.");
+            if (loggedUser.UserRole != UserRole.Student)
+                throw new UnauthorizedOperationException("Only students users can apply to be teachers.");
 
-            var courseApplications = applicationRepository.GetCourseApplications(courseId);
+            if (applicationRepository.CheckDuplicateApplication(loggedUser.Id))
+                throw new DuplicateEntityException("You already have a pending teacher application.");
 
-            return courseApplications;
-        }
-
-        //todo fix slow performance
-        public TeacherApplication CreateApplication(int courseId)
-        {
-            var course = courseService.GetCourseById(courseId);
-            var loggedUser = accountService.GetLoggedUser();
-
-            if (loggedUser.UserRole != UserRole.Teacher)
-                throw new UnauthorizedOperationException("Only teacher users can apply to be teachers in a course.");
-
-            if (course.ActiveTeachers.Any(u => u.Id == loggedUser.Id))
-                throw new DuplicateEntityException("You are already an active teacher in this course");
-
-            if (applicationRepository.CheckDuplicateApplication(courseId, loggedUser.Id))
-                throw new DuplicateEntityException("You already have a pending teacher application in this course.");
-
-            var createdApplication = applicationRepository.CreateApplication(course, loggedUser);
+            var createdApplication = applicationRepository.CreateApplication(loggedUser);
 
             return createdApplication;
         }
-
 
         public string ResolveApplication(int applicationId, bool resolution)
         {
             var loggedUser = accountService.GetLoggedUser();
             var application = GetById(applicationId);
 
-            var course = courseService.GetCourseById(application.CourseId);
-            var teacher = userService.GetById(application.TeacherId);
+            var student = userService.GetById(application.StudentId);
             
-            if (loggedUser.UserRole != UserRole.Admin 
-                && course.ActiveTeachers.All(t => t != loggedUser))
-                throw new UnauthorizedOperationException("Only admins and active course teachers can resolve applications.");
+            if (loggedUser.UserRole != UserRole.Admin)
+                throw new UnauthorizedOperationException("Only admins can resolve applications.");
 
             string result;
 
             if (resolution == true)
             {
-                result = courseService.AddTeacher(course.Id, teacher.Id);
+                userService.ChangeRole(application.StudentId, 1);
+                result = "Application approved.";
             }
             else
             {
-                result = $"Application successfully denied.";
+                result = "Application denied.";
             }
 
             applicationRepository.MarkComplete(application.Id);

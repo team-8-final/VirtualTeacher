@@ -10,6 +10,7 @@ using VirtualTeacher.ViewModels.Account;
 using VirtualTeacher.Helpers;
 using MailKit;
 using VirtualTeacher.Models.DTOs;
+using VirtualTeacher.Models.DTOs.Account;
 
 namespace VirtualTeacher.Controllers.MVC;
 
@@ -104,7 +105,7 @@ public class AccountController : Controller
                 return View("Update", model);
             }
 
-            var dto = new UserUpdateDto
+            var dto = new AccountUpdateDto
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -303,7 +304,7 @@ public class AccountController : Controller
                 ModelState.AddModelError("CurrentPassword", "Incorrect password.");
                 return View("Password", model);
             }
-            var dto = new UserUpdateDto
+            var dto = new AccountUpdateDto
             {
                 Password = model.NewPassword
             };

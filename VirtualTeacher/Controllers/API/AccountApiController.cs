@@ -171,12 +171,12 @@ public class AccountApiController : ControllerBase
     /// </returns>
     ///<response code="200">User json returned</response>
     [HttpPut]
-    public IActionResult Update([FromBody] UserUpdateDto userDto)
+    public IActionResult Update([FromBody] AccountUpdateDto userDto)
     {
         try
         {
             var loggedUserId = accountService.GetLoggedUserId();
-            var updatedUser = userService.Update(loggedUserId, userDto);
+            var updatedUser = userService.UpdateAccount(loggedUserId, userDto);
             var updatedUserDto = mapper.MapResponse(updatedUser);
 
             return Ok(updatedUserDto);
@@ -214,12 +214,12 @@ public class AccountApiController : ControllerBase
                 return BadRequest("Invalid credentials.");
             }
 
-            var userUpdateDto = new UserUpdateDto
+            var accountUpdateDto = new AccountUpdateDto
             {
                 Password = dto.NewPassword
             };
 
-            _ = userService.Update(loggedUser.Id, userUpdateDto);
+            _ = userService.UpdateAccount(loggedUser.Id, accountUpdateDto);
 
             return Ok("Password changed successfully.");
         }

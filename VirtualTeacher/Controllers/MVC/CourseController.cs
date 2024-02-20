@@ -198,39 +198,39 @@ namespace VirtualTeacher.Controllers.MVC
             }
         }
 
-        //[IsTeacherOrAdmin]
-        //[HttpGet]
-        //public IActionResult AddTeacher(int courseId, string username)
-        //{
-        //    try
-        //    {
-        //        courseService.AddTeacher(courseId, username);
+        [IsTeacherOrAdmin]
+        [HttpGet]
+        public IActionResult AddTeacher(int courseId, int teacherId)
+        {
+            try
+            {
+                courseService.AddTeacher(courseId, teacherId);
 
-        //        return RedirectToAction("Details", "Course", new { id = courseId });
-        //    }
-        //    catch (EntityNotFoundException e) //todo most likely useless
-        //    {
-        //        TempData["StatusCode"] = StatusCodes.Status404NotFound;
-        //        TempData["ErrorMessage"] = e.Message;
+                return RedirectToAction("Details", "Course", new { id = courseId });
+            }
+            catch (EntityNotFoundException e) //todo most likely useless
+            {
+                TempData["StatusCode"] = StatusCodes.Status404NotFound;
+                TempData["ErrorMessage"] = e.Message;
 
-        //        return RedirectToAction("Error", "Shared");
-        //    }
-        //    catch (DuplicateEntityException e)
-        //    {
-        //        TempData["StatusCode"] = StatusCodes.Status409Conflict;
-        //        TempData["ErrorMessage"] = e.Message;
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (DuplicateEntityException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status409Conflict;
+                TempData["ErrorMessage"] = e.Message;
 
-        //        return RedirectToAction("Error", "Shared");
-        //    }
-        //    catch (InvalidOperationException e)
-        //    {
-        //        TempData["StatusCode"] = StatusCodes.Status400BadRequest;
-        //        TempData["ErrorMessage"] = e.Message;
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (InvalidOperationException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status400BadRequest;
+                TempData["ErrorMessage"] = e.Message;
 
-        //        return RedirectToAction("Error", "Shared");
-        //    }
+                return RedirectToAction("Error", "Shared");
+            }
 
-        //}
+        }
 
     }
 }

@@ -172,7 +172,7 @@ public class AccountService : IAccountService
         return true;
     }
 
-    public User AccountUpdate(UserUpdateDto dto)
+    public User AccountUpdate(AccountUpdateDto dto)
     {
         var user = GetLoggedUser();
 
@@ -185,7 +185,7 @@ public class AccountService : IAccountService
 
         dto.Password = dto.Password != null ? Sha512(dto.Password) : user.Password;
 
-        var updatedUser = userRepository.UpdateUser(user.Id, dto);
+        var updatedUser = userRepository.UpdateAccount(user.Id, dto);
 
         return updatedUser ?? throw new Exception("Your profile could not be updated.");
     }

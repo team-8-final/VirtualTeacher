@@ -15,6 +15,7 @@ namespace VirtualTeacher.Repositories.Contracts
         User? GetById(int id);
         User? GetByUsername(string username);
         User? Create(UserCreateDto dto);
+        User? UpdateAccount(int id, AccountUpdateDto updateData);
         User? UpdateUser(int id, UserUpdateDto updateData);
         bool? Delete(int id);
         int GetUserCount();

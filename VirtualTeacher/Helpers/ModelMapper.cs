@@ -7,6 +7,7 @@ using VirtualTeacher.Models.DTOs.User;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.ViewModels;
 using VirtualTeacher.ViewModels.Lectures;
+using VirtualTeacher.ViewModels.Users;
 
 namespace VirtualTeacher.Helpers;
 
@@ -41,6 +42,7 @@ public class ModelMapper
         };
     }
 
+    //todo probably useless???
     public User MapUpdate(UserUpdateDto dto)
     {
         return new User()
@@ -48,7 +50,8 @@ public class ModelMapper
             Email = dto.Email,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
-            Password = dto.Password,
+            Username = dto.Username,
+            UserRole = dto.UserRole
         };
     }
 
@@ -151,6 +154,19 @@ public class ModelMapper
         };
     }
 
+    //User Update VM
+    public UserUpdateViewModel MapUpdateVM(User user)
+    {
+        return new UserUpdateViewModel
+        {
+            Username = user.Username,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            UserRole = user.UserRole
+        };
+    }
+
     public RatingResponseDto MapResponse(Rating rating)
     {
         return new RatingResponseDto
@@ -177,7 +193,6 @@ public class ModelMapper
 
 
     //Lecture DTOs
-
     public LectureResponseDto MapResponse(Lecture lecture)
     {
         return new LectureResponseDto()
@@ -229,16 +244,14 @@ public class ModelMapper
     }
 
     //Teacher Application DTO
-
     public ApplicationResponseDto MapResponse(TeacherApplication application)
     {
         return new ApplicationResponseDto()
         {
             Id = application.Id,
-            Teacher = application.Teacher.Username,
-            TeacherId = application.TeacherId,
-            Course = application.Course.Title,
-            CourseId = application.CourseId
+            Student = application.Student.Username,
+            StudentId = application.Student.Id,
+            IsCompleted = application.IsCompleted
         };
     }
 }

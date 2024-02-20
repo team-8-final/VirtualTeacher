@@ -44,5 +44,5 @@ public class User
     public IList<Course> CreatedCourses { get; set; } = null!;
     public IList<Lecture> CreatedLectures { get; set; } = null!;
     public IList<Submission> CreatedAssignments { get; set; } = null!;
-    //public IList<TeacherApplication> TeacherApplications { get; set; } = null!;
+    //public TeacherApplication TeacherApplication
 }
