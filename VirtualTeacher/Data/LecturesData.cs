@@ -229,13 +229,6 @@ public static class LecturesData
         };
 
 
-        foreach (var lecture in lectures.Where(lecture => lecture.Id==1))
-        {
-            lecture.AssignmentLink = GenerateAssignmentLink(lecture.CourseId, lecture.Id);
-        }
-
-
-
 
         static string GenerateAssignmentLink(int courseId, int lectureId)
         {
@@ -255,14 +248,9 @@ public static class LecturesData
                 File.Delete(existingFile);
             }
 
-            // Assuming you have some logic to determine the fileExtension and file paths
             var fileExtension = ".txt";
             var fullPath = Path.Combine(assignmentDirectory, fileNameWithoutExtension + fileExtension);
 
-            // Assuming you have some logic to create the assignment in the database
-            // courseRepository.CreateAssignment(courseId, lectureId, fullPath);
-
-            // Return the constructed assignment link
             return fullPath;
         }
 
