@@ -15,11 +15,13 @@ namespace VirtualTeacher.Services
     {
         private readonly IUserRepository userRepository;
         private readonly IAccountService accountService;
+        private readonly IEmailService emailService;
 
-        public UserService(IUserRepository userRepository, IAccountService accountService)
+        public UserService(IUserRepository userRepository, IAccountService accountService, IEmailService emailService)
         {
             this.userRepository = userRepository;
             this.accountService = accountService;
+            this.emailService = emailService;
         }
 
         public User Create(UserCreateDto dto)
@@ -37,6 +39,9 @@ namespace VirtualTeacher.Services
             dto.Password = accountService.Sha512(dto.Password);
 
             var createdUser = userRepository.Create(dto);
+
+            if (createdUser is not null)
+                emailService.RegistrationConfirmation(createdUser);
 
             return createdUser ?? throw new Exception($"The registration could not be completed.");
         }

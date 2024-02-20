@@ -19,6 +19,7 @@ public interface ICourseService
 
     string Enroll(int courseId);
     string AddTeacher(int courseId, int teacherId);
+    string InviteFriend(int courseId, string email, string name);
 
     List<Rating> GetRatings(int courseId);
     Rating RateCourse(int courseId, RatingCreateDto dto);

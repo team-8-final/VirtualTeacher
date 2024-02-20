@@ -17,13 +17,15 @@ public class CourseService : ICourseService
     private readonly IAccountService accountService;
     private readonly IUserService userService;
     private readonly IWebHostEnvironment hostEnvironment;
+    private readonly IEmailService emailService;
 
-    public CourseService(ICourseRepository courseRepository, IAccountService accountService, IUserService userService, IWebHostEnvironment hostEnvironment)
+    public CourseService(ICourseRepository courseRepository, IAccountService accountService, IUserService userService, IWebHostEnvironment hostEnvironment, IEmailService emailService)
     {
         this.courseRepository = courseRepository;
         this.accountService = accountService;
         this.userService = userService;
         this.hostEnvironment = hostEnvironment;
+        this.emailService = emailService;
     }
 
     public List<Course> GetAllCourses()
@@ -157,7 +159,10 @@ public class CourseService : ICourseService
         bool? enrollStatus = courseRepository.Enroll(courseId, loggedUser);
 
         if (enrollStatus == true)
+        {
+            emailService.EnrollConfirmation(loggedUser, course);
             return $"Successfully enrolled to course '{course.Title}'.";
+        }
 
         throw new Exception($"The enroll request could not be completed.");
     }
@@ -165,13 +170,12 @@ public class CourseService : ICourseService
     //Add new active teacher
     public string AddTeacher(int courseId, int teacherId)
     {
-        //var loggedUser = accountService.GetLoggedUser();
-
-        //if (!course.ActiveTeachers.Any(t => t.Id == loggedUser.Id)
-        //    && loggedUser.UserRole != UserRole.Admin)
-        //    throw new UnauthorizedOperationException("Only active course teachers or admins can assign new teachers.");
-
+        var loggedUser = accountService.GetLoggedUser();
         var course = GetCourseById(courseId);
+
+        if (!course.ActiveTeachers.Any(t => t.Id == loggedUser.Id)
+            && loggedUser.UserRole != UserRole.Admin)
+            throw new UnauthorizedOperationException("Only active course teachers or admins can assign new teachers.");
 
         if (course.ActiveTeachers.Any(t => t.Id == teacherId))
             throw new DuplicateEntityException("User is already an active teacher in the course");
@@ -184,9 +188,26 @@ public class CourseService : ICourseService
         bool? additionStatus = courseRepository.AddTeacher(courseId, teacher);
 
         if (additionStatus == true)
+        {
+            emailService.TeacherAddition(teacher, course);
             return $"Successfully added teacher {teacher.Username} to course '{course.Title}'";
+        }
 
         throw new Exception($"The addition request could not be completed.");
+    }
+
+    public string InviteFriend(int courseId, string email, string name)
+    {
+        var course = GetCourseById(courseId);
+        var loggedUser = accountService.GetLoggedUser();
+
+        if (course.EnrolledStudents.Any(s => s.Email == email) 
+            || course.ActiveTeachers.Any(t => t.Email == email))
+            throw new DuplicateEntityException("User is already enrolled in this course");
+
+        emailService.InviteFriend(email, name, loggedUser, course);
+
+        return "Invitation has been successfully sent.";
     }
 
     // Ratings
@@ -706,4 +727,6 @@ public class CourseService : ICourseService
 
         return link;
     }
+
+
 }

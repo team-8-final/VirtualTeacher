@@ -16,6 +16,42 @@
 
 @model Course
 
+@*INVITE A FRIEND MODAL*@
+<div class="modal fade" id="inviteFriendModal" aria-hidden="true" aria-labelledby="inviteFriendModalLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="inviteFriendModalLabel">Invite a friend</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form asp-controller="Course" asp-action="InviteFriend" asp-route-courseId="@Model.Id" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" name="email" placeholder="e.g. name@example.com" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Your friend's name</label>
+                        <input type="text" class="form-control" name="name" placeholder="e.g. John Smith">
+                    </div>
+
+                    <div style="text-align: center;">
+                        <button type="submit" value="post" class="btn btn-primary btn-sm">
+                            <i class="fa-regular fa-paper-plane"></i> Send Invitation
+                        </button>
+                    </div>
+
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @*STUDENT MODAL*@
 <div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -53,6 +89,9 @@
                         }
                     }
                 </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" data-bs-target="#inviteFriendModal" data-bs-toggle="modal">Invite a friend</button>
             </div>
         </div>
     </div>

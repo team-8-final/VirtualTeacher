@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MailKit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Helpers.CustomAttributes;
+using VirtualTeacher.Models;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels;
@@ -35,7 +37,7 @@ namespace VirtualTeacher.Controllers.MVC
                 .Distinct()
                 .ToList();
 
-            List<string>  allTopics = courseService.GetAllCourses().Select(course => course.CourseTopic.ToString())
+            List<string> allTopics = courseService.GetAllCourses().Select(course => course.CourseTopic.ToString())
                 .Distinct()
                 .ToList();
 
@@ -161,7 +163,7 @@ namespace VirtualTeacher.Controllers.MVC
 
         }
 
-       
+
         [HttpGet]
         public IActionResult Details([FromRoute] int id)
         {
@@ -230,6 +232,26 @@ namespace VirtualTeacher.Controllers.MVC
                 return RedirectToAction("Error", "Shared");
             }
 
+        }
+
+        //todo add notification exceptions
+        [HttpPost]
+        [Route("Cousre/{courseId}/Invite")]
+        public IActionResult InviteFriend([FromRoute] int courseId, [FromForm] string email, [FromForm] string name)
+        {
+            try
+            {
+                courseService.InviteFriend(courseId, email, name);
+
+                return RedirectToAction("Details", "Course", new { id = courseId });
+            }
+            catch (DuplicateEntityException e) //todo most likely useless
+            {
+                TempData["StatusCode"] = StatusCodes.Status400BadRequest;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
         }
 
     }

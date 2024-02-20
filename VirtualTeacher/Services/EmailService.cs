@@ -4,6 +4,8 @@ using MimeKit.Text;
 using MimeKit;
 using VirtualTeacher.Models.DTOs;
 using VirtualTeacher.Services.Contracts;
+using VirtualTeacher.Models;
+using VirtualTeacher.Helpers;
 
 
 namespace VirtualTeacher.Services
@@ -11,10 +13,36 @@ namespace VirtualTeacher.Services
     public class EmailService : IEmailService
     {
         private readonly IConfiguration config;
+        private readonly MailMapper mapper;
 
-        public EmailService(IConfiguration config)
+        public EmailService(IConfiguration config, MailMapper mapper)
         {
             this.config = config;
+            this.mapper = mapper;
+        }
+
+        public void EnrollConfirmation(User user, Course course)
+        {
+            EmailDto request = mapper.MapEnroll(user, course);
+            SendEmail(request);
+        }
+
+        public void RegistrationConfirmation(User user)
+        {
+            EmailDto request = mapper.MapRegistration(user);
+            SendEmail(request);
+        }
+
+        public void TeacherAddition(User user, Course course)
+        {
+            EmailDto request = mapper.MapTeacherAddition(user, course);
+            SendEmail(request);
+        }
+
+        public void InviteFriend(string friendEmail, string friendName, User user, Course course)
+        {
+            EmailDto request = mapper.MapFriendInvite(friendEmail, friendName, user, course);
+            SendEmail(request);
         }
 
         public void SendEmail(EmailDto request)
@@ -35,5 +63,7 @@ namespace VirtualTeacher.Services
                 client.Disconnect(true);
             }
         }
+
+
     }
 }

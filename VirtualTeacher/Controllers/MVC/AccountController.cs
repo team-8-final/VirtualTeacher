@@ -222,15 +222,6 @@ public class AccountController : Controller
                 RememberLogin = false,
             };
 
-            //todo move this to mapper, make it look professional
-            var emailDto = new EmailDto
-            {
-                To = user.Email,
-                Subject = "Polyglot Registration",
-                Body = $"You ({user.Username}) have successfully registered to Polyglot courses!"
-            };
-
-            emailService.SendEmail(emailDto);
             Login(loginViewModel);
             return RedirectToAction("Index", "Account");
         }

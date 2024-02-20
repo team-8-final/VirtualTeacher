@@ -142,6 +142,8 @@ public class Program
 
         //Helpers
         builder.Services.AddScoped<ModelMapper>();
+        builder.Services.AddScoped<MailMapper>();
+
 
         var app = builder.Build();
 
