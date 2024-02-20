@@ -27,8 +27,14 @@
             if (@Model.FilteredCourses != null){
                 foreach (var course in @Model.FilteredCourses)
                 {
-                    <H4 style="color: blue" class="pt-2 pb-2">@course.Title</H4>
-                    
+                    <div class="d-flex align-items-center justify-content-between">
+                        <H4 style="color: blue" class="ps-2  pb-2">@course.Title</H4>
+                        <div style="padding-inline-end: 40px; :">
+                            <i class="fa-regular fa-user  inline-block" title="Total number of students in this course"></i>
+                            <p class="inline-block">@course.EnrolledStudents.Where(student => student.IsDeleted != true).Count()</p>
+                        </div>
+                        
+                    </div>
                     foreach(var lecture in course.Lectures)
                     {
                         <div class="pb-2">
@@ -57,10 +63,11 @@
                                                 <div class="ms-2" data-toggle="tooltip" data-placement="top" title="Graded Submissions"> @gradedSubmissions <i class="fa-solid fa-square-check" style="color: green"></i></div>
                                             }
 
+                                                
                                             
                                             if (lecture.AssignmentLink != "")
                                             {
-                                                <div class="end-50px position-absolute" title="This lecture has an assignment">
+                                                <div class="end-50px position-absolute " title="This lecture has an assignment">
                                                     <i class="fa-regular fa-clipboard"></i>
                                                 </div>
                                             }

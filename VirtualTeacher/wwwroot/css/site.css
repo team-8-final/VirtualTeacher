@@ -346,6 +346,10 @@ parent "position-relative" child "position-absolute"*/
     right: 50px !important;
 }
 
+.end-70px {
+    right: 70px !important;
+}
+
 .end-90px {
     right: 90px !important;
 }
