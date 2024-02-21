@@ -1,5 +1,6 @@
 ﻿@{
     string navbarUsername = "Account";
+
     if (User.Identity is { IsAuthenticated: true })
     {
         navbarUsername = User.Identity.Name;
@@ -25,6 +26,44 @@
 </head>
 
 <body>
+
+@*CONTACT MODAL*@
+<div class="modal fade" id="contactModal" aria-hidden="true" aria-labelledby="contactModalLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="contactModalLabel">Write to us</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form asp-controller="Home" asp-action="Contact" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Your email address</label>
+                        <input type="email" class="form-control" name="email" placeholder="e.g. name@example.com" aria-describedby="emailHelp">
+                        <small id="emailHelp" class="form-text text-muted">We'll only use your email for further communication and won't share it with anyone else.</small>
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Your message</label>
+                        <textarea rows="4" class="form-control" name="body" placeholder="Drop us a message, and we'll get back to you as soon as possible! 🚀"></textarea>
+                    </div>
+
+
+                    <div style="text-align: center;">
+                        <button type="submit" value="post" class="btn btn-primary btn-sm">
+                            <i class="fa-regular fa-paper-plane"></i> Send
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 @* Top Navigation *@
 <nav id="nav" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -123,6 +162,9 @@
         <span>
             Polyglot &copy; 2024 -
             <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a> - <a href="/api/swagger">API</a>
+            -
+            <a href="#" data-bs-toggle="modal" data-bs-target="#contactModal">Contact</a>
+
         </span>
     </div>
 </footer>

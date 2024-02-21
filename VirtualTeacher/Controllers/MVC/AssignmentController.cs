@@ -27,6 +27,7 @@ namespace VirtualTeacher.Controllers.MVC
 
         [HttpGet]
         [Route("/Assignments")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public ActionResult Index( int openPanel, string searchWord)
         {
             try 

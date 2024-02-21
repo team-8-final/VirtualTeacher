@@ -129,6 +129,18 @@ namespace VirtualTeacher.Services
             SendEmail(request);
         }
 
+        public void Contact(string email, string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"<p>Contact message from {email}</p>");
+            sb.Append($"<p>{text}</p>");
+
+            string title = $"Contact - {email}";
+
+            EmailDto request = Map("mypolyglotcourse@gmail.com", title, sb);
+            SendEmail(request);
+        }
+
         public void SendEmail(EmailDto request)
         {
             var email = new MimeMessage();
@@ -147,6 +159,7 @@ namespace VirtualTeacher.Services
                 client.Disconnect(true);
             }
         }
+
 
         public EmailDto Map(string recepient, string title, StringBuilder body)
         {

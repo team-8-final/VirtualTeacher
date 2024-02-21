@@ -364,6 +364,7 @@ public class AccountController : Controller
             List<Claim> claims = new List<Claim>
             {
                 new("UserId", user.Id.ToString()),
+                new("FirstName", user.FirstName),
                 new(ClaimTypes.Name, user.Username),
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, user.UserRole.ToString())
