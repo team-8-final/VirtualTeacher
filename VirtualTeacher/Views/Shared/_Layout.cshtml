@@ -1,9 +1,12 @@
 ﻿@{
+    AvatarHelper avatarHelper = new AvatarHelper();
     string navbarUsername = "Account";
+    string avatarLocation = "avatar-default.jpg";
 
     if (User.Identity is { IsAuthenticated: true })
     {
         navbarUsername = User.Identity.Name;
+        avatarLocation = avatarHelper.GetAvatar(navbarUsername);
     }
 
     var userRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role);
@@ -112,7 +115,19 @@
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="fa-solid fa-user"></i>&nbsp; @navbarUsername</a>
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                        @{
+                            if (User.Identity is { IsAuthenticated: true })
+                            {
+                                <img class="avatar-layout" src="~/images/avatars/@avatarLocation" alt="avatar" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-user"></i>
+                            }
+                        }
+                        @navbarUsername
+                    </a>
                     <ul class="dropdown-menu">
                         @if (User.Identity is { IsAuthenticated: true })
                         {

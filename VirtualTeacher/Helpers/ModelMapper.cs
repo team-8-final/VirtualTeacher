@@ -118,14 +118,18 @@ public class ModelMapper
     }
 
     //Home VM
-    public HomeIndexViewModel MapHomeVM(List<Course> newestCourses, List<Course> topRatedCourses, List<Course> popularCourses, List<User> teachers)
+    public HomeIndexViewModel MapHomeVM(List<Course> newestCourses, List<Course> topRatedCourses, List<Course> popularCourses, List<User> teachers, 
+        int usersCount, int coursesCount, int lecturesCount)
     {
         return new HomeIndexViewModel
         {
             CoursesByDate = newestCourses,
             CoursesByPopularity = popularCourses,
             CoursesByRating = topRatedCourses,
-            Teachers = teachers
+            Teachers = teachers,
+            UsersCount = usersCount,
+            CoursesCount = coursesCount,
+            LecturesCount = lecturesCount
         };
     }
 

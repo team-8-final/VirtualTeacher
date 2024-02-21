@@ -254,9 +254,9 @@ namespace VirtualTeacher.Controllers.MVC
 
         }
 
-        //todo add notification exceptions
         [HttpPost]
         [Route("Course/{courseId}/Invite")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult InviteFriend([FromRoute] int courseId, [FromForm] string email, [FromForm] string name)
         {
             try

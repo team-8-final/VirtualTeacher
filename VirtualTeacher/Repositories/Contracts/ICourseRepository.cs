@@ -48,5 +48,8 @@ namespace VirtualTeacher.Repositories.Contracts
         bool DeleteAssignment(int courseId, int lectureId);
         bool DeleteAllSubmissions(int lectureId);
         List<Comment> GetCommentsByUser(User user);
+
+        int GetCoursesCount();
+        int GetLecturesCount();
     }
 }

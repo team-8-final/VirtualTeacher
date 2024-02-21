@@ -622,4 +622,16 @@ public class CourseRepository : ICourseRepository
         return true;
     }
 
+    // Count methods
+    public int GetCoursesCount()
+    {
+        return context.Courses
+            .Where(c => !c.IsDeleted)
+            .Count();
+    }
+
+    public int GetLecturesCount()
+    {
+        return context.Lectures.Count();
+    }
 }

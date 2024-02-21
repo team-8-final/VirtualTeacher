@@ -34,7 +34,12 @@ public class HomeController : Controller
         var popularCourses = courseService.GetPopularCourses();
         var teachers = userService.GetHomeTeachers();
 
-        HomeIndexViewModel vm = mapper.MapHomeVM(newestCourses, topRatedCourses, popularCourses, teachers);
+        var usersCount = userService.GetUserCount();
+        var coursesCount = courseService.GetCoursesCount();
+        var lecturesCount = courseService.GetLecturesCount();
+
+        HomeIndexViewModel vm = mapper.MapHomeVM(newestCourses, topRatedCourses, popularCourses, teachers, 
+            usersCount, coursesCount, lecturesCount);
 
         return View(vm);
     }

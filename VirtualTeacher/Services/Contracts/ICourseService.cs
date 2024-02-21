@@ -16,6 +16,7 @@ public interface ICourseService
     Course CreateCourse(CourseCreateDto dto);
     Course UpdateCourse(int id, CourseUpdateDto dto);
     string DeleteCourse(int id);
+    int GetCoursesCount();
 
     string Enroll(int courseId);
     string AddTeacher(int courseId, int teacherId);
@@ -27,12 +28,11 @@ public interface ICourseService
 
     List<Lecture> GetLectures(int courseId);
     Lecture GetLectureById(int courseId, int lectureId);
-
     Lecture CreateLecture(LectureCreateDto dto, int courseId);
-
     Lecture UpdateLecture(LectureUpdateDto dto, int courseId, int lectureId);
-
     public string DeleteLecture(int courseId, int lectureId);
+    int GetLecturesCount();
+
     List<Comment> GetComments(int courseId, int lectureId);
     Comment GetCommentById(int courseId, int lectureId, int commentId);
     Comment CreateComment(int courseId, int lectureId, CommentCreateDto dto);

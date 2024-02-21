@@ -249,6 +249,13 @@ footer {
     object-fit: cover; 
 }
 
+.avatar-layout {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 0px;
+}
+
 
 /*positionning classes below
 parent "position-relative" child "position-absolute"*/

@@ -14,6 +14,12 @@ namespace VirtualTeacher.Services;
 public class CourseService : ICourseService
 {
     private readonly ICourseRepository courseRepository;
+
+    public CourseService(ICourseRepository courseRepository)
+    {
+        this.courseRepository = courseRepository;
+    }
+
     private readonly IAccountService accountService;
     private readonly IUserService userService;
     private readonly IWebHostEnvironment hostEnvironment;
@@ -731,5 +737,13 @@ public class CourseService : ICourseService
         return link;
     }
 
+    public int GetCoursesCount()
+    {
+        return courseRepository.GetCoursesCount();
+    }
 
+    public int GetLecturesCount()
+    {
+        return courseRepository.GetLecturesCount();
+    }
 }
