@@ -1,50 +1,135 @@
-# .NET Project ({{Project name}})
-
+# .NET Project Virtual_Teacher
 ## Overview
 
-{{Project overview. What users can expect in terms of features.}}
+A platform for online learning where teachers can create video courses. Students can see all available courses, enroll in the ones they like and rate and comment under the course. Some lectures can have assignments, where each enrolled student can upload submission and receive a grade. 
 
 ---
 <br>
+
 ## Features
 
-- Feature 1.
-- Feature 2.
-- Feature 3.
-
-<br />
+- Anonymous users can see the list of all courses
+  + Access the course introduction video and see the comments bellow with ratings.
+  + They can sort and filter the list of courses
+- Users can register as a teacher or a student
+- Students can
+  + See all that Anonymous users can see
+  + Enroll in courses
+  + Rate courses (And leave a comment with their rating if they want to)
+  + See all lectures in the courses they are enrolled in
+  + Download assignments from under lectures 
+  + Upload their submission for each assignment under the respective lecture
+  + See a list of all courses they are enrolled in in their account page
+- Teachers can
+  + See a list of all courses they have created
+  + Create courses as drafts or directly publish them
+  + Add and remove lectures
+  + Upload assignment for each lecture as a text file
+  + See a list of all assignments that are pending assessment,  
+  + Download the submissions and grade them, change the grade at a latter point
 
 ## Technologies Used
 
-- Technology 1
-- Technology 2
-- Technology 3
+- Entity Framework 6.0
+- Bootstrap library
 
----
+- Necessary packages:
+  + Microsoft.EntityFrameworkCore Version="6.0.26"
+  + Microsoft.AspNetCore.Authentication.JwtBearer Version="6.0.25"
+  + Microsoft.AspNetCore.Identity.EntityFrameworkCore Version="6.0.26" 
+  + Microsoft.AspNetCore.Mvc.NewtonsoftJson Version="6.0.26"
+  + Microsoft.EntityFrameworkCore.Design Version="6.0.26"
+  + Microsoft.EntityFrameworkCore.SqlServer  Version="6.0.26"
+  + Microsoft.EntityFrameworkCore.Tools Version="6.0.26"
+  + Swashbuckle.AspNetCore Version="6.5.0"
+  + Swashbuckle.AspNetCore.Newtonsoft Version="6.5.0"
+  + Swashbuckle.AspNetCore.Annotations Version="6.5.0"
+  + System.IdentityModel.Tokens.Jwt Version="6.35.0"
+  + MailKit Version="4.3.0" 
+  + NSwag.Annotations Version="14.0.3"
 
 ## Installation
-
+The project generates a database using code-first approach. 
 
 Follow these steps to set up and run the application:
 
 1. **Step one**
+- Install all necessary packages using the the NuGet Package manager in Visual Studio 2023
+
 2. **Step two**
-2. **Step three**
+- Setup the SQL server connection to your computer by creating an appsettings.json file in the root folder of the project
+  
+3. **Step three**
+- Paste this code in your appsettings.jon file:
+
+```
+{
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Server={{YourServerconnectionString}};Database=VirtualTeacherDatabaseProject;Trusted_Connection=True;"
+  },
+  "Jwt": {
+    "Key": "8344d3e3-33ef-48a5-a47d-6af35154e943",
+    "Issuer": "SchoolOfHardKnocks.com"
+  },
+  "EmailHost": "smtp.gmail.com",
+  "EmailUsername": "mypolyglotcourse@gmail.com",
+  "EmailPassword": "kzoa lirj ohpa ahdc"
+}
+``` 
+You need to replace ```{{YourServerconnectionString}}``` with your actual SQL connection string. 
+
+
+4. **Step four**
+- Open the Package Manager Console and create a new database migration.
+```
+Add-Migration Initial
+```
+5. **Step five**
+- In the console upload the migration
+```
+Update-Database
+```
+6. **Step six**
+- Build the project
+
+7. **Step seven**
+- Open it in a browser
+The url with the port you are using is set in /Properties/launchSettings.json:
+this line:
+```"applicationUrl": "http://localhost:5000"```
+This is the url you can use to access the site after you have build the project. 
 
 <br>
+<br>
 
-#### Home Page - before and after login
 
-<img></img>
+#### Home Page
+
+<img src=https://i.ibb.co/KyzCfQL/fp-an.png></img>
 
 #### Login Page 
 
-<img></img>
+<img src="https://i.ibb.co/YjdpcNg/login.png" alt="login" border="0" />
 
-{{Pictures representing the different pages of the project and its different states - Browse User (Admin only), API Page, etc.}}
+#### Register Page 
+
+<img src="https://i.ibb.co/tY5P4c8/register.png" alt="register" border="0" />
+
+#### Account Page 
+
+#### Student View 
+
+<img src="https://i.ibb.co/yF2Zjhy/student-view.png" alt="student-view" border="0" />
+
+#### Teacher View 
+
+#### Assignments Page 
+
+
 
 <br />
-<img src=  />
+
 
 ## Database Diagram
 
