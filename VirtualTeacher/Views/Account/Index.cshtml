@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Profile Info";
+    var draftCourses = Model.CreatedCourses.Where(c => c.Published).ToList();
 }
 
 <style>
@@ -126,11 +127,11 @@
             <input style="margin: 25px auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Update Profile"/>
         </form>
         @{
-            if (Model.UserRole == UserRole.Student 
+            if (Model.UserRole == UserRole.Student
                 && Model.TeacherApplication is null)
             {
                 <form asp-controller="Application" asp-action="Create" method="get">
-                    <input style="margin: 25px auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Apply for a Teacher" />
+                    <input style="margin: 25px auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Apply for a Teacher"/>
                 </form>
             }
             else if (Model.TeacherApplication is not null && !Model.TeacherApplication.IsCompleted)
@@ -143,7 +144,7 @@
 
     <div class="user-content-container">
 
-        <h3 class="username">Enrolled Courses</h3>
+        <h3 class="username">Enrolled Courses (@Model.EnrolledCourses.Count) </h3>
         @if (Model.EnrolledCourses.Count == 0)
         {
             <div class="text-muted text-center">The user hasn't enrolled in any courses. </div>
@@ -164,16 +165,21 @@
                                 @foreach (var lecture in course.Lectures)
                                 {
                                     <li class="list-group-item d-flex justify-content-between align-items-start">
-                                        <div class="ms-2 me-auto">
-                                            <div class="fw-bold">
-                                                <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
-                                                    @lecture.Title &nbsp;
-                                                </a>
-                                                @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                        <div class="ms-2 me-auto d-flex align-items-center">
+                                            <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                                                @lecture.Title &nbsp;
+                                            </a>
+                                            @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                            {
+                                                <i class="fa-solid fa-circle-check" style="color: green;"> &nbsp;&nbsp;</i>
+                                            }
+                                            @{
+                                                var grade = lecture.Submissions.FirstOrDefault(s => s.StudentId == Model.Id)?.Grade;
+                                                if (grade != null)
                                                 {
-                                                    <i class="fa-solid fa-circle-check" style="color: green;"></i>
+                                                    <div><i class="fa-solid fa-graduation-cap"></i> Grade: @grade</div>
                                                 }
-                                            </div>
+                                            }
                                         </div>
                                     </li>
                                 }
@@ -185,7 +191,7 @@
             }
         </div>
 
-        <h3 class="username mt-4">Completed Courses</h3>
+        <h3 class="username mt-4">Completed Courses (@Model.CompletedCourses.Count)</h3>
         @if (Model.CompletedCourses.Count == 0)
         {
             <div class="text-muted text-center">The user hasn't completed any courses. </div>
@@ -206,16 +212,21 @@
                                 @foreach (var lecture in course.Lectures)
                                 {
                                     <li class="list-group-item d-flex justify-content-between align-items-start">
-                                        <div class="ms-2 me-auto">
-                                            <div class="fw-bold">
-                                                <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
-                                                    @lecture.Title &nbsp;
-                                                </a>
-                                                @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                        <div class="ms-2 me-auto d-flex align-items-center">
+                                            <a asp-controller="Lecture" asp-action="Details" asp-route-courseId="@course.Id" asp-route-id="@lecture.Id" style="text-decoration:none;">
+                                                @lecture.Title &nbsp;
+                                            </a>
+                                            @if (lecture.Submissions.Any(s => s.StudentId == Model.Id))
+                                            {
+                                                <i class="fa-solid fa-circle-check" style="color: green;"> &nbsp;&nbsp;</i>
+                                            }
+                                            @{
+                                                var grade = lecture.Submissions.FirstOrDefault(s => s.StudentId == Model.Id)?.Grade;
+                                                if (grade != null)
                                                 {
-                                                    <i class="fa-solid fa-circle-check" style="color: green;"></i>
+                                                    <div><i class="fa-solid fa-graduation-cap"></i> Grade: @grade</div>
                                                 }
-                                            </div>
+                                            }
                                         </div>
                                     </li>
                                 }
@@ -229,7 +240,7 @@
 
         @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Admin") || User.IsInRole("Teacher")))
         {
-            <h3 class="username mt-4">Created Courses</h3>
+            <h3 class="username mt-4">Created Courses (@Model.CreatedCourses.Count)</h3>
             @if (Model.CreatedCourses.Count == 0)
             {
                 <div class="text-muted text-center">The user hasn't created any courses. </div>
@@ -272,8 +283,8 @@
                 }
             </div>
 
-            <h3 class="username mt-4">Draft Courses</h3>
-            @if (Model.CreatedCourses.All(c => c.Published))
+            <h3 class="username mt-4">Draft Courses (@draftCourses.Count)</h3>
+            @if (draftCourses.Count != 0)
             {
                 <div class="text-muted text-center">The user doesn't have any draft courses. </div>
             }
