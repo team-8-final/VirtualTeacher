@@ -4,6 +4,7 @@
     bool isLogged = User.Identity.IsAuthenticated;
     string? currentUser = isLogged ? User.Identity.Name : "";
 
+    AvatarHelper avatarHelper = new AvatarHelper();
 }
 
 @model HomeIndexViewModel;
@@ -239,11 +240,13 @@
         {
             foreach (var teacher in Model.Teachers)
             {
+                string avatarLocation = avatarHelper.GetAvatar(teacher.Username);
+
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <div class="d-flex justify-content-center" style="margin-bottom: 3px;">
                             <div>
-                                <img src="~/images/avatar-default.jpg" style="width: 80px; height: 75px;" />
+                                <img class="circle-avatar-home" src="~/images/avatars/@avatarLocation" alt="avatar" />
                             </div>
                         </div>
 
@@ -266,9 +269,10 @@
                     <a asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">
                         <div class="card-footer text-center">
                             @{
-                                <span>
+                                <div class="btn btn-secondary btn-sm">
+                                    <img class="language-flag-small" src="~/images/flags/svgFlags/@(course.CourseTopic).svg" alt="" />
                                     @course.Title
-                                </span>
+                                </div>
                             }
                         </div>
                     </a>

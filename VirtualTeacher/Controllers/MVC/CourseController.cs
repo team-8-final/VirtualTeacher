@@ -5,7 +5,9 @@ using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Helpers.CustomAttributes;
 using VirtualTeacher.Models;
+using VirtualTeacher.Models.DTOs;
 using VirtualTeacher.Models.QueryParameters;
+using VirtualTeacher.Services;
 using VirtualTeacher.Services.Contracts;
 using VirtualTeacher.ViewModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -15,11 +17,13 @@ namespace VirtualTeacher.Controllers.MVC
     public class CourseController : Controller
     {
         private readonly ICourseService courseService;
+        private readonly ITranslationService translationService;
         private readonly ModelMapper mapper;
 
-        public CourseController(ICourseService courseService, ModelMapper mapper)
+        public CourseController(ICourseService courseService, ModelMapper mapper, ITranslationService translationService)
         {
             this.courseService = courseService;
+            this.translationService = translationService;
             this.mapper = mapper;
         }
 
@@ -252,7 +256,7 @@ namespace VirtualTeacher.Controllers.MVC
 
         //todo add notification exceptions
         [HttpPost]
-        [Route("Cousre/{courseId}/Invite")]
+        [Route("Course/{courseId}/Invite")]
         public IActionResult InviteFriend([FromRoute] int courseId, [FromForm] string email, [FromForm] string name)
         {
             try

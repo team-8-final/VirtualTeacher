@@ -12,6 +12,8 @@
     double baseRatingValue = 5;
 
     string? dateDisplay = Model.StartingDate > DateTime.Now ? Model.StartingDate?.ToString("MMM dd, yyyy") : "Ongoing";
+
+    AvatarHelper avatarHelper = new AvatarHelper();
 }
 
 @model Course
@@ -76,7 +78,10 @@
                         {
                             foreach (var student in Model.EnrolledStudents)
                             {
+                                string avatarLocation = avatarHelper.GetAvatar(student.Username);
+
                                 <li class="list-group-item">
+                                    <img class="avatar-small" src="~/images/avatars/@avatarLocation" alt="avatar" />
                                     @student.FirstName @student.LastName
                                 </li>
                             }
@@ -243,7 +248,7 @@
     <div class="card p-2 col-md-9">
         @*VIDEO*@
         <div>
-            <iframe style="width: 100%; aspect-ratio: 16/9" src="@Model.VideoLink" title="dance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe style="width: 100%; aspect-ratio: 16/9" src="@Model.VideoLink" title="Course Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
 
         @*INFO BLOCK*@
@@ -259,7 +264,12 @@
                         @{
                             foreach (var teacher in Model.ActiveTeachers)
                             {
-                                <a href="#" class="btn btn-secondary btn-sm"> @teacher.FirstName @teacher.LastName</a>
+                                string avatarLocation = avatarHelper.GetAvatar(teacher.Username);
+
+                                <a href="#" class="btn btn-secondary btn-sm">
+                                    <img class="avatar-small" src="~/images/avatars/@avatarLocation" alt="avatar" />
+                                    @teacher.FirstName @teacher.LastName
+                                </a>
                             }
                         }
 
@@ -378,9 +388,12 @@
             <ol class="list-group list-group-flush">
                 @foreach (var rating in Model.Ratings)
                 {
+                    string avatarLocation = avatarHelper.GetAvatar(rating.Student.Username);
+
                     <li class="list-group-item d-flex justify-content-between align-items-start">
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">
+                                <img class="avatar-small" src="~/images/avatars/@avatarLocation" alt="avatar" />
                                 @rating.Student.FirstName @rating.Student.LastName
                             </div>
                             @{

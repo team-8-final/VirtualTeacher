@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="~/images/favicon.ico">
 
     <script src="https://kit.fontawesome.com/c21727a50d.js" crossorigin="anonymous"></script>
 </head>
@@ -101,6 +102,13 @@
                         <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Users</a>
                     </li>
                 }
+                @if (User.Identity is { IsAuthenticated: true })
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Translator" asp-action="Index">Translator</a>
+                    </li>
+                }
+                    
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown">

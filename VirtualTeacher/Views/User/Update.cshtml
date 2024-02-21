@@ -1,6 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Update User";
     var userId = ViewContext.RouteData.Values["id"];
+
+    AvatarHelper avatarHelper = new AvatarHelper();
+    string avatarLocation = avatarHelper.GetAvatar(Model.Username);
 }
 
 @model UserUpdateViewModel
@@ -36,7 +39,21 @@
 <div style="max-width: 350px; margin: auto">
     <form asp-controller="User" asp-action="Update" asp-route-id="@userId" method="post">
 
-       @*todo add avatar removal*@
+        <div class="circle-avatar-container">
+            <img class="circle-avatar" src="~/images/avatars/@avatarLocation" alt="avatar" />
+
+            @{
+                if (avatarLocation != "avatar-default.jpg")
+                {
+                    <a asp-controller="User" asp-action="RemoveAvatar" asp-route-id="@userId" aria-label="Remove Avatar">
+                        <button type="button" class="btn-remove-avatar" id="changeAvatarButton" aria-label="Change Avatar">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </a>
+                }
+            }
+
+        </div>
 
         <div class="d-flex" style="padding-bottom: 15px;">
             <div class="me-auto">
@@ -50,8 +67,6 @@
             </div>
         </div>
 
-
-        @*<h3 style="margin: 0 auto 20px auto; text-align: center">@Model.Username</h3>*@
  
         <div class="form-floating mb-3">
             <input asp-for="Username" type="text" class="form-control" id="floatingUsername" placeholder="Username" required>
@@ -149,5 +164,38 @@
         notificationPopup.style.display = 'none';
     });
 
-
 </script>
+
+<style>
+    .circle-avatar-container {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 15px auto;
+    }
+
+    .btn-remove-avatar {
+        position: absolute;
+        bottom: 0px;
+        right: -5px;
+        border: none;
+        background: rgba(255, 29, 29, 0.8);
+        border-radius: 50%;
+        padding: 0;
+        cursor: pointer;
+        outline: none;
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+    }
+
+    .btn-remove-avatar:hover {
+        background: rgba(213, 16, 16, 0.5);
+    }
+
+    .btn-remove-avatar i {
+        color: white;
+        font-size: 16px;
+    }
+
+</style>

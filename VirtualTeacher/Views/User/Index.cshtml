@@ -3,6 +3,8 @@
     var userCount = Convert.ToInt32(ViewData["UserCount"]);
     var searchUserCount = Model.Users.Count();
     var applicationCount = Model.Applications.Count();
+
+    AvatarHelper avatarHelper = new AvatarHelper();
 }
 
 @model UserIndexViewModel
@@ -34,11 +36,19 @@
                     else
                     {
                         int counter = 1;
+
                         foreach (var application in Model.Applications)
                         {
+                            string avatarLocation = avatarHelper.GetAvatar(application.Student.Username);
+
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <span>@counter. @application.Student.FirstName @application.Student.LastName (&#64;@application.Student.Username) - @application.Student.Email </span>
+                                    <span>
+                                        @counter.
+                                        <img class="avatar-small" src="~/images/avatars/@avatarLocation" alt="avatar" />
+
+                                        @application.Student.FirstName @application.Student.LastName (&#64;@application.Student.Username) - @application.Student.Email 
+                                    </span>
                                 </div>
 
                                 <div>
@@ -83,14 +93,21 @@
             else
             {
                 int counter = 1;
+
                 foreach (var user in Model.Users)
                 {
+                    string avatarLocation = avatarHelper.GetAvatar(user.Username);
+
                     <div class="card" style="margin-bottom: 5px;">
                         <a a asp-controller="User" asp-action="Update" asp-route-id="@user.Id" class="custom-hover" style="text-decoration:none; color: #000000">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
 
-                                    <div>@counter. @user.FirstName @user.LastName (&#64;@user.Username) - @user.Email</div>
+                                    <div>
+                                        @counter.                                     
+                                        <img class="avatar-small" src="~/images/avatars/@avatarLocation" alt="avatar" />
+                                        @user.FirstName @user.LastName (&#64;@user.Username) - @user.Email
+                                    </div>
 
                                     <div>@user.UserRole</div>
                                     

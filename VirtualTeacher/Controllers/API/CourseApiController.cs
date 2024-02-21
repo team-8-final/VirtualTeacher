@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Models;
+using VirtualTeacher.Models.DTOs;
 using VirtualTeacher.Models.DTOs.Course;
 using VirtualTeacher.Models.QueryParameters;
 using VirtualTeacher.Services;
@@ -20,13 +21,11 @@ public class CourseApiController : ControllerBase
 {
     private readonly ICourseService courseService;
     private readonly ModelMapper mapper;
-    private readonly IAccountService accountService;
 
-    public CourseApiController(ICourseService courseService, ModelMapper mapper, IAccountService accountService)
+    public CourseApiController(ICourseService courseService, ModelMapper mapper)
     {
         this.courseService = courseService;
         this.mapper = mapper;
-        this.accountService = accountService;
     }
 
     /// <summary>
@@ -955,5 +954,4 @@ public class CourseApiController : ControllerBase
             return NotFound(e.Message);
         }
     }
-
 }

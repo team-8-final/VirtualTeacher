@@ -138,6 +138,8 @@ public class Program
         builder.Services.AddScoped<ICourseService, CourseService>();
         builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IApplicationService, ApplicationService>();
+        builder.Services.AddScoped<ITranslationService, TranslationService>();
+
 
 
         //Helpers

@@ -230,8 +230,23 @@ footer {
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
 }
 
+.language-flag-small {
+    width: 18px;
+    height: 10px;
+    border-radius: 10%;
+    object-fit: cover;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
 .custom-hover:hover {
     background-color: #f8f9fa;
+}
+
+.avatar-small {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; 
+    object-fit: cover; 
 }
 
 

@@ -1,5 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Lecture";
+    AvatarHelper avatarHelper = new AvatarHelper();
+    string teacherAvatarLocation = avatarHelper.GetAvatar(Model.Teacher.Username);
 }
 
 @model Lecture
@@ -45,7 +47,12 @@
             <hr/>
             <div class="d-flex justify-content-between">
 
-                <p class="card-text text-muted">Teacher: @Model.Teacher.FirstName @Model.Teacher.LastName</p>
+
+                <p class="card-text text-muted">
+                    Teacher: 
+                    <img class="avatar-small" src="~/images/avatars/@teacherAvatarLocation" alt="avatar" />
+                    @Model.Teacher.FirstName @Model.Teacher.LastName
+                </p>
 
                 @*UPDATE LECTURE BUTTON*@
                 @if (User.Identity is { IsAuthenticated: true } && (User.IsInRole("Admin") || User.IsInRole("Teacher")))
@@ -227,9 +234,14 @@
             <ol class="list-group list-group-flush">
                 @foreach (var comment in Model.Comments)
                 {
+                    string avatarLocation = avatarHelper.GetAvatar(comment.Author.Username);
+
                     <li class="list-group-item d-flex justify-content-between align-items-start">
                         <div class="ms-2 me-auto">
-                            <div class="fw-bold">@comment.Author.Username</div>
+                            <div class="fw-bold">
+                                <img class="avatar-small" src="~/images/avatars/@avatarLocation" alt="avatar" />
+                                @comment.Author.Username
+                            </div>
                             @comment.Content
                         </div>
 

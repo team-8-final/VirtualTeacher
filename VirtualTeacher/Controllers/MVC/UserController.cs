@@ -16,12 +16,14 @@ namespace VirtualTeacher.Controllers.MVC
     {
         private readonly IUserService userService;
         private readonly IApplicationService applicationService;
+        private readonly IAccountService accountService;
         private readonly ModelMapper mapper;
 
-        public UserController(IUserService userService, IApplicationService applicationService, ModelMapper mapper)
+        public UserController(IUserService userService, IApplicationService applicationService, IAccountService accountService, ModelMapper mapper)
         {
             this.userService = userService;
             this.applicationService = applicationService;
+            this.accountService = accountService;
             this.mapper = mapper;
         }
 
@@ -72,7 +74,6 @@ namespace VirtualTeacher.Controllers.MVC
             }
         }
 
-        //todo exceptions
         [IsAdmin]
         [HttpPost]
         [Route("User/{id}/Update/")]
@@ -108,12 +109,33 @@ namespace VirtualTeacher.Controllers.MVC
 
                 return Json(new { success = true });
             }
-            catch (Exception e)
+            catch (EntityNotFoundException e)
             {
-                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
-                TempData["ErrorMessage"] = e.Message;
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                ViewData["ErrorMessage"] = e.Message;
 
-                return Json(new { success = false, errorMessage = e.Message });
+                return RedirectToAction("Error", "Shared");
+            }
+        }
+
+        [IsAdmin]
+        [HttpGet]
+        [Route("User/{id}/Avatar")]
+        public IActionResult RemoveAvatar([FromRoute] int id)
+        {
+            try
+            {
+                var user = userService.GetById(id);
+                accountService.DeleteUserAvatar(user.Username);
+
+                return RedirectToAction("Update", "User", new { id = user.Id });
+            }
+            catch (EntityNotFoundException e)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                ViewData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
             }
         }
     }

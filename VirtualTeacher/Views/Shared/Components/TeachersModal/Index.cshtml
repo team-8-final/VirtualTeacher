@@ -1,4 +1,8 @@
-﻿@model List<User>
+﻿@{
+    AvatarHelper avatarHelper = new AvatarHelper();
+}
+
+@model List<User>
 
 @*ADD TEACHERS MODAL*@
 <div class="modal fade" id="teachersModal" tabindex="-1" aria-labelledby="teachersModalLabel" aria-hidden="true">
@@ -16,9 +20,14 @@
                     @{
                         foreach (var teacher in Model)
                         {
+                            string avatarLocation = avatarHelper.GetAvatar(teacher.Username);
+
                             <li class="list-group-item">
                                 <div class="d-flex justify-content-between">
-                                    @teacher.FirstName @teacher.LastName
+                                    <div>
+                                        <img class="avatar-small" src="~/images/avatars/@avatarLocation" alt="avatar" />
+                                        @teacher.FirstName @teacher.LastName
+                                    </div>
 
                                     <a asp-controller="Course" asp-action="AddTeacher" asp-route-courseId="@TempData["courseId"]" asp-route-teacherId="@teacher.Id" class="btn btn-outline-secondary btn-sm">
                                         <strong><i class="fa-solid fa-plus"></i></strong>
