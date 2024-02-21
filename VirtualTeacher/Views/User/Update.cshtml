@@ -71,7 +71,10 @@
             <select asp-for="UserRole" class="form-control" id="userRole" name="userRole" id="floatingRole">
                 @foreach (var role in Enum.GetValues(typeof(UserRole)))
                 {
-                    <option value="@role">@role</option>
+                    if ((UserRole)role != UserRole.Anonymous)
+                    {
+                        <option value="@role">@role</option>
+                    }
                 }
             </select>
             <label asp-for="UserRole" for="floatingRole">Role</label>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VirtualTeacher.Helpers.CustomAttributes;
 using VirtualTeacher.Services.Contracts;
 
 namespace VirtualTeacher.Controllers.MVC
@@ -12,9 +13,9 @@ namespace VirtualTeacher.Controllers.MVC
             this.applicationService = applicationService;
         }
 
-        //[IsAdmin]
+        [IsAdmin]
         [HttpGet]
-        [Route("application/{applicationId}/{resolution}")]
+        [Route("application/{applicationId}/{verdict}")]
         public IActionResult Resolve([FromRoute] int applicationId, [FromRoute] string verdict)
         {
             try
@@ -35,6 +36,24 @@ namespace VirtualTeacher.Controllers.MVC
 
         }
 
-        //todo create
+        //to do exceptions
+        [HttpGet]
+        [Route("account/application")]
+        public IActionResult Create()
+        {
+            try
+            {
+                applicationService.CreateApplication();
+
+                return RedirectToAction("Index", "Account");
+            }
+            catch (Exception e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status500InternalServerError;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+        }
     }
 }

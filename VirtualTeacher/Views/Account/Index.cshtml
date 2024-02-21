@@ -125,6 +125,20 @@
         <form asp-controller="Account" asp-action="Update" method="get">
             <input style="margin: 25px auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Update Profile"/>
         </form>
+        @{
+            if (Model.UserRole == UserRole.Student 
+                && Model.TeacherApplication is null)
+            {
+                <form asp-controller="Application" asp-action="Create" method="get">
+                    <input style="margin: 25px auto; display: block; width: 100%" class="btn btn-primary" type="submit" value="Apply for a Teacher" />
+                </form>
+            }
+            else if (Model.TeacherApplication is not null && !Model.TeacherApplication.IsCompleted)
+            {
+                <input style="margin: 25px auto; display: block; width: 100%" class="btn btn-primary" value="Application pending" disabled/>
+            }
+        }
+
     </div>
 
     <div class="user-content-container">

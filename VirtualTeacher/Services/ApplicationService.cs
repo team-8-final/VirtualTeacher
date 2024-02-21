@@ -75,7 +75,6 @@ namespace VirtualTeacher.Services
             return result;
         }
 
-        //todo maybe private
         public TeacherApplication GetById(int id)
         {
             TeacherApplication? foundApplication = applicationRepository.GetById(id);
@@ -87,6 +86,11 @@ namespace VirtualTeacher.Services
                 throw new InvalidUserInputException("This application is already marked as complete.");
 
             return foundApplication;
+        }
+
+        public int GetActiveApplicationsCount()
+        {
+            return applicationRepository.GetActiveApplicationsCount();
         }
     }
 }

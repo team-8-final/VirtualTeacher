@@ -19,14 +19,12 @@ public class AccountController : Controller
     private readonly IUserService userService;
     private readonly IAccountService accountService;
     private readonly ICourseService courseService;
-    private readonly IEmailService emailService;
 
-    public AccountController(IUserService userService, IAccountService accountService, ICourseService courseService, IEmailService emailService)
+    public AccountController(IUserService userService, IAccountService accountService, ICourseService courseService)
     {
         this.userService = userService;
         this.accountService = accountService;
         this.courseService = courseService;
-        this.emailService = emailService;
     }
 
     [HttpGet]
@@ -49,7 +47,8 @@ public class AccountController : Controller
                 UserRole = loggedUser.UserRole,
                 CompletedCourses = accountService.GetCompletedCourses(),
                 RatedCourses = accountService.GetRatedCourses(),
-                CourseComments = courseService.GetCommentsByUser()
+                CourseComments = courseService.GetCommentsByUser(),
+                TeacherApplication = loggedUser.TeacherApplication
             };
 
             return View("Index", model);

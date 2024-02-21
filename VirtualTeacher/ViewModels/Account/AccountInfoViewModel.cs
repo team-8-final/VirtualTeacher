@@ -28,4 +28,5 @@ public class AccountInfoViewModel
     public IList<Course> RatedCourses { get; set; } = new List<Course>();
 
     public List<Comment> CourseComments { get; set; } = null!;
+    public TeacherApplication? TeacherApplication { get; set; }
 }
