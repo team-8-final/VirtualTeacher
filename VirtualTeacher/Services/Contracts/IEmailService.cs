@@ -9,6 +9,7 @@ namespace VirtualTeacher.Services.Contracts
         public void EnrollConfirmation(User user, Course course);
         public void TeacherAddition(User user, Course course);
         public void InviteFriend(string friendEmail, string friendName, User user, Course course);
+        public void Contact(string email, string text);
         void SendEmail(EmailDto request);
 
     }

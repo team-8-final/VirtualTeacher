@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    string? currentUser = User.Identity.IsAuthenticated ? User.Identity.Name : "";
+
     bool isLogged = User.Identity.IsAuthenticated;
+    string? currentUser = isLogged ? User.Identity.Name : "";
+
 }
 
 @model HomeIndexViewModel;
@@ -11,7 +13,9 @@
         @{
             if (isLogged)
             {
-                <h1>Hello, @currentUser!</h1>
+                <div id="greeting-container">
+                    <h1 id="greeting" , @currentUser></h1>
+                </div>
             }
             else
             {
@@ -19,10 +23,9 @@
             }
         }
         <h4>Your Gateway to Fluent Learning!</h4>
-        <p>
-            Insert your corporate text here
-            @* Master languages at your pace, from beginners to advanced. 
-            Redefine language education from home. Join us on your journey to fluency! *@
+        <p style="text-align:justify">
+            Master languages at your pace, from beginners to advanced. 
+            Redefine language education from home.
         </p>
 
         @{
@@ -307,6 +310,21 @@
     document.getElementById('newestButton').addEventListener('click', function () {
         toggleBlockVisibility('newestBlock', 'newestButton', ['popularBlock', 'ratingBlock'], ['ratingButton', 'popularButton']);
     });
+
+    @*GREETING*@
+    document.addEventListener("DOMContentLoaded", function () {
+        var currentTime = new Date().getHours();
+        var greetingElement = document.getElementById("greeting");
+
+        if (currentTime >= 5 && currentTime < 12) {
+            greetingElement.textContent = "Good Morning, @currentUser!";
+        } else if (currentTime >= 12 && currentTime < 18) {
+            greetingElement.textContent = "Good Afternoon, @currentUser!";
+        } else {
+            greetingElement.textContent = "Good Evening, @currentUser!";
+        }
+    });
+
 </script>
 
 

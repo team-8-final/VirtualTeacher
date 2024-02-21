@@ -4,6 +4,7 @@ using VirtualTeacher.Services.Contracts;
 
 namespace VirtualTeacher.Controllers.MVC
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ApplicationController : Controller
     {
         private readonly IApplicationService applicationService;

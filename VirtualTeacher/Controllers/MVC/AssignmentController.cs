@@ -26,6 +26,7 @@ namespace VirtualTeacher.Controllers.MVC
 
         [HttpGet]
         [Route("/Assignments")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public ActionResult Index( int openPanel, string searchWord)
         {
             var userId = int.Parse(User.FindFirstValue("UserId"));

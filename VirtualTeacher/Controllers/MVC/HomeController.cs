@@ -14,13 +14,15 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly ICourseService courseService;
     private readonly IUserService userService;
+    private readonly IEmailService emailService;
     private readonly ModelMapper mapper;
 
-    public HomeController(ILogger<HomeController> logger, ICourseService courseService, IUserService userService, ModelMapper mapper)
+    public HomeController(ILogger<HomeController> logger, ICourseService courseService, IUserService userService, IEmailService emailService, ModelMapper mapper)
     {
         _logger = logger;
         this.courseService = courseService;
         this.userService = userService;
+        this.emailService = emailService;
         this.mapper = mapper;
     }
 
@@ -40,6 +42,14 @@ public class HomeController : Controller
     public IActionResult Privacy()
     {
         return View();
+    }
+
+    public IActionResult Contact([FromForm] string email, [FromForm] string body)
+    {
+        emailService.Contact(email, body);
+
+        //todo change
+        return RedirectToAction("Index", "Home");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

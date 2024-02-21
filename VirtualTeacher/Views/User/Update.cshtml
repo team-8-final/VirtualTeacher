@@ -5,7 +5,7 @@
 
 @model UserUpdateViewModel
 
-@*DELETE LECTURE MODAL*@
+@*DELETE USER MODAL*@
 <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -38,9 +38,21 @@
 
        @*todo add avatar removal*@
 
+        <div class="d-flex" style="padding-bottom: 15px;">
+            <div class="me-auto">
+                <h3 style="text-align:center;">Update User</h3>
+            </div>
 
-        <h3 style="margin: 0 auto 20px auto; text-align: center">@Model.Username</h3>
+            <div class="align-self-end">
+                <a asp-controller="User" asp-action="Index">
+                    <h5>Back</h5>
+                </a>
+            </div>
+        </div>
 
+
+        @*<h3 style="margin: 0 auto 20px auto; text-align: center">@Model.Username</h3>*@
+ 
         <div class="form-floating mb-3">
             <input asp-for="Username" type="text" class="form-control" id="floatingUsername" placeholder="Username" required>
             <label asp-for="Username" for="floatingUsername">Username</label>
