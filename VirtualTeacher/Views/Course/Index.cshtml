@@ -32,16 +32,16 @@
         </ul>
     </div>
 
-    <span style="flex: 1;" class="ms-1 me-1">
+    <span style="flex" class="ms-1 me-1">
         @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Teacher"))
         {
-            <a asp-controller="Course" asp-action="Index" asp-action="Index" asp-route-TeacherUsername="@User.FindFirst(ClaimTypes.Name).Value.ToString()" class="btn btn-success">Courses I am Teaching</a>
+            <a asp-controller="Course" asp-action="Index" asp-action="Index" asp-route-TeacherUsername="@User.FindFirst(ClaimTypes.Name).Value.ToString()" class="btn btn-primary" >Courses I am Teaching</a>
         }
     </span>
     <span style="flex: 1;" class="ms-1 me-1">
         @if (User.Identity is { IsAuthenticated: true } && User.IsInRole("Teacher"))
         {
-            <a asp-controller="Course" asp-action="Index" asp-action="Index" asp-route-TeacherUsername="@User.FindFirst(ClaimTypes.Name).Value.ToString()" asp-route-SeeDrafts="true" class="btn btn-success">Drafts</a>
+            <a asp-controller="Course" asp-action="Index" asp-action="Index" asp-route-TeacherUsername="@User.FindFirst(ClaimTypes.Name).Value.ToString()" asp-route-SeeDrafts="true" class="btn btn-primary">Drafts</a>
         }
     </span>
 
@@ -313,7 +313,7 @@
                         }
                         <div class="list-group-item " >
                             <div style="display: block;" class="mb-4 mt-2">
-                                <strong margin-bottom: 10px;>Min Rating:</strong>
+                                <strong margin-bottom: 10px;>Minimum Rating:</strong>
 
                              @* RATING STARS *@
 
