@@ -1,12 +1,14 @@
-# .NET Project Virtual_Teacher
-## Overview
+## .NET Project Virtual_Teacher
+### Overview
 
 A platform for online learning where teachers can create video courses. Students can see all available courses, enroll in the ones they like and rate and comment under the course. Some lectures can have assignments, where each enrolled student can upload submission and receive a grade. 
+
+The theme of the project is Language lessons. :speech_balloon:
 
 ---
 <br>
 
-## Features
+### :hammer_and_wrench: Features
 
 - Anonymous users can see the list of all courses
   + Access the course introduction video and see the comments bellow with ratings.
@@ -28,7 +30,7 @@ A platform for online learning where teachers can create video courses. Students
   + See a list of all assignments that are pending assessment,  
   + Download the submissions and grade them, change the grade at a latter point
 
-## Technologies Used
+### :jigsaw: Technologies Used
 
 - Entity Framework 6.0
 - Bootstrap library
@@ -48,96 +50,186 @@ A platform for online learning where teachers can create video courses. Students
   + MailKit Version="4.3.0" 
   + NSwag.Annotations Version="14.0.3"
 
-## Installation
+### :rocket: Installation
 The project generates a database using code-first approach. 
 
 Follow these steps to set up and run the application:
 
-1. **Step one**
+:footprints::one: **Step one**
 - Install all necessary packages using the the NuGet Package manager in Visual Studio 2023
 
-2. **Step two**
+:footprints::two: **Step two**
 - Setup the SQL server connection to your computer by creating an appsettings.json file in the root folder of the project
   
-3. **Step three**
+:footprints::three:	 **Step three**
 - Paste this code in your appsettings.jon file:
 
 ```
 {
   "AllowedHosts": "*",
   "ConnectionStrings": {
-    "DefaultConnection": "Server={{YourServerconnectionString}};Database=VirtualTeacherDatabaseProject;Trusted_Connection=True;"
+    "DefaultConnection": "Server=DESKTOP-VKFPR8Q\\SQLEXPRESS;Database=VirtualTeacher;Trusted_Connection=True;"
   },
   "Jwt": {
     "Key": "8344d3e3-33ef-48a5-a47d-6af35154e943",
     "Issuer": "SchoolOfHardKnocks.com"
   },
+
   "EmailHost": "smtp.gmail.com",
   "EmailUsername": "mypolyglotcourse@gmail.com",
-  "EmailPassword": "kzoa lirj ohpa ahdc"
+  "EmailPassword": "kzoa lirj ohpa ahdc",
+
+  "TranslatorConfig": {
+    "AuthKey": "30cc864d-ca3e-4271-954b-414af4218ec8:fx"
+  }
 }
-``` 
+```
+
 You need to replace ```{{YourServerconnectionString}}``` with your actual SQL connection string. 
 
 
-4. **Step four**
+:footprints::four: **Step four**
 - Open the Package Manager Console and create a new database migration.
 ```
 Add-Migration Initial
 ```
-5. **Step five**
+:footprints::five: **Step five**
 - In the console upload the migration
 ```
 Update-Database
 ```
-6. **Step six**
+:footprints::six: **Step six**
 - Build the project
 
-7. **Step seven**
+:footprints::seven: **Step seven**
 - Open it in a browser
 The url with the port you are using is set in /Properties/launchSettings.json:
 this line:
 ```"applicationUrl": "http://localhost:5000"```
 This is the url you can use to access the site after you have build the project. 
 
+:footprints::eight: **Step eight**
+- After the database have been created pull the repository again in order to get the PrivateData directory with the necessary Assignment and Submission files that might have been deleted during the database creation.
 <br>
 <br>
 
-
-#### Home Page
-
-<img src=https://i.ibb.co/KyzCfQL/fp-an.png></img>
-
-#### Login Page 
-
-<img src="https://i.ibb.co/YjdpcNg/login.png" alt="login" border="0" />
-
-#### Register Page 
-
-<img src="https://i.ibb.co/tY5P4c8/register.png" alt="register" border="0" />
-
-#### Account Page 
-
-#### Student View 
-
-<img src="https://i.ibb.co/yF2Zjhy/student-view.png" alt="student-view" border="0" />
-
-#### Teacher View 
-
-#### Assignments Page 
+### Home Page
+<br>
+<img src="https://i.ibb.co/KyzCfQL/fp-an.png" width='600' />
 
 
+
+### :key: Login Page 
+<br>
+
+You can login using any username in the database, the password for all of them is <img src="https://i.ibb.co/XJz1NNb/pass.png"/>
+An example credentials are:
+
+<br>
+<img src="https://i.ibb.co/qx7rZ0z/creds.png"  width='600' />
+<br>
+<img src="https://i.ibb.co/YjdpcNg/login.png" width='600' />
+
+### :key: Register Page 
+
+
+<img src="https://i.ibb.co/tY5P4c8/register.png" width='600' />
+
+### :id: Account Page 
+
+After successful login you are redirected to the Account Info page:
+
+
+<img src="https://i.ibb.co/K9DM1VY/account-info-page.png" width='600' />
+
+## :film_strip: All Courses
+
+
+### :student: Student View 
+<br>
+
+Navigating to "All Courses" for students look like this:
+
+<br/>
+<img src="https://i.ibb.co/yF2Zjhy/student-view.png" width='600'/>
+
+### :woman_teacher: Teacher View 
+<br/>
+Navigating to "All Courses" for teachers look like this.
+The users that are in role Teacher see additional functionality on this page.
+<br>
+
+They can see the drafts of the courses they haven't published yet ("Drafts" button) or directly sort the list of courses to see only the ones they are teaching ("Courses I am Teaching" button).
+
+<br/>
+
+<img src="https://i.ibb.co/Wtf3cvm/teacher-view-diffs.png"  width='600' />
+
+### :microscope: Filter panel
+<br/>
+
+You can filter and sort the Courses by <strong>Teacher</strong> username, <strong>Topic</strong> or <strong>Minimum Rating</strong> or a combination of them.
+
+<br/>
+
+<img src="https://i.ibb.co/6YffB75/filter-bar.png"  width='600' />
+
+You can also sort the list with the SortBy Button on top by  <strong>Rating</strong> and <strong>Title</strong>.
+
+<br>
+<img src="https://i.ibb.co/CzHjKxr/sort-but.png"  width='600' />
 
 <br />
 
+### :window: Course and Lecture view
 
-## Database Diagram
+From the lins with courses, clicking on one of the course titles loads the Course page.
+Here you can see the introductory video for the course and enroll in the course. You can give it a rating from 0.5 to 5 and leave a review. 
+<br/>
 
+<img src="https://i.ibb.co/YRwRNXS/course-view.png" alt="course-view" border="0"  width='600' />
+
+From there (if you are entrolled) you can select a lecture from the list on the left, in this case "Basic Grammar".
+Here you can add notes only visible to you and discuss the lecture in the comments below. 
+<br/>
+
+<img src="https://i.ibb.co/5GLkGD9/lecture-view.png" alt="lecture-view" border="0"  width='600' />
+
+### :green_book: Assignments Page 
+Assignments Page is visible to Teachers only. 
+There they can see all Lectures that have assignments and how many submissions there are for each of these lectures. Lectures without submission have an X on the right-hand side of the list. 
+
+Unassessed lecture show with red icon, and the assessed ones with green checkmark inside the list. 
+
+<br>
+<img src="https://i.ibb.co/K2VLKcN/assign.png"  width='600' />
+<br/>
+
+When the teacher wants to grade the submission then can open the element by clicking on the lecture name. In this case Common Vocabulary:
+
+
+<img src="https://i.ibb.co/84XYSVq/assess-2.png"  width='600'/>
+
+From the small buttons on the top-right corner of the element they can download the Assignment itself or upload a new one. At the moment Deletion is disabled for Teachers, hence the trashcan button is greyed out. 
+However this can be done from the Lecture page.
+<br />
+
+### :shield: Admin Panel
+<br>
+
+Admins can see a list of all users and promote them to teachers. Students can request to become teachers and admins can approve them or deny the change in their Users panel:
+
+<br>
+<img src="https://i.ibb.co/ggbphVM/admin-users-panel.png" alt="admin-users-panel" border="0"  width='600'/>
+
+
+### :chains: Database Diagram
+<br>
 <img src=https://i.ibb.co/fXQW2NX/db-diagram.png />
 
 <br>
 
-## Solution Structure
+### :deciduous_tree: Solution Structure
 The project uses 3 layered structure:
 
 + Repository layer
@@ -153,20 +245,21 @@ flowchart TD
     S === R[Repository Layer]
     R === D[(Database)]
 ```
-
+:world_map: Detailed Project File Structure:
 <details>
+
+  <br>
   <summary>Click to expand/collapse</summary>
 
   ```
 C:.
 ¦   .gitignore
+¦   directory_structure.txt
 ¦   project_structure.txt
 ¦   README.md
 ¦   Virtual Teacher.docx
 ¦   VirtualTeacher.sln
 ¦   
-+---.github
-¦   L---workflows
 L---VirtualTeacher
     ¦   appsettings.Development_.json
     ¦   appsettings.json
@@ -180,8 +273,6 @@ L---VirtualTeacher
     ¦       TeachersModal.cs
     ¦       
     +---Controllers
-    ¦   ¦   EmailController.cs
-    ¦   ¦   
     ¦   +---API
     ¦   ¦       AccountApiController.cs
     ¦   ¦       ApplicationApiController.cs
@@ -217,7 +308,6 @@ L---VirtualTeacher
     ¦       UnauthorizedOperationException.cs
     ¦       
     +---Helpers
-    ¦   ¦   MailMapper.cs
     ¦   ¦   ModelMapper.cs
     ¦   ¦   SwaggerTagsFilter.cs
     ¦   ¦   
@@ -226,16 +316,8 @@ L---VirtualTeacher
     ¦           IsTeacherOrAdminAttribute.cs
     ¦           
     +---Migrations
-    ¦       20240220074141_initial.cs
-    ¦       20240220074141_initial.Designer.cs
-    ¦       20240220083328_initial2.cs
-    ¦       20240220083328_initial2.Designer.cs
-    ¦       20240220083703_hrthr.cs
-    ¦       20240220083703_hrthr.Designer.cs
-    ¦       20240220095331_asgweinp.cs
-    ¦       20240220095331_asgweinp.Designer.cs
-    ¦       20240220100321_asgweinpåãâ.cs
-    ¦       20240220100321_asgweinpåãâ.Designer.cs
+    ¦       20240221074451_initial.cs
+    ¦       20240221074451_initial.Designer.cs
     ¦       AppDbContextModelSnapshot.cs
     ¦       
     +---Models
@@ -245,7 +327,6 @@ L---VirtualTeacher
     ¦   ¦   Note.cs
     ¦   ¦   PaginatedList.cs
     ¦   ¦   Rating.cs
-    ¦   ¦   RatingValues.cs
     ¦   ¦   Submission.cs
     ¦   ¦   TeacherApplication.cs
     ¦   ¦   User.cs
@@ -536,6 +617,8 @@ L---VirtualTeacher
                     jquery.validate.unobtrusive.js
                     jquery.validate.unobtrusive.min.js
                     LICENSE.txt
+                    
+
   
   ```
 </details>
@@ -546,7 +629,7 @@ L---VirtualTeacher
 ## Contributors
 For further information, please feel free to contact us:
 
-| Authors                   | Emails                                                      | GitHub                                      |
+| Authors                   | :mailbox_closed:                                                    | :octocat:                                    |
 | ------                    | ------                                                      | ------                                      |
 | Stanimir Nenkov           | staanimir@gmail.com                        	              | [link](https://github.com/stnmrr)           |
 | Tomi Tsolov               | tvtsolov@gmail.com                                          | [link](https://github.com/tvtsolov)         |
