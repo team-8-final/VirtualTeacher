@@ -28,23 +28,39 @@ namespace VirtualTeacher.Controllers.MVC
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(CourseQueryParameters queryParameters)
         {
-            //todo add try catch
-            var courses = courseService.FilterCoursesBy(queryParameters);
+            try 
+            {
+                var courses = courseService.FilterCoursesBy(queryParameters);
 
-            List<string> allTeachers = courseService.GetAllCourses()
-            .SelectMany(course => course.ActiveTeachers.Select(teacher => teacher.Username)
-                .Distinct())
-                .Distinct()
-                .ToList();
+                List<string> allTeachers = courseService.GetAllCourses()
+                .SelectMany(course => course.ActiveTeachers.Select(teacher => teacher.Username)
+                    .Distinct())
+                    .Distinct()
+                    .ToList();
 
-            List<string> allTopics = courseService.GetAllCourses().Select(course => course.CourseTopic.ToString())
-                .Distinct()
-                .ToList();
+                List<string> allTopics = courseService.GetAllCourses().Select(course => course.CourseTopic.ToString())
+                    .Distinct()
+                    .ToList();
 
-            var allCourses = courseService.GetAllCourses();
-            CoursesListViewModel coursesVM = mapper.MapCourseList(courses, allTeachers, allTopics, queryParameters);
+                var allCourses = courseService.GetAllCourses();
+                CoursesListViewModel coursesVM = mapper.MapCourseList(courses, allTeachers, allTopics, queryParameters);
 
-            return View(coursesVM);
+                return View(coursesVM);
+            }
+            catch (EntityNotFoundException e)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                ViewData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status401Unauthorized;
+                TempData["ErrorMessage"] = e.Message;
+
+                return RedirectToAction("Error", "Shared");
+            }
         }
 
         [IsTeacherOrAdmin]

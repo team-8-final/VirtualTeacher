@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using VirtualTeacher.Exceptions;
 using VirtualTeacher.Helpers;
 using VirtualTeacher.Helpers.CustomAttributes;
 using VirtualTeacher.Models;
@@ -28,30 +29,43 @@ namespace VirtualTeacher.Controllers.MVC
         [Route("/Assignments")]
         public ActionResult Index( int openPanel, string searchWord)
         {
-            var userId = int.Parse(User.FindFirstValue("UserId"));
-
-            AssignmentsViewModel studentsVM = new AssignmentsViewModel();
-            
-            List<Course> courses = courseService.FilterByTeacherId(userId).ToList();
-            if(searchWord != null)
+            try 
             {
-                courses = courses.Where(course => course.Title.Contains(searchWord)).ToList();
+                var userId = int.Parse(User.FindFirstValue("UserId"));
+
+                AssignmentsViewModel studentsVM = new AssignmentsViewModel();
+
+                List<Course> courses = courseService.FilterByTeacherId(userId).ToList();
+                if (searchWord != null)
+                {
+                    courses = courses.Where(course => course.Title.Contains(searchWord)).ToList();
+                }
+                studentsVM.FilteredCourses = courses;
+
+                List<User> allUsersObj = studentsVM.FilteredCourses
+                    .SelectMany(course => course.EnrolledStudents)
+                    .Distinct()
+                    .ToList();
+
+                studentsVM.AllStudents = mapper.MapStudentsToDto(allUsersObj);
+                studentsVM.OpenPanel = openPanel;
+
+                return View(studentsVM);
             }
+            catch (EntityNotFoundException e)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                ViewData["ErrorMessage"] = e.Message;
 
-            studentsVM.FilteredCourses = courses;
+                return RedirectToAction("Error", "Shared");
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                TempData["StatusCode"] = StatusCodes.Status401Unauthorized;
+                TempData["ErrorMessage"] = e.Message;
 
-
-
-            List<User> allUsersObj = studentsVM.FilteredCourses
-                .SelectMany(course => course.EnrolledStudents)
-                .Distinct()
-                .ToList();
-
-
-            studentsVM.AllStudents = mapper.MapStudentsToDto(allUsersObj);
-            studentsVM.OpenPanel = openPanel;
-
-            return View(studentsVM);
+                return RedirectToAction("Error", "Shared");
+            }
         }
     }
 }

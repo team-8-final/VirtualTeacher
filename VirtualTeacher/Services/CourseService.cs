@@ -33,7 +33,6 @@ public class CourseService : ICourseService
         CourseQueryParameters parameters = new CourseQueryParameters();
         parameters.PageSize = int.MaxValue;
         
-
         return courseRepository.FilterBy(parameters);
     }
     public PaginatedList<Course> FilterCoursesBy(CourseQueryParameters parameters)
@@ -46,6 +45,10 @@ public class CourseService : ICourseService
         else
         {
             loggedUser.UserRole = UserRole.Anonymous;
+        }
+        if (parameters.SeeDrafts != false && (loggedUser.UserRole != UserRole.Admin || loggedUser.UserRole != UserRole.Teacher))
+        {
+            throw new UnauthorizedAccessException("You are not authorized");
         }
 
         parameters.LoggedUserRole = loggedUser.UserRole;

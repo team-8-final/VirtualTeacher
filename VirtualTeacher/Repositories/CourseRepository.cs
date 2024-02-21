@@ -271,8 +271,6 @@ public class CourseRepository : ICourseRepository
     {
         if (loggedUserRole != UserRole.Admin)
         {
-            //can't see deleted
-            //cant see drafts
             return courses.Where(course => course.IsDeleted != true && course.Published == true);
 
         }
