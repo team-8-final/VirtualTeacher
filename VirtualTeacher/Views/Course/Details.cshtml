@@ -297,8 +297,8 @@
                     <div>
                         @*CREATE RATING MODAL BUTTON*@
                         @{
-                            if (isEnrolled || isActiveTeacherOrAdmin)
-                            {
+                            if (isEnrolled || (User.Identity.IsAuthenticated &&  User.IsInRole("Admin")))
+                                        {
                                 <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#rateModal">Rate</button>
                             }
                         }

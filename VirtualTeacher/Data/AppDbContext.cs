@@ -45,7 +45,7 @@ public class AppDbContext : DbContext
             {
                 new() { Id = 1, CourseId = 1, StudentId = 1, Value = 5, Review = "Very cool course!" },
                 new() { Id = 2, CourseId = 2, StudentId = 1, Value = 1, Review = "Not good." },
-                new() { Id = 3, CourseId = 1, StudentId = 2, Value = 1, Review = "Avoid this course." },
+                new() { Id = 3, CourseId = 1, StudentId = 8, Value = 1, Review = "Avoid this course." },
             });
 
         modelBuilder.Entity<TeacherApplication>().HasData(
