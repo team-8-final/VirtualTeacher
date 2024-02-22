@@ -49,6 +49,7 @@ The theme of the project is Language lessons. :speech_balloon:
   + System.IdentityModel.Tokens.Jwt Version="6.35.0"
   + MailKit Version="4.3.0" 
   + NSwag.Annotations Version="14.0.3"
+  + DeepL.NET Library Version="1.8.0"
 
 ### :rocket: Installation
 The project generates a database using code-first approach. 
